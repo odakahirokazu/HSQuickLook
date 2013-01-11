@@ -11,7 +11,8 @@ using namespace anl;
 
 DAQ::DAQ()
   : m_MDBHost("localhost"), m_MDBName("hxiql"),
-    m_Instrument("HXI-1")
+    m_Instrument("HXI-1"),
+    m_ImageFileName("image.png"), m_ImageHeight(600), m_ImageWidth(600)
 {
   m_Connection = new mongo::DBClientConnection;
 }
@@ -27,6 +28,11 @@ ANLStatus DAQ::mod_startup()
   register_parameter(&m_MDBHost, "MongoDB host");
   register_parameter(&m_MDBName, "Database name");
   register_parameter(&m_Instrument, "Instrument");
+
+  register_parameter(&m_ImageFileName, "Image file");
+  register_parameter(&m_ImageHeight, "Image height");
+  register_parameter(&m_ImageWidth, "Image width");
+
   return AS_OK;
 }
 
@@ -109,16 +115,18 @@ ANLStatus DAQ::mod_ana()
   if (ii%10==0) {
     const size_t SIZE = 10*1024*1024;
     static char buf[SIZE];
-    std::string filename("image.png");
+    std::string filename(m_ImageFileName);
     std::ifstream fin(filename.c_str(), std::ios::in|std::ios::binary);
     fin.read(buf, SIZE);
     size_t readSize = fin.gcount();
     
     mongo::BSONObjBuilder b;
     mongo::BSONObjBuilder b1;
-    b1.append("FileName", filename);
+    b1.append("FileName", m_ImageFileName);
     b1.append("Size", static_cast<int>(readSize));
     b1.appendBinData("Data", readSize, mongo::BinDataGeneral, buf);
+    b1.append("Height", m_ImageHeight);
+    b1.append("Width", m_ImageWidth);
     b.append("Image", b1.obj());
     mongo::BSONObj p = b.obj();
     

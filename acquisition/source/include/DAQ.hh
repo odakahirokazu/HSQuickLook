@@ -35,6 +35,9 @@ private:
   std::string m_MDBHost;
   std::string m_MDBName;
   std::string m_Instrument;
+  std::string m_ImageFileName;
+  int m_ImageHeight;
+  int m_ImageWidth;
 };
 
 #endif // DAQ_HH

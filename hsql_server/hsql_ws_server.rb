@@ -136,7 +136,15 @@ EventMachine::run do
                   File.open(path, "w+b") {|fout|
                     fout.write(v['Data'].to_s)
                   }
-                  a[k] = sprintf("<img src=\"%s\">", "tmp/"+fileName)
+                  height = v['Height']
+                  width = v['Width']
+                  imageSize = ""
+                  if height && width
+                    imageSize = sprintf(" height=\"%d\" width=\"%d\"",
+                                        height, width)
+                  end
+                  a[k] = sprintf("<img src=\"%s\" alt=\"%s\"%s>",
+                                 "tmp/"+fileName, k, imageSize)
                 end
               }
               collections[ql.name] = a.to_json
