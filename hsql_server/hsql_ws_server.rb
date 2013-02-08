@@ -23,42 +23,45 @@ FileTmpDir = ( ARGV[2] or ENV["HOME"]+"/Sites/hsql_client/tmp" )
 ########################################
 
 
-class QLCollection
-  def initialize(name, period, file)
-    @name = name
+class QLDocument
+  def initialize(collection, fo_name, attr_seq, period, file)
+    @collection = collection
+    @fo_name = fo_name
+    @attr_seq = attr_seq
     @period = period
     @file = file
+    @name = (collection.to_s+'/'+fo_name.to_s+'/'+attr_seq.to_s).to_sym
   end
-  attr_reader :name, :period, :file
+  attr_reader :collection, :fo_name, :attr_seq, :period, :file, :name
 end
 
 
 class QLInfo
   def initialize()
-    @collections = {}
+    @documents = {}
   end
 
-  def insert(client_id, ql_collection, ql_period, ql_file)
-    ql = QLCollection.new(ql_collection, ql_period, ql_file)
-    if @collections[client_id]
-      @collections[client_id] << ql
+  def insert(client_id, collection, fo_name, attr_seq, period, file)
+    ql = QLDocument.new(collection, fo_name, attr_seq, period, file)
+    if @documents[client_id]
+      @documents[client_id] << ql
     else
-      @collections[client_id] = [ql]
+      @documents[client_id] = [ql]
     end
   end
 
   def delete(client_id)
-    @collections.delete(client_id)
+    @documents.delete(client_id)
   end
 
   def each_collection()
-    @collections.values.flatten.each{|ql|
+    @documents.values.flatten.each{|ql|
       yield ql
     }
   end
 
   def each_client_info()
-    @collections.each{|c|
+    @documents.each{|c|
       yield c
     }
   end
@@ -89,6 +92,7 @@ EventMachine::run do
         if mes.class == Hash
           ql_data = mes[cid]
           if ql_data
+            p ql_data.to_json
             ws.send(ql_data.to_json) unless ql_data.empty?
           end
         else
@@ -103,9 +107,12 @@ EventMachine::run do
 
         ql = JSON.parse(mes)
         ql_collection = ql["collection"].to_sym
+        ql_fo_name = ql["fo_name"].to_sym
+        ql_attr_seq = ql["attr_seq"].to_sym
         ql_period = ql["period"].to_i
         ql_file = ql["file"] or true
-        @ql_info.insert(cid, ql_collection, ql_period, ql_file)
+        @ql_info.insert(cid, ql_collection, ql_fo_name, ql_attr_seq,
+                        ql_period, ql_file)
       }
 
 
@@ -122,11 +129,19 @@ EventMachine::run do
   EventMachine::defer do
     time_index = 0
     loop do
-      collections = {}
+      documents = {}
       @ql_info.each_collection{|ql|
         if ql.period > 0 && time_index % ql.period == 0
-          unless collections[ql.name]
-            obj = DB[ql.name.to_s].find_one(nil, {:sort => ["$natural", :descending]})
+          unless documents[ql.name]
+            query = {
+              :FunctionalObjectName => ql.fo_name.to_s,
+              :AttributeSequenceName => ql.attr_seq.to_s
+            }
+            # p query
+            option = {:sort => ["$natural", :descending]}
+            obj = DB[ql.collection.to_s].find_one(query, option)
+            # p obj
+            
             if ql.file
               a = {}
               obj.each {|k, v|
@@ -147,9 +162,9 @@ EventMachine::run do
                                  "tmp/"+fileName, k, imageSize)
                 end
               }
-              collections[ql.name] = a.to_json
+              documents[ql.name] = a.to_json
             else
-              collections[ql.name] = obj.to_json
+              documents[ql.name] = obj.to_json
             end
           end
         end
@@ -163,7 +178,7 @@ EventMachine::run do
           name = ql.name
           period = ql.period
           if period > 0 && time_index%period == 0
-            data[cid][name] = collections[name]
+            data[cid][name] = documents[name]
           end
         }
       }

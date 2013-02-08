@@ -60,6 +60,7 @@ link_directories(
 
 set(ANL_MODULES
   src/DAQ.cc
+  src/DAQ2.cc
   )
 
 add_library(${MY_LIBRARY} SHARED

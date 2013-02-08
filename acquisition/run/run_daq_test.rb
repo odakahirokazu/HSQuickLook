@@ -5,13 +5,16 @@ require 'ANLLib'
 
 include DAQTest
 
-app = ANLApp.new
-app.chain :DAQ
+dbName = ( ARGV[0] or "hxiql" )
+dbHost = ( ARGV[1] or "localhost" )
 
-app.set_parameters :DAQ, {
-  "MongoDB host" => "cosmos1",
-  "Database name" => "sgdql",
-  "Instrument" => "SGD-2",
+app = ANLApp.new
+app.chain :DAQ2
+
+app.set_parameters :DAQ2, {
+  "MongoDB host" => dbHost,
+  "Database name" => dbName,
+  "Instrument" => "HXI-1",
 }
 
-app.run(100000, 100)
+app.run(100, 10)

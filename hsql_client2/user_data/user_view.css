@@ -1,0 +1,18 @@
+table#table_main {
+    margin: 12px;
+    float: left;
+}
+
+table#table_scaler {
+    margin: 12px;
+    float: left;
+}
+
+table#table_image {
+    margin: 12px;
+    float: left;
+
+    // position: absolute;
+    // left: 300px;
+    // top: 12px
+}
