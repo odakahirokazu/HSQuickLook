@@ -3,9 +3,7 @@ var log_mode = false;
 
 $(document).ready(function() {
   var KC_ENTER = 13;
-
   $('input#post').click(post);
-  
   $('input#period').keypress(function(e) {
     // log ("key input");
     if(e.keyCode == KC_ENTER) { 
@@ -19,35 +17,28 @@ $(document).ready(function() {
 ws.onopen = function() {
   log("WebSocket opened.");
 
-  if (!log_mode) var target = $('div#main_tables').html("");
+  if (!log_mode) {
+    var target = $('div#main_tables').html("");
+  }
+  
   for (var i=0; i<ql_schema.length; i++) {
     var ql = ql_schema[i];
     var collection = ql.collection;
     var fo = ql.functionalObject;
-    var attr_seq = ql.attributeSequence;
-    var block_name = ql.blockName;
+    var attrs = ql.attributeSequence;
+    var block = ql.blockName;
     var period = ql.period;
-    var file = ql.file;
     if (collection != undefined) {
-      var css_id = (collection+'_'+fo+'_'+attr_seq+'_'+block_name).split('/').join('_').split('.').join('_');
-      log(css_id);
-      
       if (!log_mode) {
-        var table = create_table(block_name, css_id);
+        var table = create_table(block, getCSSID(collection, fo, attrs, block));
         target.append(table);
       }
-      
-      if (file == undefined) {
-        ws.send('{"collection": "'+collection+'", '
-                +'"fo_name": "'+fo+'", '
-                +'"attr_seq": "'+attr_seq+'", '
-                +'"period": '+period+'}');
-      } else {
-        ws.send('{"collection": "'+collection+'",'
-                +'"fo_name": "'+fo+'", '
-                +'"attr_seq": "'+attr_seq+'", '
-                +'"period": '+period+', "file": 1}');
-      }
+      var message = '{"collection": "'+collection+'", '
+          +'"functionalObject": "'+fo+'", '
+          +'"attributeSequence": "'+attrs+'", '
+          +'"period": "'+period+'", '
+          +'"fileDirectory": "'+file_directory+'"}';
+      ws.send(message);
     }
   }
 };
@@ -59,8 +50,13 @@ ws.onclose = function() {
 
 
 ws.onmessage = function(e) {
-  log("WebSocket message: "+e.data);
+  // log("WebSocket message: "+e.data);
   update(e.data);
+};
+
+
+function getCSSID(collection, functionalObject, attributeSequence, blockName) {
+  return (collection+'_'+functionalObject+'_'+attributeSequence+'_'+blockName).split('/').join('_').split('.').join('_');
 };
 
 
@@ -111,7 +107,6 @@ function make_pair(key, value, type, status, format) {
   }
 
   if (type!=undefined) { elem_value.addClass(type); }
-
   if (status!="") { elem_value.addClass(status); }
 
   var pair = $("<tr />").append(elem_key).append(elem_value);
@@ -124,38 +119,41 @@ function update(data) {
   
   for (var i=0; i<ql_schema.length; i++) {
     var ql = ql_schema[i];
-    var collection = ql.collection;
-    var fo = ql.functionalObject;
-    var attr_seq = ql.attributeSequence;
-    var block_name = ql.blockName;
-    var name = collection+'/'+fo+'/'+attr_seq;
+    var qlName = ql.collection+'/'+ql.functionalObject+'/'+ql.attributeSequence;
     if (data_eval!=[]) {
-      var obj = data_eval[name];
+      var obj = data_eval[qlName];
     }
+    // log(obj);
 
     if (obj==undefined) continue;
 
-    var blocks = JSON.parse(obj)["Contents"];
+    var blocks = JSON.parse(obj)["Blocks"];
     for (var ib=0; ib<blocks.length; ib++) {
       var block = blocks[ib];
-      if (block["BlockName"] != block_name) continue;
+      if (block["BlockName"] != ql.blockName) continue;
       var blockData = block["Contents"];
-      var css_id = (collection+'_'+fo+'_'+attr_seq+'_'+block_name).split('/').join('_').split('.').join('_');
-      var target = $('tbody#table_'+css_id+'_body').html("");
+      var cssID = getCSSID(ql.collection, ql.functionalObject, ql.attributeSequence, ql.blockName);
+      var target = $('tbody#table_'+cssID+'_body').html("");
       var contents = ql.contents;
+      
       for (var key in contents) {
         var value = blockData[key];
         // log(obj+" => "+key+": "+value);
         // log("Obj => "+key+": "+value);
         
         if (value==undefined) continue;
-        
         var s = contents[key];
         if ('status' in s) {
-          var status = s.status(value);
+          var statusObj = s.status;
+          if (typeof statusObj == "function") {
+            var status = statusObj(value);
+          } else {
+            var status = statusObj;  
+          }
         } else {
           var status = "";
         }
+        
         var format = s.format;
         var type = s.type;
         target.append(make_pair(key, value, type, status, format));

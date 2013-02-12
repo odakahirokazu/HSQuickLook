@@ -79,7 +79,7 @@ ANLStatus DAQ3::mod_ana()
   
   mongo::BSONArrayBuilder bab;
   bab << b1.obj();
-  b << "Contents" << bab.arr();
+  b << "Blocks" << bab.arr();
   
   mongo::BSONObj p = b.obj();
   m_Connection->insert(ns, p);

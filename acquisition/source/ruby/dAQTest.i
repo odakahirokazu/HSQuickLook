@@ -3,7 +3,6 @@
 // include headers of my modules
 #include "MongoDBClient.hh"
 #include "WaitFor.hh"
-#include "DAQ.hh"
 #include "DAQ2.hh"
 #include "DAQ3.hh"
 
@@ -31,13 +30,6 @@ public:
 };
 
 }
-
-class DAQ : public anl::BasicModule
-{
-public:
-  DAQ();
-  ~DAQ();
-};
 
 class DAQ2 : public anl::BasicModule
 {

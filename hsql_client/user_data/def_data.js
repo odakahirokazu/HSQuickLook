@@ -1,12 +1,6 @@
-// host = "ws://192.168.1.1:8080";
 host = "ws://localhost:8080";
 
-
-var scaler_status =  function(v) {
-  if (v < 20.0) return "safe";
-  else if (v < 40.0) return "warning";
-  else return "error";
-};
+file_directory = "hsql_client/tmp";
 
 ql_schema = [
   {

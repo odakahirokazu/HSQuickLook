@@ -18,21 +18,22 @@ require 'json'
 DBName = ( ARGV[0] or "hxiql" )
 Host = ( ARGV[1] or "localhost" )
 Port = ( ARGV[2] ? ARGV[2].to_i : 27017 )
-FileTmpDir = ( ARGV[2] or ENV["HOME"]+"/Sites/hsql_client/tmp" )
-
+WebSiteDirectory = ENV["HOME"]+"/Sites"
+# WebSiteDirectory = ENV["HOME"]+"/public_html"
 ########################################
 
 
 class QLDocument
-  def initialize(collection, functional_object, attribute_sequence, period)
+  def initialize(collection, functional_object, attribute_sequence, period, file_dir)
     @collection = collection
     @functional_object = functional_object
     @attribute_sequence = attribute_sequence
     @period = period
+    @file_directory = file_dir
     @name = (collection.to_s+'/'+functional_object.to_s+'/'+attribute_sequence.to_s).to_sym
   end
 
-  attr_reader :collection, :functional_object, :attribute_sequence, :period
+  attr_reader :collection, :functional_object, :attribute_sequence, :period, :file_directory
   attr_reader :name
 end
 
@@ -42,8 +43,8 @@ class QLInfo
     @documents = {}
   end
   
-  def insert(client_id, collection, functional_object, attribute_sequence, period)
-    ql = QLDocument.new(collection, functional_object, attribute_sequence, period)
+  def insert(client_id, collection, functional_object, attribute_sequence, period, file_dir)
+    ql = QLDocument.new(collection, functional_object, attribute_sequence, period, file_dir)
     if @documents[client_id]
       @documents[client_id] << ql
     else
@@ -69,7 +70,7 @@ class QLInfo
 end
 
 
-def collect_document(ql, mongodb, file_dir)
+def collect_document(ql, mongodb)
   query = {
     :FunctionalObjectName => ql.functional_object.to_s,
     :AttributeSequenceName => ql.attribute_sequence.to_s
@@ -84,47 +85,24 @@ def collect_document(ql, mongodb, file_dir)
     return nil
   end
   
-  blocks = obj["Contents"]
+  blocks = obj["Blocks"]
   if blocks
     blocks.each do |block|
       contents = block["Contents"]
-      convert_contents(contents)
+      convert_contents(contents, ql.file_directory)
     end
   end
 
-  if nil
-    a = {}
-    obj.each {|k, v|
-      if v.class==BSON::OrderedHash && fileName = v["FileName"]
-        path = file_dir+"/"+fileName
-        # p v['Data']
-        File.open(path, "w+b") {|fout|
-          fout.write(v['Data'].to_s)
-        }
-        height = v['Height']
-        width = v['Width']
-        imageSize = ""
-        if height && width
-          imageSize = sprintf(" height=\"%d\" width=\"%d\"",
-                              height, width)
-        end
-        a[k] = sprintf("<img src=\"%s\" alt=\"%s\"%s>",
-                       "tmp/"+fileName, k, imageSize)
-      end
-    }
-    return a.to_json
-  else
-    return obj.to_json
-  end
+  return obj.to_json
 end
 
 
-def convert_contents(obj)
+def convert_contents(obj, file_dir)
   obj.each do |k, v|
     next unless v.class == BSON::OrderedHash
     if v["DataType"] == "image"
       fileName = v["FileName"]
-      path = FileTmpDir+"/"+fileName
+      path = file_dir+"/"+fileName
       # p v['Data']
       File.open(path, "w+b") {|fout|
         fout.write(v['Data'].to_s)
@@ -156,7 +134,7 @@ EventMachine::run do
   @channel = EM::Channel.new
   @client_id = 0
   @ql_info = QLInfo.new
-
+  
   EventMachine::WebSocket.start(:host => "0.0.0.0", :port => 8080) do |ws|
     ws.onopen {
       @client_id = @client_id + 1
@@ -179,10 +157,12 @@ EventMachine::run do
         puts "Client #{sid}: #{mes}"
         ql = JSON.parse(mes)
         collection = ql["collection"].to_sym
-        fo = ql["fo_name"].to_sym
-        as = ql["attr_seq"].to_sym
+        fo = ql["functionalObject"].to_sym
+        as = ql["attributeSequence"].to_sym
         period = ql["period"].to_i
-        @ql_info.insert(cid, collection, fo, as, period)
+        file_dir = (ql["fileDirectory"] or "hsql_client/tmp")
+        file_dir_full = WebSiteDirectory+"/"+file_dir
+        @ql_info.insert(cid, collection, fo, as, period, file_dir_full)
       }
 
       ws.onclose {
@@ -202,7 +182,7 @@ EventMachine::run do
       @ql_info.each_collection{|ql|
         next if documents[ql.name]
         if ql.period > 0 && (time_index % ql.period) == 0
-          documents[ql.name] = collect_document(ql, DB, FileTmpDir)
+          documents[ql.name] = collect_document(ql, DB)
         end
       }
 
