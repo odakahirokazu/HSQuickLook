@@ -59,8 +59,11 @@ link_directories(
   )
 
 set(ANL_MODULES
+  src/MongoDBClient.cc
+  src/WaitFor.cc
   src/DAQ.cc
   src/DAQ2.cc
+  src/DAQ3.cc
   )
 
 add_library(${MY_LIBRARY} SHARED

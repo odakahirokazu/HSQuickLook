@@ -70,15 +70,24 @@ ql_schema = [
       }
     }
   }
-  ,
-  {
-    "collection" : "image",
-    "functionalObject": "ANALYSIS",
-    "attributeSequence": "IMAGES",
-    "period" : 1,
-    "blockName" : "Block_images",
-    "contents" : {
-      "HXI_IMAGE" : {"type": "image"}
-    }
-  }
+
+  // {
+  //   "collection" : "scaler",
+  //   "period" : 2,
+  //   "contents" : {
+  //     "Scaler 1" : {"type": "int", "format": "%3d", "status": scaler_status },
+  //     "Scaler 2" : {"type": "int", "format": "%3d", "status": scaler_status },
+  //     "Scaler 3" : {"type": "int", "format": "%3d", "status": scaler_status },
+  //     "Scaler 10" : {"type": "int", "format": "%3d", "status": scaler_status }
+  //   }
+  // },
+
+  // {
+  //   "collection" : "image",
+  //   "period" : 10,
+  //   "file" : 1,
+  //   "contents" : {
+  //     "Image" : {"type": "image" }
+  //   }
+  // }
 ];

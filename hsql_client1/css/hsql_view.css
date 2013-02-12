@@ -1,0 +1,36 @@
+body {
+    background-color: #000;
+    color: #FFF;
+    padding: 1em;
+    font-family: monospace;
+    font-size: 12pt;
+}
+
+.error {
+    color: #F00;
+}
+
+.warning {
+    color: #FF0;
+}
+
+.safe {
+    color: #0F0;
+}
+
+.int {
+    text-align :right;
+}
+
+.float {
+    text-align :right;
+}
+
+div#main_tables {
+    position: relative;
+}
+
+table {
+    float: left;
+    margin: 8px;
+}

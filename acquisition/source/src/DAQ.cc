@@ -2,19 +2,16 @@
 
 #include <cstdlib>
 #include <fstream>
-#include <unistd.h>
 #include <boost/format.hpp>
-#include <mongo/client/dbclient.h>
-#include <mongo/bson/bsonobjbuilder.h>
+#include "MongoDBClient.hh"
 
 using namespace anl;
 
 DAQ::DAQ()
-  : m_MDBHost("localhost"), m_MDBName("hxiql"),
+  : m_Connection(0),
     m_Instrument("HXI-1"),
     m_ImageFileName("image.png"), m_ImageHeight(600), m_ImageWidth(600)
 {
-  m_Connection = new mongo::DBClientConnection;
 }
 
 
@@ -25,8 +22,6 @@ DAQ::~DAQ()
 
 ANLStatus DAQ::mod_startup()
 {
-  register_parameter(&m_MDBHost, "MongoDB host");
-  register_parameter(&m_MDBName, "Database name");
   register_parameter(&m_Instrument, "Instrument");
 
   register_parameter(&m_ImageFileName, "Image file");
@@ -39,37 +34,16 @@ ANLStatus DAQ::mod_startup()
 
 ANLStatus DAQ::mod_init()
 {
-  try {
-    m_Connection->connect(m_MDBHost);
-  }
-  catch (mongo::DBException& e) {
-    std::cout << "caught " << e.what() << std::endl;
-    return AS_QUIT_ERR;
-  }
+  GetANLModuleNC("MongoDBClient", &m_Connection);
 
-  return AS_OK;
-}
+  const int size(1*1024*1024);
+  const std::string nsMain("hxiql.main");
+  const std::string nsScaler("hxiql.scaler");
+  const std::string nsImage("hxiql.image");
 
-
-ANLStatus DAQ::mod_his()
-{
-  return AS_OK;
-}
-
-
-ANLStatus DAQ::mod_bgnrun()
-{
-  const std::string dbName(m_MDBName);
-  const std::string nsMain(dbName+".main");
-  const std::string nsScaler(dbName+".scaler");
-  const std::string nsImage(dbName+".image");
-
-  const int size = 1*1024*1024;
-  const bool capped = true;
-
-  m_Connection->createCollection(nsMain, size, capped);
-  m_Connection->createCollection(nsScaler, size, capped);
-  m_Connection->createCollection(nsImage, size*100, capped);
+  m_Connection->createCappedCollection(nsMain, size);
+  m_Connection->createCappedCollection(nsScaler, size);
+  m_Connection->createCappedCollection(nsImage, size*100);
 
   return AS_OK;
 }
@@ -79,10 +53,9 @@ ANLStatus DAQ::mod_ana()
 {
   using boost::format;
 
-  const std::string dbName(m_MDBName);
-  const std::string nsMain(dbName+".main");
-  const std::string nsScaler(dbName+".scaler");
-  const std::string nsImage(dbName+".image");
+  const std::string nsMain("hxiql.main");
+  const std::string nsScaler("hxiql.scaler");
+  const std::string nsImage("hxiql.image");
 
   static int ii(0);
 
@@ -133,21 +106,7 @@ ANLStatus DAQ::mod_ana()
     m_Connection->insert(nsImage, p);
   }
     
-  usleep(100000);
-
   ++ii;
 
-  return AS_OK;
-}
-
-
-ANLStatus DAQ::mod_endrun()
-{
-  return AS_OK;
-}
-
-
-ANLStatus DAQ::mod_exit()
-{
   return AS_OK;
 }

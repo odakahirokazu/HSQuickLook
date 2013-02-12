@@ -11,7 +11,7 @@
 
 #include "BasicModule.hh"
 
-namespace mongo { class DBClientConnection; }
+namespace hxisgd { class MongoDBClient; }
 
 class DAQ2 : public anl::BasicModule
 {
@@ -24,14 +24,10 @@ public:
   
   anl::ANLStatus mod_startup();
   anl::ANLStatus mod_init();
-  anl::ANLStatus mod_bgnrun();
   anl::ANLStatus mod_ana();
 
-
 private:
-  mongo::DBClientConnection *m_Connection;
-  std::string m_MDBHost;
-  std::string m_MDBName;
+  hxisgd::MongoDBClient* m_Connection;
   std::string m_Instrument;
 };
 

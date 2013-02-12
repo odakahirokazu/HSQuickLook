@@ -6,20 +6,20 @@
  *
  */
 
-#ifndef DAQ_HH
-#define DAQ_HH
+#ifndef DAQ3_HH
+#define DAQ3_HH
 
 #include "BasicModule.hh"
 
 namespace hxisgd { class MongoDBClient; }
 
-class DAQ : public anl::BasicModule
+class DAQ3 : public anl::BasicModule
 {
 public:
-  DAQ();
-  ~DAQ();
+  DAQ3();
+  ~DAQ3();
 
-  std::string module_name() const { return "DAQ"; }
+  std::string module_name() const { return "DAQ3"; }
   std::string module_version() const { return "1.0"; }
   
   anl::ANLStatus mod_startup();
@@ -34,4 +34,4 @@ private:
   int m_ImageWidth;
 };
 
-#endif // DAQ_HH
+#endif // DAQ3_HH
