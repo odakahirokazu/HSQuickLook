@@ -5,6 +5,7 @@
 #   hsql WebSocket server
 #   Hirokazu Odaka
 #   2012-10-08
+#   2013-02-13 (last modified)
 ########################################
 
 require 'rubygems'
@@ -131,8 +132,9 @@ def convert_contents(obj, file_dirs)
         imageSize = sprintf(" height=\"%d\" width=\"%d\"",
                             height, width)
       end
+      query = "?%d" % Time.now.to_i
       obj[k] = sprintf("<img src=\"%s\" alt=\"%s\"%s>",
-                       "tmp/"+fileName, k, imageSize)
+                       "tmp/"+fileName+query, k, imageSize)
     end
   end
 end
