@@ -20,6 +20,11 @@ ws.onopen = function() {
   if (!log_mode) {
     var target = $('div#main_tables').html("");
   }
+
+  if (file_directory != undefined) {
+    var message = '{"fileDirectory": "'+file_directory+'"}';
+    ws.send(message);
+  }
   
   for (var i=0; i<ql_schema.length; i++) {
     var ql = ql_schema[i];
@@ -36,8 +41,7 @@ ws.onopen = function() {
       var message = '{"collection": "'+collection+'", '
           +'"functionalObject": "'+fo+'", '
           +'"attributeSequence": "'+attrs+'", '
-          +'"period": "'+period+'", '
-          +'"fileDirectory": "'+file_directory+'"}';
+          +'"period": "'+period+'"}';
       ws.send(message);
     }
   }

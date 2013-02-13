@@ -24,16 +24,15 @@ WebSiteDirectory = ENV["HOME"]+"/Sites"
 
 
 class QLDocument
-  def initialize(collection, functional_object, attribute_sequence, period, file_dir)
+  def initialize(collection, functional_object, attribute_sequence, period)
     @collection = collection
     @functional_object = functional_object
     @attribute_sequence = attribute_sequence
     @period = period
-    @file_directory = file_dir
     @name = (collection.to_s+'/'+functional_object.to_s+'/'+attribute_sequence.to_s).to_sym
   end
 
-  attr_reader :collection, :functional_object, :attribute_sequence, :period, :file_directory
+  attr_reader :collection, :functional_object, :attribute_sequence, :period
   attr_reader :name
 end
 
@@ -43,8 +42,8 @@ class QLInfo
     @documents = {}
   end
   
-  def insert(client_id, collection, functional_object, attribute_sequence, period, file_dir)
-    ql = QLDocument.new(collection, functional_object, attribute_sequence, period, file_dir)
+  def insert(client_id, collection, functional_object, attribute_sequence, period)
+    ql = QLDocument.new(collection, functional_object, attribute_sequence, period)
     if @documents[client_id]
       @documents[client_id] << ql
     else
@@ -56,16 +55,26 @@ class QLInfo
     @documents.delete(client_id)
   end
 
-  def each_collection()
-    @documents.values.flatten.each{|ql|
-      yield ql
-    }
+  def collections()
+    @documents.values.flatten
   end
 
   def each_client_info()
     @documents.each{|c|
       yield c
     }
+  end
+
+  def clients(name, time_index=0)
+    list = []
+    @documents.each{|client_id, ql_list|
+      ql_list.each{|ql|
+        if ql.name==name && ql.period>0 && (time_index % ql.period)==0
+          list << client_id
+        end
+      }
+    }
+    return list.uniq
   end
 end
 
@@ -84,12 +93,17 @@ def collect_document(ql, mongodb)
   if obj.class != BSON::OrderedHash
     return nil
   end
-  
-  blocks = obj["Blocks"]
+
+  return obj
+end
+
+
+def convert_object(obj, file_dirs)
+  blocks = obj["Blocks"] if obj
   if blocks
     blocks.each do |block|
       contents = block["Contents"]
-      convert_contents(contents, ql.file_directory)
+      convert_contents(contents, file_dirs)
     end
   end
 
@@ -97,16 +111,19 @@ def collect_document(ql, mongodb)
 end
 
 
-def convert_contents(obj, file_dir)
+def convert_contents(obj, file_dirs)
   obj.each do |k, v|
     next unless v.class == BSON::OrderedHash
     if v["DataType"] == "image"
       fileName = v["FileName"]
-      path = file_dir+"/"+fileName
-      # p v['Data']
-      File.open(path, "w+b") {|fout|
-        fout.write(v['Data'].to_s)
-      }
+      data = v['Data'].to_s
+      # p data
+      file_dirs.each do |dir|
+        path = dir+"/"+fileName
+        File.open(path, "w+b") {|fout|
+          fout.write(data.to_s)
+        }
+      end
       height = v['Height']
       width = v['Width']
       imageSize = ""
@@ -134,6 +151,7 @@ EventMachine::run do
   @channel = EM::Channel.new
   @client_id = 0
   @ql_info = QLInfo.new
+  @file_directory_map = {}
   
   EventMachine::WebSocket.start(:host => "0.0.0.0", :port => 8080) do |ws|
     ws.onopen {
@@ -156,13 +174,16 @@ EventMachine::run do
       ws.onmessage {|mes|
         puts "Client #{sid}: #{mes}"
         ql = JSON.parse(mes)
-        collection = ql["collection"].to_sym
-        fo = ql["functionalObject"].to_sym
-        as = ql["attributeSequence"].to_sym
-        period = ql["period"].to_i
-        file_dir = (ql["fileDirectory"] or "hsql_client/tmp")
-        file_dir_full = WebSiteDirectory+"/"+file_dir
-        @ql_info.insert(cid, collection, fo, as, period, file_dir_full)
+        if file_dir = ql["fileDirectory"]
+          file_dir_full = WebSiteDirectory+"/"+file_dir
+          @file_directory_map[cid] = file_dir_full
+        else
+          collection = ql["collection"].to_sym
+          fo = ql["functionalObject"].to_sym
+          as = ql["attributeSequence"].to_sym
+          period = ql["period"].to_i
+          @ql_info.insert(cid, collection, fo, as, period)
+        end
       }
 
       ws.onclose {
@@ -178,22 +199,25 @@ EventMachine::run do
   EventMachine::defer do
     time_index = 0
     loop do
-      documents = {}
-      @ql_info.each_collection{|ql|
-        next if documents[ql.name]
-        if ql.period > 0 && (time_index % ql.period) == 0
-          documents[ql.name] = collect_document(ql, DB)
-        end
-      }
-
       data = {}
       @ql_info.each_client_info{|client_info|
         cid = client_info[0]
         data[cid] = {}
-        client_info[1].each{|ql|
-          if ql.period > 0 && (time_index % ql.period) == 0
-            data[cid][ql.name] = documents[ql.name]
-          end
+      }
+
+      names = {}
+      @ql_info.collections.each{|ql|
+        next if names[ql.name]
+        
+        clients = @ql_info.clients(ql.name, time_index)
+        next if clients.size==0
+        
+        obj = collect_document(ql, DB) 
+        names[ql.name] = true
+        file_dirs = clients.map{|c| @file_directory_map[c] }.uniq
+        json = convert_object(obj, file_dirs)
+        clients.each {|cid|
+          data[cid][ql.name] = json
         }
       }
 
