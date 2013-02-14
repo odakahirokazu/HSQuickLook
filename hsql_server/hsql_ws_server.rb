@@ -92,7 +92,7 @@ def collect_document(ql, mongodb)
   # p obj
   
   if obj.class != BSON::OrderedHash
-    return nil
+    obj = {}
   end
 
   return obj
@@ -100,10 +100,10 @@ end
 
 
 def convert_object(obj, file_dirs)
-  blocks = obj["Blocks"] if obj
+  blocks = obj["Blocks"]
   if blocks
     blocks.each do |block|
-      contents = block["Contents"]
+      contents = ( block["Contents"] or {} )
       convert_contents(contents, file_dirs)
     end
   end
@@ -121,9 +121,14 @@ def convert_contents(obj, file_dirs)
       # p data
       file_dirs.each do |dir|
         path = dir+"/"+fileName
-        File.open(path, "w+b") {|fout|
-          fout.write(data.to_s)
-        }
+        begin
+          File.open(path, "w+b") {|fout|
+            fout.write(data.to_s)
+          }
+        rescue => ex
+          p ex
+          puts "cannot write an image file."
+        end
       end
       height = v['Height']
       width = v['Width']
@@ -174,17 +179,23 @@ EventMachine::run do
       puts "Client #{sid} --- connected"
 
       ws.onmessage {|mes|
-        puts "Client #{sid}: #{mes}"
-        ql = JSON.parse(mes)
-        if file_dir = ql["fileDirectory"]
-          file_dir_full = WebSiteDirectory+"/"+file_dir
-          @file_directory_map[cid] = file_dir_full
-        else
-          collection = ql["collection"].to_sym
-          fo = ql["functionalObject"].to_sym
-          as = ql["attributeSequence"].to_sym
-          period = ql["period"].to_i
-          @ql_info.insert(cid, collection, fo, as, period)
+        begin
+          puts "Client #{sid}: #{mes}"
+          ql = JSON.parse(mes)
+          if file_dir = ql["fileDirectory"]
+            file_dir_full = WebSiteDirectory+"/"+file_dir
+            @file_directory_map[cid] = file_dir_full
+          elsif collection = ql["collection"]
+            collection = collection.to_sym
+            fo = ql["functionalObject"].to_sym
+            as = ql["attributeSequence"].to_sym
+            period = ql["period"].to_i
+            @ql_info.insert(cid, collection, fo, as, period)
+          else
+            puts "Received an unknown-type message."
+          end
+        rescue => ex
+          p ex
         end
       }
 
