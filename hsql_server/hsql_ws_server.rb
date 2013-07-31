@@ -16,7 +16,7 @@ require 'json'
 ########################################
 ### QL definition
 ########################################
-DBName = ( ARGV[0] or "hxiql" )
+DBName = ( ARGV[0] or "hxi" )
 Host = ( ARGV[1] or "localhost" )
 Port = ( ARGV[2] ? ARGV[2].to_i : 27017 )
 WebSiteDirectory = ENV["HOME"]+"/Sites"

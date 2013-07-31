@@ -125,13 +125,21 @@ function update(data) {
     var ql = ql_schema[i];
     var qlName = ql.collection+'/'+ql.functionalObject+'/'+ql.attributeSequence;
     if (data_eval!=[]) {
-      var obj = data_eval[qlName];
+      var data_ql = data_eval[qlName];
     }
-    // log(obj);
+    // log(data_ql);
 
-    if (obj==undefined) continue;
+    if (data_ql==undefined) continue;
 
-    var blocks = JSON.parse(obj)["Blocks"];
+    var obj_ql = JSON.parse(data_ql);
+
+    // show time
+    var ti = obj_ql["TI"];
+    var unixtime = obj_ql["UNIXTIME"];
+    $('p#time').html(unixtime+" | TI: "+ti);
+
+    // make tables
+    var blocks = obj_ql["Blocks"];
     for (var ib=0; ib<blocks.length; ib++) {
       var block = blocks[ib];
       if (block["BlockName"] != ql.blockName) continue;
@@ -142,8 +150,6 @@ function update(data) {
       
       for (var key in contents) {
         var value = blockData[key];
-        // log(obj+" => "+key+": "+value);
-        // log("Obj => "+key+": "+value);
         
         if (value==undefined) continue;
         var s = contents[key];

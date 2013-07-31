@@ -9,7 +9,7 @@ file_directory = "hsql_client_hxiql/tmp";
 
 ql_schema = [
   {
-    "collection":"hk",
+    "collection":"hk1",
     "functionalObject":"/HXI1.USR",
     "attributeSequence":"USR_HK",
     "period":"1",
@@ -51,7 +51,7 @@ ql_schema = [
     }
   },
   {
-    "collection":"hk",
+    "collection":"hk1",
     "functionalObject":"/HXI1.USR",
     "attributeSequence":"USR_HK",
     "period":"1",
@@ -98,7 +98,7 @@ ql_schema = [
     }
   },
   {
-    "collection":"hk",
+    "collection":"hk1",
     "functionalObject":"/HXI1.USR",
     "attributeSequence":"USR_HK",
     "period":"1",
@@ -118,7 +118,7 @@ ql_schema = [
     }
   },
   {
-    "collection":"hk",
+    "collection":"hk1",
     "functionalObject":"/HXI1.USR",
     "attributeSequence":"USR_HK",
     "period":"1",
@@ -172,7 +172,7 @@ ql_schema = [
     }
   },
   {
-    "collection":"hk",
+    "collection":"hk1",
     "functionalObject":"/HXI1.USR",
     "attributeSequence":"USR_HK",
     "period":"1",
@@ -218,7 +218,7 @@ ql_schema = [
     }
   },
   {
-    "collection":"hk",
+    "collection":"hk1",
     "functionalObject":"/HXI1.USR",
     "attributeSequence":"USR_HK",
     "period":"1",
@@ -240,7 +240,7 @@ ql_schema = [
     }
   },
   {
-    "collection":"hk",
+    "collection":"hk1",
     "functionalObject":"/HXI1.USR",
     "attributeSequence":"USR_HK",
     "period":"1",
