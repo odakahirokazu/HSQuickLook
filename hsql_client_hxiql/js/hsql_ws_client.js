@@ -1,41 +1,54 @@
 var ws = new WebSocket(host);
-var log_mode = false;
+var logMode = false;
+
+function sendTimeFunc(e) {
+  var KC_ENTER = 13;
+  // log ("key input");
+  if(e.keyCode == KC_ENTER) { 
+    e.preventDefault();
+    sendTime();
+  }
+};
 
 $(document).ready(function() {
-  var KC_ENTER = 13;
-  $('input#post').click(post);
-  $('input#period').keypress(function(e) {
-    // log ("key input");
-    if(e.keyCode == KC_ENTER) { 
-      e.preventDefault();
-      post();
-    }
-  });
+  $('input#post_ql').click(sendTimeNow);
+  $('input#post_dl').click(sendTime);
+  $('input#time_0').keypress(sendTimeFunc);
+  $('input#time_1').keypress(sendTimeFunc);
+  $('input#time_2').keypress(sendTimeFunc);
+  $('input#time_3').keypress(sendTimeFunc);
+  $('input#time_4').keypress(sendTimeFunc);
+  $('input#time_5').keypress(sendTimeFunc);
 });
 
 
 ws.onopen = function() {
   log("WebSocket opened.");
 
-  if (!log_mode) {
+  sendTimeNow();
+
+  $('h1#title').html(title);
+  $('title').html(title);
+
+  if (!logMode) {
     var target = $('div#main_tables').html("");
   }
 
-  if (file_directory != undefined) {
-    var message = '{"fileDirectory": "'+file_directory+'"}';
+  if (fileDirectory != undefined) {
+    var message = '{"fileDirectory": "'+fileDirectory+'"}';
     ws.send(message);
   }
-  
-  for (var i=0; i<ql_schema.length; i++) {
-    var ql = ql_schema[i];
+
+  for (var i=0; i<qlSchema.length; i++) {
+    var ql = qlSchema[i];
     var collection = ql.collection;
     var fo = ql.functionalObject;
     var attrs = ql.attributeSequence;
     var block = ql.blockName;
     var period = ql.period;
     if (collection != undefined) {
-      if (!log_mode) {
-        var table = create_table(block, getCSSID(collection, fo, attrs, block));
+      if (!logMode) {
+        var table = createTable(block, getCSSID(collection, fo, attrs, block));
         target.append(table);
       }
       var message = '{"collection": "'+collection+'", '
@@ -70,29 +83,47 @@ function post() {
 };
 
 
+function sendTime() {
+  var year = $('input#time_0').val();
+  var month = $('input#time_1').val();
+  var day = $('input#time_2').val();
+  var hour = $('input#time_3').val();
+  var minute = $('input#time_4').val();
+  var second = $('input#time_5').val();
+  var message = '{"time": "DL '+year+':'+month+':'+day+':'+hour+':'+minute+':'+second+'"}';
+  ws.send(message);    
+}
+
+
+function sendTimeNow() {
+  var message = '{"time": "QL" }';
+  ws.send(message);    
+}
+
+
 function log(message) {
   var mes_div = $("<div />").html(message);
   $('div#log').prepend(mes_div);
 };
 
 
-function create_table(name, css_id) {
+function createTable(name, cssID) {
   var table = $("<table />").html("");
   table.attr("frame", "border");
   table.attr("rules", "all");
-  table.attr("id", "table_"+css_id);
+  table.attr("id", "table_"+cssID);
   table.addClass("ql_table");
   
   var thead = $("<thead/>").html("");
-  var thead_row = $("<tr/>").html("");
-  var thead_title = $("<th/>").html(name);
-  thead_title.attr("colspan", "2");
-  thead_title.attr("id", "table_"+css_id+"_title");
-  thead_row.append(thead_title);
-  thead.append(thead_row);
+  var theadRow = $("<tr/>").html("");
+  var theadTitle = $("<th/>").html(name);
+  theadTitle.attr("colspan", "2");
+  theadTitle.attr("id", "table_"+cssID+"_title");
+  theadRow.append(theadTitle);
+  thead.append(theadRow);
   
   var tbody = $("<tbody/>").html("");
-  tbody.attr("id", "table_"+css_id+"_body");
+  tbody.attr("id", "table_"+cssID+"_body");
   
   table.append(thead);
   table.append(tbody);
@@ -101,45 +132,41 @@ function create_table(name, css_id) {
 }
 
 
-function make_pair(key, value, type, status, format) {
-  var elem_key = $("<td />").html(key);
+function makePair(key, value, type, status, format) {
+  var elemKey = $("<td />").html(key);
 
   if (format==undefined) {
-    var elem_value = $("<td />").html(value);
+    var elemValue = $("<td />").html(value);
   } else {
-    var elem_value = $("<td />").html(sprintf(format, value));
+    var elemValue = $("<td />").html(sprintf(format, value));
   }
 
-  if (type!=undefined) { elem_value.addClass(type); }
-  if (status!="") { elem_value.addClass(status); }
+  if (type!=undefined) { elemValue.addClass(type); }
+  if (status!="") { elemValue.addClass(status); }
 
-  var pair = $("<tr />").append(elem_key).append(elem_value);
+  var pair = $("<tr />").append(elemKey).append(elemValue);
   return pair;
 }
 
 
 function update(data) {
-  var data_eval = JSON.parse( data );
-  
-  for (var i=0; i<ql_schema.length; i++) {
-    var ql = ql_schema[i];
+  var dataEval = JSON.parse( data );
+
+  for (var i=0; i<qlSchema.length; i++) {
+    var ql = qlSchema[i];
     var qlName = ql.collection+'/'+ql.functionalObject+'/'+ql.attributeSequence;
-    if (data_eval!=[]) {
-      var data_ql = data_eval[qlName];
+    if (dataEval!=[]) {
+      var obj = dataEval[qlName];
     }
-    // log(data_ql);
-
-    if (data_ql==undefined) continue;
-
-    var obj_ql = JSON.parse(data_ql);
+    if (obj==undefined) continue;
 
     // show time
-    var ti = obj_ql["TI"];
-    var unixtime = obj_ql["UNIXTIME"];
+    var ti = obj["TI"];
+    var unixtime = obj["UNIXTIME"];
     $('p#time').html(unixtime+" | TI: "+ti);
 
     // make tables
-    var blocks = obj_ql["Blocks"];
+    var blocks = obj["Blocks"];
     for (var ib=0; ib<blocks.length; ib++) {
       var block = blocks[ib];
       if (block["BlockName"] != ql.blockName) continue;
@@ -166,7 +193,7 @@ function update(data) {
         
         var format = s.format;
         var type = s.type;
-        target.append(make_pair(key, value, type, status, format));
+        target.append(makePair(key, value, type, status, format));
       }
     }
   }

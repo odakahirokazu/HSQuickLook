@@ -1,13 +1,15 @@
 host = "ws://localhost:8080";
 
-var get_status_error = function(v) {
+var getStatusError = function(v) {
   if (v==0) return "safe";
   else return "error";
 };
 
-file_directory = "hsql_client_hxiql/tmp";
+fileDirectory = "hsql_client_hxiql/tmp";
 
-ql_schema = [
+title = "HXI-1 USER HK";
+
+qlSchema = [
   {
     "collection":"hk1",
     "functionalObject":"/HXI1.USR",
@@ -17,20 +19,20 @@ ql_schema = [
     "contents":{
       "DE_MODE":{"type":"int","status":"ok","format":"%2X"},
       "TOUT_CNT_CPMU_HK":{"type":"int","status":"ok","format":"%2X"},
-      "DERR_CNT_CPMU_HK":{"type":"int","status":get_status_error,"format":"%2X"},
+      "DERR_CNT_CPMU_HK":{"type":"int","status":getStatusError,"format":"%2X"},
       "TOUT_CNT_APMU_HK":{"type":"int","status":"ok","format":"%2X"},
-      "DERR_CNT_APMU_HK":{"type":"int","status":get_status_error,"format":"%2X"},
+      "DERR_CNT_APMU_HK":{"type":"int","status":getStatusError,"format":"%2X"},
       "TOUT_CNT_APMU_SCL":{"type":"int","status":"ok","format":"%2X"},
-      "DERR_CNT_APMU_SCL":{"type":"int","status":get_status_error,"format":"%2X"},
+      "DERR_CNT_APMU_SCL":{"type":"int","status":getStatusError,"format":"%2X"},
       "TOUT_CNT_APMU_HIST":{"type":"int","status":"ok","format":"%2X"},
-      "DERR_CNT_APMU_HIST":{"type":"int","status":get_status_error,"format":"%2X"},
+      "DERR_CNT_APMU_HIST":{"type":"int","status":getStatusError,"format":"%2X"},
       "TOUT_CNT_APMU_GRB":{"type":"int","status":"ok","format":"%2X"},
-      "DERR_CNT_APMU_GRB":{"type":"int","status":get_status_error,"format":"%2X"},
+      "DERR_CNT_APMU_GRB":{"type":"int","status":getStatusError,"format":"%2X"},
       "TOUT_CNT_SCL":{"type":"int","status":"ok","format":"%2X"},
-      "DERR_CNT_SCL":{"type":"int","status":get_status_error,"format":"%2X"},
+      "DERR_CNT_SCL":{"type":"int","status":getStatusError,"format":"%2X"},
       "TOUT_CNT_ASICREG":{"type":"int","status":"ok","format":"%2X"},
-      "DERR_CNT_ASICREG":{"type":"int","status":get_status_error,"format":"%2X"},
-      "DERR_CNT_EVNT":{"type":"int","status":get_status_error,"format":"%2X"},
+      "DERR_CNT_ASICREG":{"type":"int","status":getStatusError,"format":"%2X"},
+      "DERR_CNT_EVNT":{"type":"int","status":getStatusError,"format":"%2X"},
       "EVNT_DERR_SIZE":{"type":"int","status":"ok","format":"%4X"},
       "EVNT_RCV_CNT":{"type":"int","status":"ok","format":"%4X"},
       "EVNT_REJ_CNT":{"type":"int","status":"ok","format":"%4X"},
@@ -44,7 +46,7 @@ ql_schema = [
       "LOAD_CNT":{"type":"int","status":"ok","format":"%2X"},
       "CAL_BUSY":{"type":"int","status":"ok","format":"%2X"},
       "CHARGE":{"type":"int","status":"ok","format":"%2X"},
-      "ERR_CNT":{"type":"int","status":get_status_error,"format":"%2X"},
+      "ERR_CNT":{"type":"int","status":getStatusError,"format":"%2X"},
       "ERR_TSK_ID":{"type":"int","status":"ok","format":"%2X"},
       "ERR_CODE":{"type":"int","status":"ok","format":"%4X"},
       "ERR_DETAIL":{"type":"int","status":"ok","format":"%4X"}
@@ -58,18 +60,18 @@ ql_schema = [
     "blockName":"MIO1_REG_block",
     "contents":{
       "MIO1_UTI_INTER":{"type":"int","status":"ok","format":"%8X"},
-      "MIO1_EDAC_ERR_CNT":{"type":"int","status":get_status_error,"format":"%2X"},
+      "MIO1_EDAC_ERR_CNT":{"type":"int","status":getStatusError,"format":"%2X"},
       "MIO1_EDAC_ERR_LTIME":{"type":"int","status":"ok","format":"%8X"},
       "MIO1_EDAC_ERR_LADD":{"type":"int","status":"ok","format":"%8X"},
-      "MIO1_RMAP_ERR_CNT":{"type":"int","status":get_status_error,"format":"%2X"},
+      "MIO1_RMAP_ERR_CNT":{"type":"int","status":getStatusError,"format":"%2X"},
       "MIO1_RMAP_ERR_LADD":{"type":"int","status":"ok","format":"%8X"},
       "MIO1_RMAP_ERR_LTIME":{"type":"int","status":"ok","format":"%8X"},
-      "CPMU_BIT_ERR_FLG":{"type":"int","status":get_status_error,"format":"%2X"},
-      "CPMU_BYTE_ERR_FLG":{"type":"int","status":get_status_error,"format":"%2X"},
-      "CPMU_CRC_ERR_FLG":{"type":"int","status":get_status_error,"format":"%2X"},
-      "CPMU_BIT_ERR_CNT":{"type":"int","status":get_status_error,"format":"%2X"},
-      "CPMU_BYTE_ERR_CNT":{"type":"int","status":get_status_error,"format":"%2X"},
-      "CPMU_CRC_ERR_CNT":{"type":"int","status":get_status_error,"format":"%2X"},
+      "CPMU_BIT_ERR_FLG":{"type":"int","status":getStatusError,"format":"%2X"},
+      "CPMU_BYTE_ERR_FLG":{"type":"int","status":getStatusError,"format":"%2X"},
+      "CPMU_CRC_ERR_FLG":{"type":"int","status":getStatusError,"format":"%2X"},
+      "CPMU_BIT_ERR_CNT":{"type":"int","status":getStatusError,"format":"%2X"},
+      "CPMU_BYTE_ERR_CNT":{"type":"int","status":getStatusError,"format":"%2X"},
+      "CPMU_CRC_ERR_CNT":{"type":"int","status":getStatusError,"format":"%2X"},
       "CPMU_SND_CNT":{"type":"int","status":"ok","format":"%4X"},
       "CPMU_CC3_PON":{"type":"int","status":"ok","format":"%2X"},
       "CPMU_CC2_PON":{"type":"int","status":"ok","format":"%2X"},
@@ -79,14 +81,14 @@ ql_schema = [
       "CPMU_FANOUT_PON":{"type":"int","status":"ok","format":"%2X"},
       "CPMU_HV_CC23_PON":{"type":"int","status":"ok","format":"%2X"},
       "CPMU_HV_CAM_PON":{"type":"int","status":"ok","format":"%2X"},
-      "APMU_2BIT_ERR_FLG":{"type":"int","status":get_status_error,"format":"%2X"},
-      "APMU_BIT_ERR_FLG":{"type":"int","status":get_status_error,"format":"%2X"},
-      "APMU_BYTE_ERR_FLG":{"type":"int","status":get_status_error,"format":"%2X"},
-      "APMU_CRC_ERR_FLG":{"type":"int","status":get_status_error,"format":"%2X"},
-      "APMU_2BIT_ERR_CNT":{"type":"int","status":get_status_error,"format":"%2X"},
-      "APMU_BIT_ERR_CNT":{"type":"int","status":get_status_error,"format":"%2X"},
-      "APMU_BYTE_ERR_CNT":{"type":"int","status":get_status_error,"format":"%2X"},
-      "APMU_CRC_ERR_CNT":{"type":"int","status":get_status_error,"format":"%2X"},
+      "APMU_2BIT_ERR_FLG":{"type":"int","status":getStatusError,"format":"%2X"},
+      "APMU_BIT_ERR_FLG":{"type":"int","status":getStatusError,"format":"%2X"},
+      "APMU_BYTE_ERR_FLG":{"type":"int","status":getStatusError,"format":"%2X"},
+      "APMU_CRC_ERR_FLG":{"type":"int","status":getStatusError,"format":"%2X"},
+      "APMU_2BIT_ERR_CNT":{"type":"int","status":getStatusError,"format":"%2X"},
+      "APMU_BIT_ERR_CNT":{"type":"int","status":getStatusError,"format":"%2X"},
+      "APMU_BYTE_ERR_CNT":{"type":"int","status":getStatusError,"format":"%2X"},
+      "APMU_CRC_ERR_CNT":{"type":"int","status":getStatusError,"format":"%2X"},
       "APMU_SND_CNT":{"type":"int","status":"ok","format":"%4X"},
       "APMU_CSA_IF_PON":{"type":"int","status":"ok","format":"%2X"},
       "APMU_APD_CSA2_PON":{"type":"int","status":"ok","format":"%2X"},
@@ -105,10 +107,10 @@ ql_schema = [
     "blockName":"MIO2_REG_block",
     "contents":{
       "MIO2_UTI_INTER":{"type":"int","status":"ok","format":"%8X"},
-      "MIO2_EDAC_ERR_CNT":{"type":"int","status":get_status_error,"format":"%2X"},
+      "MIO2_EDAC_ERR_CNT":{"type":"int","status":getStatusError,"format":"%2X"},
       "MIO2_EDAC_ERR_LTIME":{"type":"int","status":"ok","format":"%8X"},
       "MIO2_EDAC_ERR_LADD":{"type":"int","status":"ok","format":"%8X"},
-      "MIO2_RMAP_ERR_CNT":{"type":"int","status":get_status_error,"format":"%2X"},
+      "MIO2_RMAP_ERR_CNT":{"type":"int","status":getStatusError,"format":"%2X"},
       "MIO2_RMAP_ERR_LADDR":{"type":"int","status":"ok","format":"%8X"},
       "MIO2_RMAP_ERR_LTIME":{"type":"int","status":"ok","format":"%8X"},
       "MIO2_MODE":{"type":"int","status":"ok","format":"%2X"},

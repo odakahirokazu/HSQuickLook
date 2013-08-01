@@ -35,67 +35,141 @@ class QLDocument
 
   attr_reader :collection, :functional_object, :attribute_sequence, :period
   attr_reader :name
+
+  def read(db, time=nil)
+    query = {
+      :FunctionalObjectName => @functional_object.to_s,
+      :AttributeSequenceName => @attribute_sequence.to_s
+    }
+    
+    if time
+      query[:UNIXTIME] = {"$gte" => time}
+      option = {:sort => ["$natural", :ascending]}
+    else
+      option = {:sort => ["$natural", :descending]}
+    end
+
+    obj = db[@collection.to_s].find_one(query, option)
+
+    # p query
+    # p obj
+    
+    if obj.class != BSON::OrderedHash
+      obj = {}
+    end
+    
+    return obj
+  end
+
+  def active_phase?(time_index)
+    @period>0 && time_index%@period==0
+  end
 end
 
 
-class QLInfo
+class ClientRequest
+  def initialize(id)
+    @client_id = id
+    @documents = []
+    @time = nil
+    @file_directory = WebSiteDirectory+"/tmp"
+  end
+
+  attr_reader :client_id
+  attr_accessor :time, :file_directory
+
+  def insert(collection, functional_object, attribute_sequence, period)
+    doc = QLDocument.new(collection, functional_object, attribute_sequence, period)
+    @documents << doc
+  end
+
+  def each(); @documents.each{|doc| yield doc }; end
+  include Enumerable
+end
+
+
+class DocumentStore
   def initialize()
     @documents = {}
   end
+
+  def clear()
+    @documents.each_value{|array| array.clear }
+  end
   
-  def insert(client_id, collection, functional_object, attribute_sequence, period)
-    ql = QLDocument.new(collection, functional_object, attribute_sequence, period)
-    if @documents[client_id]
-      @documents[client_id] << ql
-    else
-      @documents[client_id] = [ql]
+  def checkout(name, time)
+    if d = @documents[name]
+      d.each do |time_data_pair|
+        return time_data_pair[1] if time_data_pair[0]==time
+      end
     end
+    return nil
   end
 
-  def delete(client_id)
-    @documents.delete(client_id)
-  end
-
-  def collections()
-    @documents.values.flatten
-  end
-
-  def each_client_info()
-    @documents.each{|c|
-      yield c
-    }
-  end
-
-  def clients(name, time_index=0)
-    list = []
-    @documents.each{|client_id, ql_list|
-      ql_list.each{|ql|
-        if ql.name==name && ql.period>0 && (time_index % ql.period)==0
-          list << client_id
-        end
-      }
-    }
-    return list.uniq
+  def push(name, time, data)
+    @documents[name] ||= []
+    @documents[name] << [time, data]
   end
 end
 
 
-def collect_document(ql, mongodb)
-  query = {
-    :FunctionalObjectName => ql.functional_object.to_s,
-    :AttributeSequenceName => ql.attribute_sequence.to_s
-  }
-  # p query
+class ClientManager
+  def initialize()
+    @clients = {}
+    @data = nil
+    @clients_to_register = {}
+    @clients_to_delete = []
+  end
+  attr_reader :data
   
-  option = {:sort => ["$natural", :descending]}
-  obj = mongodb[ql.collection.to_s].find_one(query, option)
-  # p obj
+  def propose_register(id)
+    @clients_to_register[id] = ClientRequest.new(id)
+  end
   
-  if obj.class != BSON::OrderedHash
-    obj = {}
+  def propose_delete(id)
+    @clients_to_delete << id
+  end
+  
+  def register_clients()
+    @clients.merge!(@clients_to_register)
+  end
+  
+  def delete_clients()
+    while id = @clients_to_delete.shift
+      @clients.delete(id)
+    end
+  end
+  
+  def get(id)
+    @clients_to_register[id] || @clients[id]
   end
 
-  return obj
+  def initialize_data()
+    @data = {}
+    @clients.each_key{|cid| @data[cid] = {} }
+    @document_store = DocumentStore.new
+  end
+
+  def request_data(db, time_index)
+    file_dirs = @clients.values.map(&:file_directory).uniq
+    @document_store.clear
+
+    @clients.each_value do |request|
+      cid = request.client_id
+      time = request.time
+      request.each do |doc|
+        if doc.active_phase?(time_index)
+          obj = @document_store.checkout(doc.name, time)
+          if obj==nil
+            obj = doc.read(db, time)
+            @document_store.push(doc.name, time, obj)
+          end
+          json = convert_object(obj, file_dirs)
+          @data[cid][doc.name] = obj
+        end
+      end
+    end
+  end
 end
 
 
@@ -145,100 +219,104 @@ def convert_contents(obj, file_dirs)
 end
 
 
-### Open a connection to MongoDB
+class HSQuickLookServer
+  def initialize()
+    @client_manager = ClientManager.new
+  end
+
+  def mongodb(host, port, db_name)
+    connection = Mongo::Connection.new(host, port)
+    @db = connection.db(db_name)
+  end
+
+  def interpret_message(mes, client_id)
+    o = JSON.parse(mes)
+    if file_dir = o["fileDirectory"]
+      file_dir_full = WebSiteDirectory+"/"+file_dir
+      @client_manager.get(client_id).file_directory = file_dir_full
+    elsif collection = o["collection"]
+      collection = collection.to_sym
+      fo = o["functionalObject"].to_sym
+      as = o["attributeSequence"].to_sym
+      period = o["period"].to_i
+      @client_manager.get(client_id).insert(collection, fo, as, period)
+    elsif time_request = o["time"]
+      time = nil
+      if time_request[0..1] == "DL"
+        time = Time.utc(*time_request[3..-1].strip.split(':'))
+      elsif time_request[0..1] == "QL"
+        time = nil
+      end
+      @client_manager.get(client_id).time = time
+    else
+      puts "Received an unknown-type message."
+    end
+  end
+
+  def run()
+    EventMachine::run do
+      puts 'Run WebSocket Server.'
+      @channel = EM::Channel.new
+      @current_client_id = 0
+      
+      EventMachine::WebSocket.start(:host => "0.0.0.0", :port => 8080) do |ws|
+        ws.onopen do
+          @current_client_id = @current_client_id + 1
+          cid = @current_client_id
+          puts "Connected to Client #{cid}"
+          @client_manager.propose_register(cid)
+
+          sid = @channel.subscribe do |data|
+            if data.class == Hash
+              if obj = data[cid]
+                ws.send(obj.to_json) unless obj.empty?
+              end
+            else
+              ws.send(data.to_s)
+            end
+          end
+
+          ws.onmessage do |mes|
+            begin
+              puts "Received from Client #{cid}: #{mes}"
+              interpret_message(mes, cid)
+            rescue => ex
+              p ex
+            end
+          end
+
+          ws.onclose do
+            puts "Disconnected Client #{cid}"
+            @channel.unsubscribe(sid)
+            @client_manager.propose_delete(cid)
+          end
+        end
+      end
+
+      EventMachine::defer do
+        time_index = 0
+        loop do
+          @client_manager.register_clients()
+          @client_manager.delete_clients()
+          @client_manager.initialize_data()
+          @client_manager.request_data(@db, time_index)
+          data = @client_manager.data
+          # p data
+          @channel.push(data)
+          sleep 1 # wait for 1 second
+          time_index += 1
+        end
+      end
+    end
+  end
+end
+
+
+### Main ###
 puts 'HSQL WebSocket Server started.'
 puts 'MongoDB connection to '+Host+':'+Port.to_s
 puts 'DB name: '+DBName
 
-Connection = Mongo::Connection.new(Host, Port)
-DB = Connection.db(DBName)
-
-EventMachine::run do
-  puts 'Run WebSocket Server.'
-  @channel = EM::Channel.new
-  @client_id = 0
-  @ql_info = QLInfo.new
-  @file_directory_map = {}
-  
-  EventMachine::WebSocket.start(:host => "0.0.0.0", :port => 8080) do |ws|
-    ws.onopen {
-      @client_id = @client_id + 1
-      cid = @client_id
-
-      sid = @channel.subscribe {|mes|
-        if mes.class == Hash
-          ql_data = mes[cid]
-          if ql_data
-            # p ql_data.to_json
-            ws.send(ql_data.to_json) unless ql_data.empty?
-          end
-        else
-          ws.send(mes)
-        end
-      }
-      puts "Client #{sid} --- connected"
-
-      ws.onmessage {|mes|
-        begin
-          puts "Client #{sid}: #{mes}"
-          ql = JSON.parse(mes)
-          if file_dir = ql["fileDirectory"]
-            file_dir_full = WebSiteDirectory+"/"+file_dir
-            @file_directory_map[cid] = file_dir_full
-          elsif collection = ql["collection"]
-            collection = collection.to_sym
-            fo = ql["functionalObject"].to_sym
-            as = ql["attributeSequence"].to_sym
-            period = ql["period"].to_i
-            @ql_info.insert(cid, collection, fo, as, period)
-          else
-            puts "Received an unknown-type message."
-          end
-        rescue => ex
-          p ex
-        end
-      }
-
-      ws.onclose {
-        puts "Client #{sid} --- disconnected"
-        @channel.unsubscribe(sid)
-        @channel.push("Client #{sid}: disconnected")
-        @ql_info.delete(cid)
-      }
-    }
-  end
-
-
-  EventMachine::defer do
-    time_index = 0
-    loop do
-      data = {}
-      @ql_info.each_client_info{|client_info|
-        cid = client_info[0]
-        data[cid] = {}
-      }
-
-      names = {}
-      @ql_info.collections.each{|ql|
-        next if names[ql.name]
-        
-        clients = @ql_info.clients(ql.name, time_index)
-        next if clients.size==0
-        
-        obj = collect_document(ql, DB) 
-        names[ql.name] = true
-        file_dirs = clients.map{|c| @file_directory_map[c] }.uniq
-        json = convert_object(obj, file_dirs)
-        clients.each {|cid|
-          data[cid][ql.name] = json
-        }
-      }
-
-      # p data
-      @channel.push(data)
-      sleep 1 # wait for 1 second
-      time_index += 1
-    end
-  end
-
-end
+server = HSQuickLookServer.new
+server.mongodb(Host, Port, DBName)
+server.run
