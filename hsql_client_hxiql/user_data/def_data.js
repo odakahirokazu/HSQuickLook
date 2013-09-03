@@ -5,11 +5,21 @@ var getStatusError = function(v) {
   else return "error";
 };
 
-fileDirectory = "hsql_client_hxiql/tmp";
+fileDirectory = "HXISGDQuickLook/hsql_client_hxiql/tmp";
 
 title = "HXI-1 USER HK";
 
 qlSchema = [
+{
+   "collection" : "hk1",
+   "functionalObject": "/HXI1.QL",
+   "attributeSequence": "LivetimeHist",
+   "period" : 1,
+   "blockName" : "Block_images",
+   "contents" : {
+     "HXI_IMAGE" : {"type": "image"}
+   }
+ },
   {
     "collection":"hk1",
     "functionalObject":"/HXI1.USR",
