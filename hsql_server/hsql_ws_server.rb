@@ -5,7 +5,9 @@
 #   hsql WebSocket server
 #   Hirokazu Odaka
 #   2012-10-08
-#   2013-02-13 (last modified)
+#   2013-02-13
+#   2013-08-02 | DL
+#   2013-09-06 | modify image tag
 ########################################
 
 require 'rubygems'
@@ -20,7 +22,7 @@ DBName = ( ARGV[0] or "hxi" )
 Host = ( ARGV[1] or "localhost" )
 Port = ( ARGV[2] ? ARGV[2].to_i : 27017 )
 WebSiteDirectory = (ARGV[3] or (ENV["HOME"]+"/Sites"))
-#WebSiteDirectory = ENV["HOME"]+"/Sites"
+# WebSiteDirectory = ENV["HOME"]+"/Sites"
 # WebSiteDirectory = ENV["HOME"]+"/public_html"
 ########################################
 
@@ -152,8 +154,6 @@ class ClientManager
   end
 
   def request_data(db, time_index)
-    @previous_time_index = @time_index
-    @time_index = time_index
     file_dirs = @clients.values.map(&:file_directory).uniq
     @document_store.clear
 
@@ -167,7 +167,7 @@ class ClientManager
             obj = doc.read(db, time)
             @document_store.push(doc.name, time, obj)
           end
-          json = convert_object(obj, file_dirs, @previous_time_index, @time_index)
+          json = convert_object(obj, file_dirs)
           @data[cid][doc.name] = obj
         end
       end
@@ -176,12 +176,12 @@ class ClientManager
 end
 
 
-def convert_object(obj, file_dirs, previous_time_index, time_index)
+def convert_object(obj, file_dirs)
   blocks = obj["Blocks"]
   if blocks
     blocks.each do |block|
       contents = ( block["Contents"] or {} )
-      convert_contents(contents, file_dirs, previous_time_index, time_index)
+      convert_contents(contents, file_dirs)
     end
   end
 
@@ -189,7 +189,7 @@ def convert_object(obj, file_dirs, previous_time_index, time_index)
 end
 
 
-def convert_contents(obj, file_dirs, previous_time_index, time_index)
+def convert_contents(obj, file_dirs)
   obj.each do |k, v|
     next unless v.class == BSON::OrderedHash
     if v["DataType"] == "image"
@@ -211,16 +211,13 @@ def convert_contents(obj, file_dirs, previous_time_index, time_index)
       width = v['Width']
       imageSize = ""
       if height && width
-        imageSize = sprintf(" height=\"%d\" width=\"%d\"",
+        imageSize = sprintf("height=\"%d\" width=\"%d\"",
                             height, width)
       end
-      query_image_old = "?%d" % @previous_time_index
-      query_image_new = "?%d" % @time_index
-      image_tag_old = sprintf("<img class=\"image_old\" src=\"%s\" alt=\"%s\"%s>",
-                              "tmp/"+fileName+query_image_old, k, imageSize)
-      image_tag_new = sprintf("<img class=\"image_new\" src=\"%s\" alt=\"%s\"%s>",
-                              "tmp/"+fileName+query_image_new, k, imageSize)
-      obj[k] = "<div class=\"display_old\">#{image_tag_old}#{image_tag_new}</div>"
+      query_image = "?%d" % Time.now.to_i
+      image_tag = sprintf("<img class=\"image_new\" src=\"%s\" alt=\"%s\" %s>",
+                          "tmp/"+fileName+query_image, k, imageSize)
+      obj[k] = "<div class=\"display_phase0\">#{image_tag}</div>"
     end
   end
 end
