@@ -189,6 +189,11 @@ function initializeTable() {
 }
 
 
+function flip(){
+	$(".display_old").removeClass("display_old").addClass("display_new");
+}
+
+
 function update(data) {
 //  $(".ql_table").draggable();
   var dataEval = JSON.parse( data );
@@ -205,6 +210,8 @@ function update(data) {
     var ti = obj["TI"];
     var unixtime = obj["UNIXTIME"];
     $('p#time').html(unixtime+" | TI: "+ti);
+
+	setTimeout(flip,500);
 
     // make tables
     var blocks = obj["Blocks"];
@@ -234,7 +241,7 @@ function update(data) {
         var format = s.format;
         // var type = s.type;        
         $("#"+cssID+"_"+key).html(value);
-        // alert(value);
+//         alert(value);
 //        target.append(makePair(key, value, type, status, format));
       }
     }

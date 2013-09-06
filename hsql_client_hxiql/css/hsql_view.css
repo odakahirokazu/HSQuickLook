@@ -42,3 +42,39 @@ table {
     float: left;
     margin: 8px;
 }
+
+.display_old {
+position:relative;
+}
+
+.display_new {
+position:relative;
+}
+
+.display_old .image_old {
+position:absolute;
+top:0;
+left:0; 
+visibility: visible;
+}
+
+.display_old .image_new {
+//position:absolute;
+//top:0;
+//left:0; 
+visibility: hidden;
+}
+
+.display_new .image_old {
+//position:absolute;
+//top:0;
+//left:0; 
+	visibility: hidden;
+}
+
+.display_new .image_new {
+position:absolute;
+top:0;
+left:0; 
+visibility: visible;
+}
