@@ -152,6 +152,8 @@ class ClientManager
   end
 
   def request_data(db, time_index)
+    @previous_time_index = @time_index
+    @time_index = time_index
     file_dirs = @clients.values.map(&:file_directory).uniq
     @document_store.clear
 
@@ -165,7 +167,7 @@ class ClientManager
             obj = doc.read(db, time)
             @document_store.push(doc.name, time, obj)
           end
-          json = convert_object(obj, file_dirs)
+          json = convert_object(obj, file_dirs, @previous_time_index, @time_index)
           @data[cid][doc.name] = obj
         end
       end
@@ -174,12 +176,12 @@ class ClientManager
 end
 
 
-def convert_object(obj, file_dirs)
+def convert_object(obj, file_dirs, previous_time_index, time_index)
   blocks = obj["Blocks"]
   if blocks
     blocks.each do |block|
       contents = ( block["Contents"] or {} )
-      convert_contents(contents, file_dirs)
+      convert_contents(contents, file_dirs, previous_time_index, time_index)
     end
   end
 
@@ -187,7 +189,7 @@ def convert_object(obj, file_dirs)
 end
 
 
-def convert_contents(obj, file_dirs)
+def convert_contents(obj, file_dirs, previous_time_index, time_index)
   obj.each do |k, v|
     next unless v.class == BSON::OrderedHash
     if v["DataType"] == "image"
@@ -212,9 +214,13 @@ def convert_contents(obj, file_dirs)
         imageSize = sprintf(" height=\"%d\" width=\"%d\"",
                             height, width)
       end
-      query = "?%d" % Time.now.to_i
-      obj[k] = sprintf("<img src=\"%s\" alt=\"%s\"%s>",
-                       "tmp/"+fileName+query, k, imageSize)
+      query_image_old = "?%d" % @previous_time_index
+      query_image_new = "?%d" % @time_index
+      image_tag_old = sprintf("<img class=\"image_old\" src=\"%s\" alt=\"%s\"%s>",
+                              "tmp/"+fileName+query_image_old, k, imageSize)
+      image_tag_new = sprintf("<img class=\"image_new\" src=\"%s\" alt=\"%s\"%s>",
+                              "tmp/"+fileName+query_image_new, k, imageSize)
+      obj[k] = "<div class=\"display_old\">#{image_tag_old}#{image_tag_new}</div>"
     end
   end
 end
