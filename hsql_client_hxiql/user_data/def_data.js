@@ -1,4 +1,4 @@
-host = "ws://localhost:8080";
+host = "ws://mongoserv.astro.isas.jaxa.jp:8080";
 
 var getStatusError = function(v) {
   if (v==0) return "safe";
@@ -10,16 +10,16 @@ fileDirectory = "HXISGDQuickLook/hsql_client_hxiql/tmp";
 title = "HXI-1 USER HK";
 
 qlSchema = [
-{
-   "collection" : "hk1",
-   "functionalObject": "/HXI1.QL",
-   "attributeSequence": "LivetimeHist",
-   "period" : 1,
-   "blockName" : "Block_images",
-   "contents" : {
-     "HXI_IMAGE" : {"type": "image"}
-   }
- },
+//{
+//   "collection" : "hk1",
+//   "functionalObject": "/HXI1.QL",
+//   "attributeSequence": "LivetimeHist",
+//   "period" : 1,
+//   "blockName" : "Block_images",
+//   "contents" : {
+//     "HXI_IMAGE" : {"type": "image"}
+//   }
+// },
   {
     "collection":"hk1",
     "functionalObject":"/HXI1.USR",

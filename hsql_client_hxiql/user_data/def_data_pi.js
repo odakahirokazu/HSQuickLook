@@ -1,4 +1,5 @@
-host = "ws://localhost:8080";
+host = "ws://mongoserv.astro.isas.jaxa.jp:8080";
+//host = "ws://localhost:8080";
 
 var getStatusError = function(v) {
   if (v==0) return "safe";

@@ -58,6 +58,7 @@ ws.onopen = function() {
       ws.send(message);
     }
   }
+  initializeTable();
 };
 
 
@@ -104,6 +105,7 @@ function sendTimeNow() {
 function log(message) {
   var mes_div = $("<div />").html(message);
   $('div#log').prepend(mes_div);
+//  alert(message);
 };
 
 
@@ -132,13 +134,13 @@ function createTable(name, cssID) {
 }
 
 
-function makePair(key, value, type, status, format) {
+function makePair(key, value, type, status, format, parentID) {
   var elemKey = $("<td />").html(key);
 
   if (format==undefined) {
-    var elemValue = $("<td />").html(value);
+    var elemValue = $("<td />").attr("id",parentID+"_"+key).html(value);
   } else {
-    var elemValue = $("<td />").html(sprintf(format, value));
+    var elemValue = $("<td />").attr("id",parentID+"_"+key).html(sprintf(format, value));
   }
 
   if (type!=undefined) { elemValue.addClass(type); }
@@ -146,6 +148,44 @@ function makePair(key, value, type, status, format) {
 
   var pair = $("<tr />").append(elemKey).append(elemValue);
   return pair;
+}
+
+
+function initializeTable() {
+//  $(".ql_table").draggable();
+  for (var i=0; i<qlSchema.length; i++) {
+    var ql = qlSchema[i];
+    var qlName = ql.collection+'/'+ql.functionalObject+'/'+ql.attributeSequence;
+
+    // show time
+    var ti = "-1";
+    var unixtime = "2112-09-03 00:00:00 UTC";
+    $('p#time').html(unixtime+" | TI: "+ti);
+
+    // make tables
+    var cssID = getCSSID(ql.collection, ql.functionalObject, ql.attributeSequence, ql.blockName);
+    var target = $('tbody#table_'+cssID+'_body').html("");
+    var contents = ql.contents;
+      
+    for (var key in contents) {
+        var s = contents[key];
+        var value = 0;
+        if ('status' in s) {
+          var statusObj = s.status;
+          if (typeof statusObj == "function") {
+            var status = statusObj(value);
+          } else {
+            var status = statusObj;  
+          }
+        } else {
+          var status = "";
+        } 
+        
+        var format = s.format;
+        var type = s.type;
+        target.append(makePair(key, value, type, status, format, cssID));
+    }
+  }
 }
 
 
@@ -173,12 +213,11 @@ function update(data) {
       if (block["BlockName"] != ql.blockName) continue;
       var blockData = block["Contents"];
       var cssID = getCSSID(ql.collection, ql.functionalObject, ql.attributeSequence, ql.blockName);
-      var target = $('tbody#table_'+cssID+'_body').html("");
+      // var target = $('tbody#table_'+cssID+'_body').html("");
       var contents = ql.contents;
       
       for (var key in contents) {
         var value = blockData[key];
-        
         if (value==undefined) continue;
         var s = contents[key];
         if ('status' in s) {
@@ -193,8 +232,10 @@ function update(data) {
         }
         
         var format = s.format;
-        var type = s.type;
-        target.append(makePair(key, value, type, status, format));
+        // var type = s.type;        
+        $("#"+cssID+"_"+key).html(value);
+        // alert(value);
+//        target.append(makePair(key, value, type, status, format));
       }
     }
   }

@@ -6,6 +6,14 @@ body {
     font-size: 12pt;
 }
 
+img {
+    background-color: #FFF;
+    color: #FFF;
+    padding: 1em;
+    font-family: monospace;
+    font-size: 12pt;
+}
+
 .error {
     color: #F00;
 }
