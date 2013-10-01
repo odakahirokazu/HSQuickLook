@@ -6,10 +6,10 @@ var getStatusError = function(v) {
   else return "error";
 };
 
-// fileDirectory = "HXISGDQuickLook/hsql_client_hxiql/tmp";
-fileDirectory = "hsql_client_hxipiql/tmp";
+//fileDirectory = "HXISGDQuickLook/clients/hsql_client_hxiql/tmp";
+fileDirectory = "clients/hsql_client_hxipiql/tmp";
 
-title = "HXI-1 PI QL";
+title = "HXI-1 Camera QL";
 
 qlSchema = [
 // {
