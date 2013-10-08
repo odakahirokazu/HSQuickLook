@@ -8,12 +8,14 @@
 #   2013-02-13
 #   2013-08-02 | DL
 #   2013-09-06 | modify image tag
+#   2013-10-08 | use data URI scheme for images
 ########################################
 
 require 'rubygems'
 require 'em-websocket'
 require 'mongo'
 require 'json'
+require 'mime/types'
 
 ########################################
 ### QL definition
@@ -21,9 +23,6 @@ require 'json'
 DBName = ( ARGV[0] or "hxi" )
 Host = ( ARGV[1] or "localhost" )
 Port = ( ARGV[2] ? ARGV[2].to_i : 27017 )
-WebSiteDirectory = (ARGV[3] or (ENV["HOME"]+"/Sites"))
-# WebSiteDirectory = ENV["HOME"]+"/Sites"
-# WebSiteDirectory = ENV["HOME"]+"/public_html"
 ########################################
 
 
@@ -75,11 +74,10 @@ class ClientRequest
     @client_id = id
     @documents = []
     @time = nil
-    @file_directory = WebSiteDirectory+"/tmp"
   end
 
   attr_reader :client_id
-  attr_accessor :time, :file_directory
+  attr_accessor :time
 
   def insert(collection, functional_object, attribute_sequence, period)
     doc = QLDocument.new(collection, functional_object, attribute_sequence, period)
@@ -124,25 +122,25 @@ class ClientManager
     @clients_to_delete = []
   end
   attr_reader :data
-  
+
   def propose_register(id)
     @clients_to_register[id] = ClientRequest.new(id)
   end
-  
+
   def propose_delete(id)
     @clients_to_delete << id
   end
-  
+
   def register_clients()
     @clients.merge!(@clients_to_register)
   end
-  
+
   def delete_clients()
     while id = @clients_to_delete.shift
       @clients.delete(id)
     end
   end
-  
+
   def get(id)
     @clients_to_register[id] || @clients[id]
   end
@@ -154,7 +152,6 @@ class ClientManager
   end
 
   def request_data(db, time_index)
-    file_dirs = @clients.values.map(&:file_directory).uniq
     @document_store.clear
 
     @clients.each_value do |request|
@@ -167,7 +164,7 @@ class ClientManager
             obj = doc.read(db, time)
             @document_store.push(doc.name, time, obj)
           end
-          json = convert_object(obj, file_dirs)
+          json = convert_object(obj)
           @data[cid][doc.name] = obj
         end
       end
@@ -176,12 +173,12 @@ class ClientManager
 end
 
 
-def convert_object(obj, file_dirs)
+def convert_object(obj)
   blocks = obj["Blocks"]
   if blocks
     blocks.each do |block|
       contents = ( block["Contents"] or {} )
-      convert_contents(contents, file_dirs)
+      convert_contents(contents)
     end
   end
 
@@ -189,34 +186,25 @@ def convert_object(obj, file_dirs)
 end
 
 
-def convert_contents(obj, file_dirs)
+def convert_contents(obj)
   obj.each do |k, v|
     next unless v.class == BSON::OrderedHash
     if v["DataType"] == "image"
-      fileName = v["FileName"]
+      file_name = v["FileName"]
       data = v['Data'].to_s
       # p data
-      file_dirs.each do |dir|
-        path = dir+"/"+fileName
-        begin
-          File.open(path, "w+b") {|fout|
-            fout.write(data.to_s)
-          }
-        rescue => ex
-          p ex
-          puts "cannot write an image file."
-        end
-      end
       height = v['Height']
       width = v['Width']
-      imageSize = ""
+
+      mime_type = MIME::Types.type_for(file_name)[0].to_s
+      data_base64 = Base64::encode64(data)
+      data_uri = "data:#{mime_type};base64,#{data_base64}"
+      image_size = ""
       if height && width
-        imageSize = sprintf("height=\"%d\" width=\"%d\"",
-                            height, width)
+        image_size = sprintf("height=\"%d\" width=\"%d\"", height, width)
       end
-      query_image = "?%d" % Time.now.to_i
       image_tag = sprintf("<img class=\"image_new\" src=\"%s\" alt=\"%s\" %s>",
-                          "tmp/"+fileName+query_image, k, imageSize)
+                          data_uri, k, image_size)
       obj[k] = "<div class=\"display_phase0\">#{image_tag}</div>"
     end
   end
@@ -235,10 +223,7 @@ class HSQuickLookServer
 
   def interpret_message(mes, client_id)
     o = JSON.parse(mes)
-    if file_dir = o["fileDirectory"]
-      file_dir_full = WebSiteDirectory+"/"+file_dir
-      @client_manager.get(client_id).file_directory = file_dir_full
-    elsif collection = o["collection"]
+    if collection = o["collection"]
       collection = collection.to_sym
       fo = o["functionalObject"].to_sym
       as = o["attributeSequence"].to_sym
