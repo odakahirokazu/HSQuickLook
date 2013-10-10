@@ -112,7 +112,7 @@ function JGraph(pointTypeX, pointTypeY) {
 		},
 		xaxis : {
 			axisLabel : xlabel,
-			axisLabelUseCanvas : false,
+			axisLabelUseCanvas : true,
 			min : xrange[0],
 			max : xrange[1]
 		},

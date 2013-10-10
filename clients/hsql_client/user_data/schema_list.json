@@ -1,5 +1,7 @@
 {
   "HXI1": {
+    "USR.USR_HK.GRAPH": "user_data/schema/HXI1/HXI1.USR.USR_HK_GRAPH.json",
+    "CAMERA.IMAGES": "user_data/schema/HXI1/HXI1.CAMERA.IMAGES.json",
     "APMU.APMU_GRB": "user_data/schema/HXI1/HXI1.APMU.APMU_GRB.json",
     "APMU.APMU_HIST": "user_data/schema/HXI1/HXI1.APMU.APMU_HIST.json",
     "APMU.APMU_HK": "user_data/schema/HXI1/HXI1.APMU.APMU_HK.json",

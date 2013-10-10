@@ -1,30 +1,7 @@
-// host = "ws://mongoserv.astro.isas.jaxa.jp:8080";
-host = "ws://localhost:8080";
-
-var getStatusError = function(v) {
-  if (v==0) return "safe";
-  else return "error";
-};
-
-//fileDirectory = "HXISGDQuickLook/clients/hsql_client_hxiql/tmp";
-fileDirectory = "clients/hsql_client_hxi2piql/tmp";
-
-title = "HXI-2 Camera QL";
-
-qlSchema = [
-// {
-//  "collection" : "hk1",
-//  "functionalObject": "/HXI1.QL",
-//  "attributeSequence": "LivetimeHist",
-//  "period" : 2,
-//  "blockName" : "Block_images",
-//  "contents" : {
-//    "HXI_IMAGE" : {"type": "image"}
-//  }
-// },
+[
 {
- "collection" : "hk2",
- "functionalObject": "/HXI2.QL",
+ "collection" : "hk1",
+ "functionalObject": "/HXI1.QL",
  "attributeSequence": "HXI_IMAGE",
  "period" : 2,
  "blockName" : "Block_images",
@@ -33,12 +10,12 @@ qlSchema = [
    "HXI_IMAGE_1" : {"type": "image"},
    "HXI_IMAGE_2" : {"type": "image"},
    "HXI_IMAGE_3" : {"type": "image"},
-   "HXI_IMAGE_4" : {"type": "image"},
+   "HXI_IMAGE_4" : {"type": "image"}
  }
 },
 {
- "collection" : "hk2",
- "functionalObject": "/HXI2.QL",
+ "collection" : "hk1",
+ "functionalObject": "/HXI1.QL",
  "attributeSequence": "hist_all",
  "period" : 2,
  "blockName" : "Block_hist_all",
@@ -48,8 +25,8 @@ qlSchema = [
  }
 },
 {
- "collection" : "hk2",
- "functionalObject": "/HXI2.QL",
+ "collection" : "hk1",
+ "functionalObject": "/HXI1.QL",
  "attributeSequence": "hist_asic",
  "period" : 2,
  "blockName" : "Block_hist_asic",
@@ -63,7 +40,7 @@ qlSchema = [
    "hist_asic_cmn_24" : {"type": "image"},
    "hist_asic_cmn_28" : {"type": "image"},
    "hist_asic_cmn_32" : {"type": "image"},
-   "hist_asic_cmn_36" : {"type": "image"},
+   "hist_asic_cmn_36" : {"type": "image"}
  }
 }
 ];
