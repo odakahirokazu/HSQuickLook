@@ -96,9 +96,9 @@ function setTables(foName, attrSeqName){
             target.append(table);
           }
           var message = '{"collection": "'+collection+'", '
-              +'"functionalObject": "'+fo+'", '
-              +'"attributeSequence": "'+attrs+'", '
-              +'"period": "'+period+'"}';
+                      +'"functionalObject": "'+fo+'", '
+                      +'"attributeSequence": "'+attrs+'", '
+                      +'"period": "'+period+'"}';
           ws.send(message);
         }
       }
@@ -123,19 +123,21 @@ $(document).ready(function() {
 
   $("#connecttohost").click(connectToHost);
 
-  connectToHost();
+  // connectToHost();
 
   $.ajax( {
-    url: "user_data/schema_list.json",
+    url: "user_data/user_configuration.json",
     dataType : 'json',
     success: function( data ) {
-      schemaList = data;
+      schemaList = data["schema_list"];
       for (var key in schemaList) {
         var filepath = schemaList[key];
         var thead = $("<option/>").html(key).attr("value",key);
         $("#folist").append(thead);
       }
       loadAttributeSequenceList();
+      $("#hostform").val(data["host"]+":"+data["port"]);
+      connectToHost();
     },
     error: function( data ) {
       alert(" does not exist");
@@ -293,18 +295,20 @@ function makePair(key, value, type, status, format, parentID, graphtype) {
 
   if (type!=undefined) {
     if(graphtype){
-      elemKey.html("");
-      var name = parentID+"_"+key;
-      // var name = key;
-      var test = $("<a />").html(key);
-      test.attr("id",name+"_row")
-      test.attr("href", "#");
-      test.addClass("graph_ready");
-      test.click(function() {
-        showGraph(name);
-      // alert(99);
-      });
-      elemKey.append(test);
+      if(graphtype!="none" && graphtype!="no"){
+        elemKey.html("");
+        var name = parentID+"_"+key;
+        // var name = key;
+        var test = $("<a />").html(key);
+        test.attr("id",name+"_row");
+        test.attr("href", "#");
+        test.addClass("graph_ready");
+        test.click(function() {
+          showGraph(name);
+        // alert(99);
+        });
+        elemKey.append(test);
+      }
     }
     elemValue.addClass(type); 
   }
