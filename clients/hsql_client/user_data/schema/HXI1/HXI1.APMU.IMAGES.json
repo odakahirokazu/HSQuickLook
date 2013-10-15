@@ -1,0 +1,20 @@
+[
+{
+ "collection" : "hk1",
+ "functionalObject": "/HXI1.QL",
+ "attributeSequence": "hist_apmu",
+ "period" : 2,
+ "blockName" : "Block_hist_apmu",
+ "contents" : {
+   "hist_apmu_0" : {"type": "image"},
+   "hist_apmu_1" : {"type": "image"},
+   "hist_apmu_2" : {"type": "image"},
+   "hist_apmu_3" : {"type": "image"},
+   "hist_apmu_4" : {"type": "image"},
+   "hist_apmu_5" : {"type": "image"},
+   "hist_apmu_6" : {"type": "image"},
+   "hist_apmu_7" : {"type": "image"},
+   "hist_apmu_8" : {"type": "image"}
+ }
+}
+];
