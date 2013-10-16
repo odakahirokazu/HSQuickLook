@@ -4,17 +4,22 @@
  "functionalObject": "/HXI1.QL",
  "attributeSequence": "hist_apmu",
  "period" : 2,
+ "tableName" : "test",
  "blockName" : "Block_hist_apmu",
  "contents" : {
-   "hist_apmu_0" : {"type": "image"},
-   "hist_apmu_1" : {"type": "image"},
-   "hist_apmu_2" : {"type": "image"},
-   "hist_apmu_3" : {"type": "image"},
-   "hist_apmu_4" : {"type": "image"},
-   "hist_apmu_5" : {"type": "image"},
-   "hist_apmu_6" : {"type": "image"},
-   "hist_apmu_7" : {"type": "image"},
-   "hist_apmu_8" : {"type": "image"}
+   "hist_apmu_00" : {"type": "image"},
+   "hist_apmu_01" : {"type": "image"},
+   "hist_apmu_02" : {"type": "image"},
+   "hist_apmu_03" : {"type": "image"},
+   "hist_apmu_04" : {"type": "image"},
+   "hist_apmu_05" : {"type": "image"},
+   "hist_apmu_06" : {"type": "image"},
+   "hist_apmu_07" : {"type": "image"},
+   "hist_apmu_08" : {"type": "image"},
+   "hist_apmu_09" : {"type": "image"},
+   "hist_apmu_10" : {"type": "image"},
+   "hist_apmu_11" : {"type": "image"},
+   "hist_apmu_12" : {"type": "image"}
  }
 }
 ];

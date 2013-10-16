@@ -278,7 +278,7 @@ function createTable(name, cssID) {
   table.append(thead);
   table.append(tbody);
 
-  table.addClass("draggable");
+  // table.addClass("draggable");
 
   return table;
 }
@@ -315,12 +315,12 @@ function makePair(key, value, type, status, format, parentID, graphtype) {
   if (status!="") { elemValue.addClass(status); }
 
   var pair = $("<tr />").append(elemKey).append(elemValue);
+  pair.addClass("draggable");
   return pair;
 }
 
 
 function initializeTable() {
- $(".draggable").draggable();
   for (var i=0; i<qlSchema.length; i++) {
     var ql = qlSchema[i];
     var qlName = ql.collection+'/'+ql.functionalObject+'/'+ql.attributeSequence;
@@ -358,6 +358,7 @@ function initializeTable() {
         target.append(makePair(key, value, type, status, format, cssID, graphtype));
     }
   }
+  $(".draggable").draggable();
 }
 
 
