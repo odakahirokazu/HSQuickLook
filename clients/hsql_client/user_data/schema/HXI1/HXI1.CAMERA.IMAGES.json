@@ -2,21 +2,21 @@
 {
  "collection" : "hk1",
  "functionalObject": "/HXI1.QL",
- "attributeSequence": "HXI_IMAGE",
+ "attributeSequence": "Camera",
  "period" : 2,
- "blockName" : "Block_images",
+ "blockName" : "Block_image",
  "contents" : {
-   "HXI_IMAGE_0" : {"type": "image"},
-   "HXI_IMAGE_1" : {"type": "image"},
-   "HXI_IMAGE_2" : {"type": "image"},
-   "HXI_IMAGE_3" : {"type": "image"},
-   "HXI_IMAGE_4" : {"type": "image"}
+   "image_0" : {"type": "image"},
+   "image_1" : {"type": "image"},
+   "image_2" : {"type": "image"},
+   "image_3" : {"type": "image"},
+   "image_4" : {"type": "image"}
  }
 },
 {
  "collection" : "hk1",
  "functionalObject": "/HXI1.QL",
- "attributeSequence": "hist_all",
+ "attributeSequence": "Camera",
  "period" : 2,
  "blockName" : "Block_hist_all",
  "contents" : {
@@ -27,7 +27,7 @@
 {
  "collection" : "hk1",
  "functionalObject": "/HXI1.QL",
- "attributeSequence": "hist_asic",
+ "attributeSequence": "Camera",
  "period" : 2,
  "blockName" : "Block_hist_asic",
  "contents" : {
