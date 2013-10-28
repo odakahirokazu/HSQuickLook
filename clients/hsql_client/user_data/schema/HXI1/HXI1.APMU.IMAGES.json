@@ -2,7 +2,7 @@
 {
  "collection" : "hk1",
  "functionalObject": "/HXI1.QL",
- "attributeSequence": "hist_apmu",
+ "attributeSequence": "APMU",
  "period" : 2,
  "tableName" : "test",
  "blockName" : "Block_hist_apmu",
@@ -25,7 +25,7 @@
 {
  "collection" : "hk1",
  "functionalObject": "/HXI1.QL",
- "attributeSequence": "hist_apmu_4096",
+ "attributeSequence": "APMU",
  "period" : 2,
  "tableName" : "test2",
  "blockName" : "Block_hist_apmu_4096",

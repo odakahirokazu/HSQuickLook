@@ -295,7 +295,7 @@ function makePair(key, value, type, status, format, parentID, graphtype) {
 
   if (type!=undefined) {
     if(graphtype){
-      if(graphtype!="none" && graphtype!="no"){
+      if(graphtype=="trend"){
         elemKey.html("");
         var name = parentID+"_"+key;
         // var name = key;
