@@ -8,6 +8,7 @@ var ymaxs= new Array()
 
 var drag_enabled = true;
 
+var qlSchema=null;
 
 function sendTimeFunc(e) {
   var KC_ENTER = 13;
@@ -77,11 +78,11 @@ function setTables(foName, attrSeqName){
   var fileName = schemaList[foName][attrSeqName];
   $.ajax( {
     url: fileName,
-    dataType : 'json',
-    // dataType : 'script',
-    success: function( data ) {
-    // success: function() {
-      qlSchema = data;
+    // dataType : 'json',
+    dataType : 'script',
+    // success: function( data ) {
+    success: function() {
+      // qlSchema = data;
       var target = $('div#main_tables').html("");
       for (var i=0; i<qlSchema.length; i++) {
         var ql = qlSchema[i];
@@ -315,7 +316,7 @@ function makePair(key, value, type, status, format, parentID, graphtype) {
   if (status!="") { elemValue.addClass(status); }
 
   var pair = $("<tr />").append(elemKey).append(elemValue);
-  pair.addClass("draggable");
+  // pair.addClass("draggable");
   return pair;
 }
 
