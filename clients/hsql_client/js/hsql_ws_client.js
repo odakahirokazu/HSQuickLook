@@ -10,6 +10,8 @@ var drag_enabled = true;
 
 var qlSchema=null;
 
+var paused = false;
+
 function sendTimeFunc(e) {
   var KC_ENTER = 13;
   // log ("key input");
@@ -35,7 +37,16 @@ function sendTimeNow() {
   ws.send(message);    
 }
 
-
+function togglePause(){
+  if(paused){
+    paused = false;
+    $("#post_pause").val("Pause");
+  }
+  else{
+    paused = true;
+    $("#post_pause").val("Resume");
+  }
+}
 
 
 function connectToHost(){
@@ -115,6 +126,7 @@ function setTables(foName, attrSeqName){
 $(document).ready(function() {
   $('input#post_ql').click(sendTimeNow);
   $('input#post_dl').click(sendTime);
+  $('input#post_pause').click(togglePause);
   $('input#time_0').keypress(sendTimeFunc);
   $('input#time_1').keypress(sendTimeFunc);
   $('input#time_2').keypress(sendTimeFunc);
@@ -390,10 +402,13 @@ function update(data) {
     // show time
     var ti = obj["TI"]>>>0;
     var unixtime = obj["UNIXTIME"];
-    $('p#time').html(unixtime+" | TI: "+ti);
+    if(!paused){
+      $('p#time').html(unixtime+" | TI: "+ti);
+    }
 
-    setTimeout(moveToPhase1, 200);
-
+    if(!paused){
+      setTimeout(moveToPhase1, 200);
+    }
     // make tables
     var blocks = obj["Blocks"];
     for (var ib=0; ib<blocks.length; ib++) {
@@ -419,13 +434,15 @@ function update(data) {
           var status = "";
         }
         
-        var format = s.format;
-        var type = s.type;
-        if (type=="image") {
-          $("#"+cssID+"_"+key).prepend(value);
-        } else{
-          $("#"+cssID+"_"+key).html(value);
-        } 
+        if(!paused){
+          var format = s.format;
+          var type = s.type;
+          if (type=="image") {
+            $("#"+cssID+"_"+key).prepend(value);
+          } else{
+            $("#"+cssID+"_"+key).html(value);
+          } 
+        }
 
         var fullkey = cssID+"_"+key;
         var time = ti/64.0;
@@ -437,7 +454,9 @@ function update(data) {
             while(ymaxs[fullkey] <= Number(value) + 0.1){
               ymaxs[fullkey] = 2*ymaxs[fullkey] + 1;
             }
-            graphs[fullkey].plot([time-600.5, time+0.5], [-0.1,ymaxs[fullkey]]);
+            if(!paused){
+              graphs[fullkey].plot([time-600.5, time+0.5], [-0.1,ymaxs[fullkey]]);
+            }
           }
           // alert(fullkey);
         }
