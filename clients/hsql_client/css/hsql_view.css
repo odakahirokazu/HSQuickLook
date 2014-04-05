@@ -3,7 +3,47 @@ body {
     color: #FFF;
     padding: 1em;
     font-family: monospace;
-    font-size: 12pt;
+    font-size: 11pt;
+}
+
+h1 {
+    text-align: center;
+    font-size: 14pt;
+    padding: 0.25em;
+    border-bottom: solid 1px #AAA;
+}
+
+h2 {
+    font-size: 11pt;
+}
+
+#control-section {
+    float: left;
+    width: 50%;
+    padding: 0.5em;
+    background-color: #224;
+    color: #99A;
+}
+
+#control-section form {
+    margin: 0.5em;
+}
+
+#log-section {
+    float: left;
+    width: 45%;
+    padding: 0.5em;
+    background-color: #242;
+    color: #9A9;
+}
+
+#log-section #log {
+    padding: 0.5em;
+}
+
+#data-section {
+    clear: left;
+    padding: 0.5em;
 }
 
 img {
@@ -14,31 +54,31 @@ img {
     font-size: 12pt;
 }
 
-.error {
+.status-error {
     color: #F00;
 }
 
-.warning {
+.status-warning {
     color: #FF0;
 }
 
-.safe {
+.status-safe {
     color: #0F0;
 }
 
-.int {
+.type-int {
     text-align :right;
 }
 
-.float {
+.type-float {
     text-align :right;
 }
 
-div#main_tables {
+div#main-tables {
     position: relative;
 }
 
-table {
+#main-tables table {
     float: left;
     margin: 8px;
 }
@@ -55,7 +95,7 @@ table {
     position: absolute;
     top: 0;
     left: 0; 
-      visibility: hidden;
+    visibility: hidden;
 }
 
 /*.drag_box {

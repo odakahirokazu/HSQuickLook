@@ -205,7 +205,7 @@ def convert_contents(obj)
       end
       image_tag = sprintf("<img class=\"image_new\" src=\"%s\" alt=\"%s\" %s>",
                           data_uri, k, image_size)
-      obj[k] = "<div class=\"display_phase0\">#{image_tag}</div>"
+      obj[k] = image_tag
     end
   end
 end

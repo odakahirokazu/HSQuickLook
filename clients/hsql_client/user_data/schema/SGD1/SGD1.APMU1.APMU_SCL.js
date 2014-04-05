@@ -1,4 +1,4 @@
-qlSchema=
+HSQuickLook.main.schema =
 [
 {
 	"collection":"hk1",

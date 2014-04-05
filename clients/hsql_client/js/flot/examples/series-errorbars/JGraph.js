@@ -1,1 +1,0 @@
-/Users/sakurai/work/Eclipse/JPlot/JGraph.js
