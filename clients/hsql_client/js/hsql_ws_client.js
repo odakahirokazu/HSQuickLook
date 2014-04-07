@@ -3,7 +3,7 @@
  *   
  *   Authors: Hirokazu Odaka, Soki Sakurai
  *   Date: 2012-10-14 (alpha)
- *   Date: 2014-04-05 (v0.2)
+ *   Date: 2014-04-07 (v0.5.1)
  * 
  ************************************************************/
 
@@ -53,18 +53,20 @@ var HSQuickLook = HSQuickLook || {};
     
     // contents-form
     $("select#selected-group").change(loadDataSheetList);
-    $("input#button-load-data-sheet").click(loadDataSheet);
+    $("select#selected-data-sheet").change(loadDataSheet);
+
+    // mode-form
+    $("input#mode-ql").click(enterQLMode);
+    $("input#mode-paused").click(pause);
 
     // time-form
-    $("input#post-ql").click(sendTimeNow);
-    $("input#post-dl").click(sendTime);
-    $("input#post-pause").click(togglePause);
     $("input#time0").keypress(sendTimeFunc);
     $("input#time1").keypress(sendTimeFunc);
     $("input#time2").keypress(sendTimeFunc);
     $("input#time3").keypress(sendTimeFunc);
     $("input#time4").keypress(sendTimeFunc);
     $("input#time5").keypress(sendTimeFunc);
+    $("input#request-time").click(enterDLMode);
 
     // log-section
     $("input#button-clear-log").click(clearLog);
@@ -90,7 +92,6 @@ var HSQuickLook = HSQuickLook || {};
     }
     
     setCurrentTime();
-
     loadDataSheetList();
     openConnection();
   }
@@ -108,10 +109,12 @@ var HSQuickLook = HSQuickLook || {};
   function loadDataSheetList() {
     var group = $("#selected-group").val();
     var schema = schemaList[group];
-    $("#selected-data-sheet").html("");
+    var target = $("#selected-data-sheet").html("");
+    var title = $("<option />").html("").attr("value", "").attr("label", "Select data sheet");
+    target.append(title);
     for (key in schema) {
       var dataSheet = $("<option />").html(key).attr("value", key);
-      $("#selected-data-sheet").append(dataSheet);
+      target.append(dataSheet);
     }
   }
 
@@ -171,6 +174,22 @@ var HSQuickLook = HSQuickLook || {};
   /************************************************************
    *   Time control
    */
+  function enterQLMode() {
+    if (paused) {
+      paused = false;
+    } else {
+      $("input#mode-paused").attr("disabled", false);
+      sendTimeNow();
+    }
+  }
+
+  function enterDLMode() {
+    paused = false;
+    $("input[name='mode']").val(["mode-dl"]);
+    $("input#mode-paused").attr("disabled", true);
+    sendTime();
+  }
+
   function sendTime() {
     var year = $('input#time0').val();
     var month = $('input#time1').val();
@@ -179,23 +198,16 @@ var HSQuickLook = HSQuickLook || {};
     var minute = $('input#time4').val();
     var second = $('input#time5').val();
     var message = '{"time": "DL '+year+':'+month+':'+day+':'+hour+':'+minute+':'+second+'"}';
-    ws.send(message);    
+    ws.send(message);
   }
 
   function sendTimeNow() {
     var message = '{"time": "QL" }';
-    ws.send(message);    
+    ws.send(message);
   }
 
-  function togglePause() {
-    if (paused) {
-      paused = false;
-      $("#post-pause").val("Pause");
-    }
-    else {
-      paused = true;
-      $("#post-pause").val("Restart");
-    }
+  function pause() {
+    paused = true;
   }
 
   function sendTimeFunc(e) {
@@ -211,6 +223,17 @@ var HSQuickLook = HSQuickLook || {};
    *   Data sheet
    */
   function loadDataSheet() {
+    var groupName;
+    var dataSheetName = $("#selected-data-sheet").val();
+    var fileName;
+
+    if (dataSheetName == "") {
+      return;
+    }
+
+    groupName = $("#selected-group").val();
+    fileName = schemaList[groupName][dataSheetName];
+
     if (!ws) {
       alert("WebSocket is not connected. Please connect to WS server.");
       return;
@@ -220,9 +243,6 @@ var HSQuickLook = HSQuickLook || {};
       killGraph(key);
     }
 
-    var groupName = $("#selected-group").val();
-    var dataSheetName = $("#selected-data-sheet").val();
-    var fileName = schemaList[groupName][dataSheetName];
     $("title").html(dataSheetName);
     
     $.ajax({

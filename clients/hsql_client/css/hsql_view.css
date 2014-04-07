@@ -29,6 +29,13 @@ h2 {
     margin: 0.5em;
 }
 
+input#time0 { width: 4em; }
+input#time1 { width: 2.8em; }
+input#time2 { width: 2.8em; }
+input#time3 { width: 2.8em; }
+input#time4 { width: 2.8em; }
+input#time5 { width: 2.8em; }
+
 #log-section {
     float: left;
     width: 45%;

@@ -20,7 +20,7 @@ require 'mime/types'
 ########################################
 ### QL definition
 ########################################
-DBName = ( ARGV[0] or "hxi" )
+DBName = ( ARGV[0] or "qldb" )
 Host = ( ARGV[1] or "localhost" )
 Port = ( ARGV[2] ? ARGV[2].to_i : 27017 )
 ########################################
