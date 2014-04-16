@@ -60,12 +60,12 @@ var HSQuickLook = HSQuickLook || {};
     $("input#mode-paused").click(pause);
 
     // time-form
-    $("input#time0").keypress(enterDLModeByPressEnter);
-    $("input#time1").keypress(enterDLModeByPressEnter);
-    $("input#time2").keypress(enterDLModeByPressEnter);
-    $("input#time3").keypress(enterDLModeByPressEnter);
-    $("input#time4").keypress(enterDLModeByPressEnter);
-    $("input#time5").keypress(enterDLModeByPressEnter);
+    $("input#time0").keypress(sendTimeFunc);
+    $("input#time1").keypress(sendTimeFunc);
+    $("input#time2").keypress(sendTimeFunc);
+    $("input#time3").keypress(sendTimeFunc);
+    $("input#time4").keypress(sendTimeFunc);
+    $("input#time5").keypress(sendTimeFunc);
     $("input#request-time").click(enterDLMode);
 
     // log-section
@@ -210,11 +210,11 @@ var HSQuickLook = HSQuickLook || {};
     paused = true;
   }
 
-  function enterDLModeByPressEnter(e) {
+  function sendTimeFunc(e) {
     var KC_ENTER = 13;
     if(e.keyCode == KC_ENTER) { 
       e.preventDefault();
-      enterDLMode();
+      sendTime();
     }
   }
 
