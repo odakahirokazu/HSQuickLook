@@ -1,11 +1,11 @@
 HSQuickLook.main.schema =
 [
 {
-	"collection":"hk2",
+	"collection":"hxi2",
 	"functionalObject":"/HXI2.USR",
 	"attributeSequence":"APMU_PRM_TBL_1",
 	"period":"1",
-	"blockName":"APMU_PRM_TBL_block",
+	"blockName":"",
 	"contents":{
 		"APMUPRM_TBL_NO":{"type":"int","status":"ok","format":"%2X"},
 		"ADC_FBGO_TH1":{"type":"int","status":"ok","format":"%4X"},

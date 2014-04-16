@@ -1,7 +1,7 @@
 HSQuickLook.main.schema =
 [
 {
-	"collection":"hk2",
+	"collection":"hxi2",
 	"functionalObject":"/HXI2.CAM",
 	"attributeSequence":"EVNT_L",
 	"period":"1",

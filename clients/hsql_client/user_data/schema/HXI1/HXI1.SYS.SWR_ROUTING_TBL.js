@@ -1,7 +1,7 @@
 HSQuickLook.main.schema =
 [
 {
-	"collection":"hk1",
+	"collection":"hxi1",
 	"functionalObject":"/HXI1.SYS",
 	"attributeSequence":"SWR_ROUTING_TBL",
 	"period":"1",
@@ -11,7 +11,7 @@ HSQuickLook.main.schema =
 	}
 },
 {
-	"collection":"hk1",
+	"collection":"hxi1",
 	"functionalObject":"/HXI1.SYS",
 	"attributeSequence":"SWR_ROUTING_TBL",
 	"period":"1",

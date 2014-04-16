@@ -1,7 +1,7 @@
 HSQuickLook.main.schema =
 [
 {
-	"collection":"hk1",
+	"collection":"hxi1",
 	"functionalObject":"/HXI1.SYS",
 	"attributeSequence":"ERR_LOG",
 	"period":"1",
@@ -11,7 +11,7 @@ HSQuickLook.main.schema =
 	}
 },
 {
-	"collection":"hk1",
+	"collection":"hxi1",
 	"functionalObject":"/HXI1.SYS",
 	"attributeSequence":"ERR_LOG",
 	"period":"1",
@@ -30,7 +30,7 @@ HSQuickLook.main.schema =
 	}
 },
 {
-	"collection":"hk1",
+	"collection":"hxi1",
 	"functionalObject":"/HXI1.SYS",
 	"attributeSequence":"ERR_LOG",
 	"period":"1",
@@ -220,7 +220,7 @@ HSQuickLook.main.schema =
 	}
 },
 {
-	"collection":"hk1",
+	"collection":"hxi1",
 	"functionalObject":"/HXI1.SYS",
 	"attributeSequence":"ERR_LOG",
 	"period":"1",
@@ -230,7 +230,7 @@ HSQuickLook.main.schema =
 	}
 },
 {
-	"collection":"hk1",
+	"collection":"hxi1",
 	"functionalObject":"/HXI1.SYS",
 	"attributeSequence":"ERR_LOG",
 	"period":"1",
@@ -313,7 +313,7 @@ HSQuickLook.main.schema =
 	}
 },
 {
-	"collection":"hk1",
+	"collection":"hxi1",
 	"functionalObject":"/HXI1.SYS",
 	"attributeSequence":"ERR_LOG",
 	"period":"1",

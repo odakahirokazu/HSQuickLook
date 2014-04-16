@@ -1,7 +1,7 @@
 HSQuickLook.main.schema =
 [
 {
- "collection" : "hk1",
+ "collection" : "hxi1",
  "functionalObject": "/HXI1.QL",
  "attributeSequence": "Camera",
  "period" : 2,
@@ -15,7 +15,7 @@ HSQuickLook.main.schema =
  }
 },
 {
- "collection" : "hk1",
+ "collection" : "hxi1",
  "functionalObject": "/HXI1.QL",
  "attributeSequence": "Camera",
  "period" : 2,
@@ -26,7 +26,7 @@ HSQuickLook.main.schema =
  }
 },
 {
- "collection" : "hk1",
+ "collection" : "hxi1",
  "functionalObject": "/HXI1.QL",
  "attributeSequence": "Camera",
  "period" : 2,

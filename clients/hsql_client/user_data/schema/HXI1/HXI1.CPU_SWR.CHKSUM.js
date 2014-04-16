@@ -1,7 +1,7 @@
 HSQuickLook.main.schema =
 [
 {
-	"collection":"hk1",
+	"collection":"hxi1",
 	"functionalObject":"/HXI1.CPU_SWR",
 	"attributeSequence":"CHKSUM",
 	"period":"1",

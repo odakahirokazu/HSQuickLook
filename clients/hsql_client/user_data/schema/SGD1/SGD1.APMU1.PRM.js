@@ -1,7 +1,7 @@
 HSQuickLook.main.schema =
 [
 {
-	"collection":"hk1",
+	"collection":"sgd1",
 	"functionalObject":"/SGD1.APMU1",
 	"attributeSequence":"PRM",
 	"period":"1",

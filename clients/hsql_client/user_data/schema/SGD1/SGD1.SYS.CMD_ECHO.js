@@ -1,7 +1,7 @@
 HSQuickLook.main.schema =
 [
 {
-	"collection":"hk1",
+	"collection":"sgd1",
 	"functionalObject":"/SGD1.SYS",
 	"attributeSequence":"CMD_ECHO",
 	"period":"1",
@@ -13,7 +13,7 @@ HSQuickLook.main.schema =
 	}
 },
 {
-	"collection":"hk1",
+	"collection":"sgd1",
 	"functionalObject":"/SGD1.SYS",
 	"attributeSequence":"CMD_ECHO",
 	"period":"1",

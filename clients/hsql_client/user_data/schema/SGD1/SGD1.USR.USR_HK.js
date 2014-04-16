@@ -1,7 +1,7 @@
 HSQuickLook.main.schema =
 [
 {
-	"collection":"hk1",
+	"collection":"sgd1",
 	"functionalObject":"/SGD1.USR",
 	"attributeSequence":"USR_HK",
 	"period":"1",
@@ -81,7 +81,7 @@ HSQuickLook.main.schema =
 	}
 },
 {
-	"collection":"hk1",
+	"collection":"sgd1",
 	"functionalObject":"/SGD1.USR",
 	"attributeSequence":"USR_HK",
 	"period":"1",
@@ -143,7 +143,7 @@ HSQuickLook.main.schema =
 	}
 },
 {
-	"collection":"hk1",
+	"collection":"sgd1",
 	"functionalObject":"/SGD1.USR",
 	"attributeSequence":"USR_HK",
 	"period":"1",
@@ -189,7 +189,7 @@ HSQuickLook.main.schema =
 	}
 },
 {
-	"collection":"hk1",
+	"collection":"sgd1",
 	"functionalObject":"/SGD1.USR",
 	"attributeSequence":"USR_HK",
 	"period":"1",
@@ -243,7 +243,7 @@ HSQuickLook.main.schema =
 	}
 },
 {
-	"collection":"hk1",
+	"collection":"sgd1",
 	"functionalObject":"/SGD1.USR",
 	"attributeSequence":"USR_HK",
 	"period":"1",
@@ -289,7 +289,7 @@ HSQuickLook.main.schema =
 	}
 },
 {
-	"collection":"hk1",
+	"collection":"sgd1",
 	"functionalObject":"/SGD1.USR",
 	"attributeSequence":"USR_HK",
 	"period":"1",
@@ -335,7 +335,7 @@ HSQuickLook.main.schema =
 	}
 },
 {
-	"collection":"hk1",
+	"collection":"sgd1",
 	"functionalObject":"/SGD1.USR",
 	"attributeSequence":"USR_HK",
 	"period":"1",
@@ -357,7 +357,7 @@ HSQuickLook.main.schema =
 	}
 },
 {
-	"collection":"hk1",
+	"collection":"sgd1",
 	"functionalObject":"/SGD1.USR",
 	"attributeSequence":"USR_HK",
 	"period":"1",
@@ -379,7 +379,7 @@ HSQuickLook.main.schema =
 	}
 },
 {
-	"collection":"hk1",
+	"collection":"sgd1",
 	"functionalObject":"/SGD1.USR",
 	"attributeSequence":"USR_HK",
 	"period":"1",
@@ -416,7 +416,7 @@ HSQuickLook.main.schema =
 	}
 },
 {
-	"collection":"hk1",
+	"collection":"sgd1",
 	"functionalObject":"/SGD1.USR",
 	"attributeSequence":"USR_HK",
 	"period":"1",
@@ -453,7 +453,7 @@ HSQuickLook.main.schema =
 	}
 },
 {
-	"collection":"hk1",
+	"collection":"sgd1",
 	"functionalObject":"/SGD1.USR",
 	"attributeSequence":"USR_HK",
 	"period":"1",

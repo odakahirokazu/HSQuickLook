@@ -1,7 +1,7 @@
 HSQuickLook.main.schema =
 [
 {
-	"collection":"hk1",
+	"collection":"hxi1",
 	"functionalObject":"/HXI1.USR",
 	"attributeSequence":"MIO2_PRM_TBL_3",
 	"period":"1",

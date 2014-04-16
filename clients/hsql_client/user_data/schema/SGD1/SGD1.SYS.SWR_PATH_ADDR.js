@@ -1,7 +1,7 @@
 HSQuickLook.main.schema =
 [
 {
-	"collection":"hk1",
+	"collection":"sgd1",
 	"functionalObject":"/SGD1.SYS",
 	"attributeSequence":"SWR_PATH_ADDR",
 	"period":"1",

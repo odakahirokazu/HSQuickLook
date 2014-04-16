@@ -1,7 +1,7 @@
 HSQuickLook.main.schema =
 [
 {
-	"collection":"hk1",
+	"collection":"sgd1",
 	"functionalObject":"/SGD1.SYS",
 	"attributeSequence":"UAPP_NPTSK_REG_33_64",
 	"period":"1",

@@ -1,7 +1,7 @@
 HSQuickLook.main.schema =
 [
 {
-	"collection":"hk2",
+	"collection":"hxi2",
 	"functionalObject":"/HXI2.APMU",
 	"attributeSequence":"APMU_SCL",
 	"period":"1",

@@ -1,11 +1,11 @@
 HSQuickLook.main.schema =
 [
 {
-	"collection":"hk2",
+	"collection":"hxi2",
 	"functionalObject":"/HXI2.USR",
 	"attributeSequence":"OBS_TBL_1",
 	"period":"1",
-	"blockName":"OBS_TBL_block",
+	"blockName":"",
 	"contents":{
 		"OBSPRM_TBL_NO":{"type":"int","status":"ok","format":"%2X"},
 		"DELTA_T_ENA":{"type":"int","status":"ok","format":"%2X"},

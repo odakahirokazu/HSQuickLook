@@ -1,7 +1,7 @@
 HSQuickLook.main.schema =
 [
 {
-	"collection":"hk1",
+	"collection":"hxi1",
 	"functionalObject":"/HXI1.USR",
 	"attributeSequence":"DE_STAT",
 	"period":"1",
@@ -66,7 +66,7 @@ HSQuickLook.main.schema =
 	}
 },
 {
-	"collection":"hk1",
+	"collection":"hxi1",
 	"functionalObject":"/HXI1.USR",
 	"attributeSequence":"DE_STAT",
 	"period":"1",
@@ -150,7 +150,7 @@ HSQuickLook.main.schema =
 	}
 },
 {
-	"collection":"hk1",
+	"collection":"hxi1",
 	"functionalObject":"/HXI1.USR",
 	"attributeSequence":"DE_STAT",
 	"period":"1",

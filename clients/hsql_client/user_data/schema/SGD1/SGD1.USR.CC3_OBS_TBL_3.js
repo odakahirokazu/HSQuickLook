@@ -1,7 +1,7 @@
 HSQuickLook.main.schema =
 [
 {
-	"collection":"hk1",
+	"collection":"sgd1",
 	"functionalObject":"/SGD1.USR",
 	"attributeSequence":"CC3_OBS_TBL_3",
 	"period":"1",

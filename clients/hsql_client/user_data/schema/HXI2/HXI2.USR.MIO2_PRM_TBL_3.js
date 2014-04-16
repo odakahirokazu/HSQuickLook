@@ -1,11 +1,11 @@
 HSQuickLook.main.schema =
 [
 {
-	"collection":"hk2",
+	"collection":"hxi2",
 	"functionalObject":"/HXI2.USR",
 	"attributeSequence":"MIO2_PRM_TBL_3",
 	"period":"1",
-	"blockName":"MIO2_PRM_TBL_block",
+	"blockName":"",
 	"contents":{
 		"MIO2PRM_TBL_NO":{"type":"int","status":"ok","format":"%2X"},
 		"FBGO":{"type":"int","status":"ok","format":"%4X"},
