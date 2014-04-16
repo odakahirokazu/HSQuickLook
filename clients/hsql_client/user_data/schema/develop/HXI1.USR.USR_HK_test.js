@@ -3,7 +3,7 @@ HSQuickLook.main.schema =
 {
   "tableName" : "APP_VAL_block_new",
   "tableTitle" : "Application Values (test)",
-	"collection":"hk1",
+	"collection":"hxi1",
 	"functionalObject":"/HXI1.USR",
 	"attributeSequence":"USR_HK",
 	"period":"1",
@@ -37,7 +37,7 @@ HSQuickLook.main.schema =
   {
   "tableName" : "APP_VAL_block",
   "tableTitle" : "Application Values",
-	"collection":"hk1",
+	"collection":"hxi1",
 	"functionalObject":"/HXI1.USR",
 	"attributeSequence":"USR_HK",
 	"period":"1",
@@ -88,7 +88,7 @@ HSQuickLook.main.schema =
 	}
 },
 {
-	"collection":"hk1",
+	"collection":"hxi1",
 	"functionalObject":"/HXI1.USR",
 	"attributeSequence":"USR_HK",
 	"period":"1",
@@ -135,7 +135,7 @@ HSQuickLook.main.schema =
 	}
 },
 {
-	"collection":"hk1",
+	"collection":"hxi1",
 	"functionalObject":"/HXI1.USR",
 	"attributeSequence":"USR_HK",
 	"period":"1",
@@ -155,7 +155,7 @@ HSQuickLook.main.schema =
 	}
 },
 {
-	"collection":"hk1",
+	"collection":"hxi1",
 	"functionalObject":"/HXI1.USR",
 	"attributeSequence":"USR_HK",
 	"period":"1",
@@ -209,7 +209,7 @@ HSQuickLook.main.schema =
 	}
 },
 {
-	"collection":"hk1",
+	"collection":"hxi1",
 	"functionalObject":"/HXI1.USR",
 	"attributeSequence":"USR_HK",
 	"period":"1",
@@ -255,7 +255,7 @@ HSQuickLook.main.schema =
 	}
 },
 {
-	"collection":"hk1",
+	"collection":"hxi1",
 	"functionalObject":"/HXI1.USR",
 	"attributeSequence":"USR_HK",
 	"period":"1",
@@ -277,7 +277,7 @@ HSQuickLook.main.schema =
 	}
 },
 {
-	"collection":"hk1",
+	"collection":"hxi1",
 	"functionalObject":"/HXI1.USR",
 	"attributeSequence":"USR_HK",
 	"period":"1",
