@@ -325,8 +325,9 @@ var HSQuickLook = HSQuickLook || {};
     var directory = tableInfo.functionalObject;
     var directory1 = directory.split('/').join('_').split('.').join('_');
     var document = tableInfo.attributeSequence;
+    var document1 = directory.split('.').join('_');
     var table = getTableName(tableInfo);
-    return (collection+'-'+directory1+'-'+document+'-'+table);
+    return (collection+'-'+directory1+'-'+document1+'-'+table);
   }
 
   function getRequestMessage(tableInfo) {
