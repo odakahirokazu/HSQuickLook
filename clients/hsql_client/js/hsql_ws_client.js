@@ -453,7 +453,6 @@ var HSQuickLook = HSQuickLook || {};
     var elemValue = $("<td />").attr("id", elemID).html(valueFormated);
     var type = info.type;
     if (type !== void 0) {
-      elemValue.addClass(type);
       var graphtype = info.graphtype;
       if (graphtype) {
         if (graphtype=="trend") {
@@ -519,6 +518,9 @@ var HSQuickLook = HSQuickLook || {};
 
   function convertValue(info, rawValue) {
     var value = rawValue;
+    if (info.type == "uint") {
+      value = value>>>0;
+    }
     if ('conversion' in info) {
       var conversion = info.conversion;
       if (typeof conversion == "function") {

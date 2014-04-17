@@ -77,6 +77,10 @@ img {
     text-align :right;
 }
 
+.type-uint {
+    text-align :right;
+}
+
 .type-float {
     text-align :right;
 }
