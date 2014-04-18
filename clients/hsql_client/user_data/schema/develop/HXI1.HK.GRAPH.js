@@ -5,12 +5,19 @@ HSQuickLook.main.schema =
  "collection" : "hxi1",
  "functionalObject": "/HXI1.QL",
  "attributeSequence": "HK_HXI1.USR.USR_HK",
- "period" : 2,
+ "period" : 4,
  "blockName" : "Block_hk_HXI1.USR.USR_HK",
  "contents" : {
    "Time_Origin" : {"source":"Time_Origin" , "type": "int"},
-   "rcv_cnt" : {"source":"Receive_Count" , "type": "image"}
-   // "rcv_cnt" : {"source":"hk_HXI1.USR.USR_HK.EVNT_RCV_CNT" , "type": "image"}
+   "rcv_cnt" : {"source":"Event_Receive_Count" , "type": "image"},
+   "tlm_sel_cnt" : {"source":"Event_Select_Count" , "type": "image"},
+   "tlm_rej_cnt" : {"source":"Event_TLM_Reject_Count" , "type": "image"},
+   "cpmu_temp" : {"source":"CPMU_Temp" , "type": "image"},
+   "cpmu_hv" : {"source":"CPMU_HV" , "type": "image"},
+   "cpmu_v" : {"source":"CPMU_V" , "type": "image"},
+   "apmu_temp" : {"source":"APMU_Temp" , "type": "image"},
+   "apmu_hv" : {"source":"APMU_HV" , "type": "image"},
+   "apmu_v" : {"source":"APMU_V" , "type": "image"}
  }
 },
 {
@@ -18,28 +25,28 @@ HSQuickLook.main.schema =
  "collection" : "hxi1",
  "functionalObject": "/HXI1.QL",
  "attributeSequence": "HK_HXI1.CAM.SCL",
- "period" : 2,
+ "period" : 4,
  "blockName" : "Block_hk_HXI1.CAM.SCL",
  "contents" : {
    "Time_Origin" : {"source":"Time_Origin" , "type": "int"},
-   "scl_trg" : {"source":"SCL_TRG" , "type": "image"}
-   // "scl_trg1" : {"source":"hk_HXI1.CAM.SCL.SCL_TRG1" , "type": "image"},
-   // "scl_trg2" : {"source":"hk_HXI1.CAM.SCL.SCL_TRG2" , "type": "image"},
-   // "scl_trg3" : {"source":"hk_HXI1.CAM.SCL.SCL_TRG3" , "type": "image"},
-   // "scl_trg4" : {"source":"hk_HXI1.CAM.SCL.SCL_TRG4" , "type": "image"},
-   // "scl_trg5" : {"source":"hk_HXI1.CAM.SCL.SCL_TRG5" , "type": "image"},
-   // "scl_trg6" : {"source":"hk_HXI1.CAM.SCL.SCL_TRG6" , "type": "image"},
-   // "scl_trg7" : {"source":"hk_HXI1.CAM.SCL.SCL_TRG7" , "type": "image"},
-   // "scl_trg8" : {"source":"hk_HXI1.CAM.SCL.SCL_TRG8" , "type": "image"},
-   // "scl_trg9" : {"source":"hk_HXI1.CAM.SCL.SCL_TRG9" , "type": "image"},
-   // "scl_trg10" : {"source":"hk_HXI1.CAM.SCL.SCL_TRG10" , "type": "image"},
-   // "scl_trg11" : {"source":"hk_HXI1.CAM.SCL.SCL_TRG11" , "type": "image"},
-   // "scl_trg12" : {"source":"hk_HXI1.CAM.SCL.SCL_TRG12" , "type": "image"},
-   // "scl_trg13" : {"source":"hk_HXI1.CAM.SCL.SCL_TRG13" , "type": "image"},
-   // "scl_trg14" : {"source":"hk_HXI1.CAM.SCL.SCL_TRG14" , "type": "image"},
-   // "scl_trg15" : {"source":"hk_HXI1.CAM.SCL.SCL_TRG15" , "type": "image"},
-   // "scl_trg16" : {"source":"hk_HXI1.CAM.SCL.SCL_TRG16" , "type": "image"},
-   // "scl_trg17" : {"source":"hk_HXI1.CAM.SCL.SCL_TRG17" , "type": "image"}
+   "scl_trg" : {"source":"SCL_TRG" , "type": "image"},
+   "scl_veto_atMIO2" : {"source":"SCL_FBGO_MIO2" , "type": "image"},
+   "scl_time" : {"source":"SCL_Time" , "type": "image"}
+ }
+},
+{
+ "tableName" : "graph_HXI_APMU_SCL",
+ "collection" : "hxi1",
+ "functionalObject": "/HXI1.QL",
+ "attributeSequence": "HK_HXI1.APMU.APMU_SCL",
+ "period" : 8,
+ "blockName" : "Block_hk_HXI1.APMU.APMU_SCL",
+ "contents" : {
+   "Time_Origin" : {"source":"Time_Origin" , "type": "int"},
+   "scl_fbgo" : {"source":"SCL_FBGO" , "type": "image"},
+   "scl_hitpat" : {"source":"SCL_HIT_PAT" , "type": "image"},
+   "scl_ud" : {"source":"SCL_UD" , "type": "image"},
+   "scl_sud" : {"source":"SCL_SUD" , "type": "image"}
  }
 }
 ];
