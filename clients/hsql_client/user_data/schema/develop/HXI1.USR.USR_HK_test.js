@@ -10,9 +10,9 @@ HSQuickLook.main.schema =
 	"blockName":"APP_VAL_block",
 	"contents":{
 		"DE_MODE":{"type":"int","status":"ok","format":"%2X"},
-		"DE_MODE_1":{source: "DE_MODE",
+		"DE_MODE_1":{"source": "DE_MODE",
                  "type":"string",
-                 conversion: function(v){
+                 "conversion": function(v){
                    return (v==0) ? "IDLE"
                        : (v==1) ? "RUN"
                        : "undefined";
@@ -28,6 +28,12 @@ HSQuickLook.main.schema =
 		"EVNT_SEL_CNT_H":{"type":"int","status":"ok","format":"%8d"},
 		"EVNT_SEL_CNT_M":{"type":"int","status":"ok","format":"%8d"},
 		"EVNT_SEL_CNT_L":{"type":"int","status":"ok","format":"%8d"},
+		"EVNT_SEL_CNT_SUM":{"source": ["EVNT_SEL_CNT_H","EVNT_SEL_CNT_M","EVNT_SEL_CNT_L"],
+                        "type":"int","status":"ok","format":"%8d",
+                        "conversion": function(v){
+                          return v[0]+v[1]+v[2];
+                        }
+                       },
 		"EVNT_TLM_REJ_CNT_H":{"type":"int","status":"ok","format":"%4X"},
 		"EVNT_TLM_REJ_CNT_M":{"type":"int","status":"ok","format":"%4X"},
 		"EVNT_TLM_REJ_CNT_L":{"type":"int","status":"ok","format":"%4X"},

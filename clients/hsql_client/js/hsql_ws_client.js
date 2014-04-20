@@ -416,7 +416,12 @@ var HSQuickLook = HSQuickLook || {};
       else {
         var source = key;
       }
-      var value = values[source];
+      if (typeof source == "string") {
+        var value = values[source];
+      }
+      else {
+        var value = source.map(function(s){ return values[s]; });
+      }
       
       if (value === void 0) continue;
 
@@ -518,13 +523,15 @@ var HSQuickLook = HSQuickLook || {};
 
   function convertValue(info, rawValue) {
     var value = rawValue;
-    if (info.type == "uint") {
-      value = value>>>0;
-    }
     if ('conversion' in info) {
       var conversion = info.conversion;
       if (typeof conversion == "function") {
         value = conversion(value);
+      }
+    }
+    else {
+      if (info.type == "uint") {
+        value = value>>>0;
       }
     }
     return value;
