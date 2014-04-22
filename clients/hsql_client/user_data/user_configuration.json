@@ -11,6 +11,7 @@
             "SGD1.USR.USR_HK": "user_data/schema/SGD1/SGD1.USR.USR_HK.js",
             "SMU_A_HW.ESHK1": "user_data/schema/SMU_A_HW/SMU_A_HW.ESHK1.js",
             "HXI1 USR-HK (develop)": "user_data/schema/develop/HXI1.USR.USR_HK_test.js",
+            "HXI1 USR-HK 温度/HV (develop)": "user_data/schema/develop/HXI1.USR.USR_HK_CONV.js",
             "HXI1 LC (develop)": "user_data/schema/develop/HXI1.CAMERA.IMAGES_test.js",
             "HXI1 HK GRAPH (develop)": "user_data/schema/develop/HXI1.HK.GRAPH.js"
         },

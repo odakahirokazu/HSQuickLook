@@ -2,7 +2,7 @@ HSQuickLook.main.schema =
 [
 {
   "tableName" : "APP_VAL_block_new",
-  "tableTitle" : "Application Values (test)",
+  "tableTitle" : "Application Values",
 	"collection":"hxi1",
 	"functionalObject":"/HXI1.USR",
 	"attributeSequence":"USR_HK",
