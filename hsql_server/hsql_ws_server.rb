@@ -26,6 +26,12 @@ Port = ( ARGV[2] ? ARGV[2].to_i : 27017 )
 ########################################
 
 
+def log(message, io=STDOUT)
+  io.puts Time.now.to_s + " | " + message
+  io.flush
+end
+
+
 class QLDocument
   def initialize(collection, functional_object, attribute_sequence, period)
     @collection = collection
@@ -43,7 +49,7 @@ class QLDocument
       :FunctionalObjectName => @functional_object.to_s,
       :AttributeSequenceName => @attribute_sequence.to_s
     }
-    
+
     if time
       query[:UNIXTIME] = {"$gte" => time}
       option = {:sort => ["$natural", :ascending]}
@@ -55,11 +61,11 @@ class QLDocument
 
     # p query
     # p obj
-    
+
     if obj.class != BSON::OrderedHash
       obj = {}
     end
-    
+
     return obj
   end
 
@@ -97,7 +103,7 @@ class DocumentStore
   def clear()
     @documents.each_value{|array| array.clear }
   end
-  
+
   def checkout(name, time)
     if d = @documents[name]
       d.each do |time_data_pair|
@@ -238,21 +244,22 @@ class HSQuickLookServer
       end
       @client_manager.get(client_id).time = time
     else
-      puts "Received an unknown-type message."
+      log "Received an unknown-type message."
     end
   end
 
   def run()
     EventMachine::run do
-      puts 'Run WebSocket Server.'
+      log 'Run WebSocket Server.'
+      STDOUT.flush
       @channel = EM::Channel.new
       @current_client_id = 0
-      
+
       EventMachine::WebSocket.start(:host => "0.0.0.0", :port => 8080) do |ws|
         ws.onopen do
           @current_client_id = @current_client_id + 1
           cid = @current_client_id
-          puts "Connected to Client #{cid}"
+          log "Connected to Client #{cid}"
           @client_manager.propose_register(cid)
 
           sid = @channel.subscribe do |data|
@@ -267,18 +274,23 @@ class HSQuickLookServer
 
           ws.onmessage do |mes|
             begin
-              puts "Received from Client #{cid}: #{mes}"
+              log "Received from Client #{cid}: #{mes}"
               interpret_message(mes, cid)
             rescue => ex
               p ex
+            ensure
+              STDOUT.flush
             end
           end
 
           ws.onclose do
-            puts "Disconnected Client #{cid}"
+            log "Disconnected Client #{cid}"
             @channel.unsubscribe(sid)
             @client_manager.propose_delete(cid)
+            STDOUT.flush
           end
+
+          STDOUT.flush
         end
       end
 
@@ -302,9 +314,16 @@ end
 
 
 ### Main ###
-puts 'HSQL WebSocket Server started.'
+puts '************************************************************'
+puts '*                                                          *'
+puts '*             HSQuickLook WebSocket Server                 *'
+puts '*                                                          *'
+puts '************************************************************'
+puts ''
 puts 'MongoDB connection to '+Host+':'+Port.to_s
-puts 'DB name: '+DBName
+puts 'Database: '+DBName
+puts ''
+STDOUT.flush
 
 server = HSQuickLookServer.new
 server.mongodb(Host, Port, DBName)
