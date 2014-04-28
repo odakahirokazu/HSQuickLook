@@ -50,6 +50,7 @@ var HSQuickLook = HSQuickLook || {};
   function bindEventForms() {
     // ws-form
     $("input#button-connect").click(openConnection);
+    $("input#ws-host").keypress(preventDefaultEnterKey);
     
     // contents-form
     $("select#selected-group").change(loadDataSheetList);
@@ -58,14 +59,14 @@ var HSQuickLook = HSQuickLook || {};
     // mode-form
     $("input#mode-ql").click(enterQLMode);
     $("input#mode-paused").click(pause);
-
+    
     // time-form
-    $("input#time0").keypress(sendTimeFunc);
-    $("input#time1").keypress(sendTimeFunc);
-    $("input#time2").keypress(sendTimeFunc);
-    $("input#time3").keypress(sendTimeFunc);
-    $("input#time4").keypress(sendTimeFunc);
-    $("input#time5").keypress(sendTimeFunc);
+    $("input#time0").keypress(enterDLModeByEvent);
+    $("input#time1").keypress(enterDLModeByEvent);
+    $("input#time2").keypress(enterDLModeByEvent);
+    $("input#time3").keypress(enterDLModeByEvent);
+    $("input#time4").keypress(enterDLModeByEvent);
+    $("input#time5").keypress(enterDLModeByEvent);
     $("input#request-time").click(enterDLMode);
 
     // log-section
@@ -81,8 +82,8 @@ var HSQuickLook = HSQuickLook || {};
     $('h1.title').html(title);
     $('title').html(title);
 
-    if (host === void 0) { host= "localhost"; }
-    if (port === void 0) { host= "8080"; }
+    if (host === void 0 || host == "") { host = location.host; }
+    if (port === void 0) { host = "8080"; }
     $("#ws-host").val(host+":"+port);
 
     schemaList = user_config["schema_list"];
@@ -118,6 +119,12 @@ var HSQuickLook = HSQuickLook || {};
     }
   }
 
+  function preventDefaultEnterKey(e) {
+    var KC_ENTER = 13;
+    if(e.keyCode == KC_ENTER) { 
+      e.preventDefault();
+    }
+  }
 
   /************************************************************
    *   Log
@@ -210,11 +217,11 @@ var HSQuickLook = HSQuickLook || {};
     paused = true;
   }
 
-  function sendTimeFunc(e) {
+  function enterDLModeByEvent(e) {
     var KC_ENTER = 13;
     if(e.keyCode == KC_ENTER) { 
       e.preventDefault();
-      sendTime();
+      enterDLMode();
     }
   }
 
