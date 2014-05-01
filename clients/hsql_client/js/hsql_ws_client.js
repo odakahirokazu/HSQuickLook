@@ -37,6 +37,7 @@ var HSQuickLook = HSQuickLook || {};
    *   Main
    */
   $(document).ready(function(){
+    $.ajaxSetup({cache: false});
     bindEventForms();
     $.getJSON("user_data/user_configuration.json")
         .done(initialize)
@@ -301,7 +302,7 @@ var HSQuickLook = HSQuickLook || {};
           $('p#time').html(unixtime+" | TI: "+ti);
           timeUpdated = true;
         }
-        setTimeout(displayImages, 100);
+        // setTimeout(displayImages, 250);
         updateTable(tableInfo, dataObject, ti);
       }
     }
@@ -393,7 +394,7 @@ var HSQuickLook = HSQuickLook || {};
       var value = 0;
       var type = info.type;
       if (type=="image") {
-        value = "<img class=\"image_old\" />";
+        value = "<img class=\"image_new\" /><img class=\"image_old\" />";
       }
       tbody.append(makePair(key, value, info, tableID));
     }
@@ -506,8 +507,32 @@ var HSQuickLook = HSQuickLook || {};
     var type = info.type;
     if (type == "image") {
       target.removeClass("display_phase1").addClass("display_phase0");
-      target.find("img").removeClass("image_new").addClass("image_old");
-      target.prepend(value);
+      var image1 = target.children("img.image_new");
+      var image2 = target.children("img.image_old");
+      var data = JSON.parse(value);
+      var data64 = data.data.replace(/\s/g, '');
+      var binaryData = atob(data64);
+      var mimeType = data.type;
+      var height = data.height;
+      var width = data.width;
+
+      var oldBlobURL = image2.attr("src");
+      var currentBlobURL = image1.attr("src");
+      var newBlobURL = createImageURL(binaryData, mimeType);
+      image2.attr({"src": newBlobURL,
+                   "height": height,
+                   "width": width});
+      image1.removeClass("image_new").addClass("image_old");
+      image2.removeClass("image_old").addClass("image_new");
+
+      setTimeout(function(){
+        target.removeClass("display_phase0").addClass("display_phase1");
+      }, 250);
+      
+      if (oldBlobURL) {
+        var URL = window.URL || window.webkitURL;
+        URL.revokeObjectURL(oldBlobURL);
+      }
     } else {
       var valueFormated = formatValue(info, value);
       target.html(valueFormated);
@@ -516,6 +541,18 @@ var HSQuickLook = HSQuickLook || {};
     }
   }
 
+  function createImageURL(binaryData, mimeType) {
+    var buf = new ArrayBuffer(binaryData.length);
+    var view = new Uint8Array(buf);
+    for(var i=0; i<view.length; i++) {
+      view[i] = binaryData.charCodeAt(i);          
+    }
+    var blob = new Blob([view], {"type": mimeType});
+    var URL = window.URL || window.webkitURL;
+    var blobURL = URL.createObjectURL(blob);
+    return blobURL;
+  }
+  
   function valueStatus(info, value) {
     if ('status' in info) {
       var status = info.status;
@@ -556,11 +593,6 @@ var HSQuickLook = HSQuickLook || {};
    */
   function displayImages() {
     $(".display_phase0").removeClass("display_phase0").addClass("display_phase1");
-    $(".image_old").remove();
-  }
-
-  function setAllImagesOld() {
-    $(".image_new").removeClass("image_new").addClass("image_old");
   }
 
 

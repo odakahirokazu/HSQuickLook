@@ -54,7 +54,6 @@ input#time5 { width: 2.8em; }
 }
 
 img {
-    background-color: #FFF;
     color: #FFF;
     padding: 1em;
     font-family: monospace;
@@ -108,6 +107,22 @@ div#main-tables {
     left: 0; 
     visibility: hidden;
 }
+
+.display_phase1 {
+    position: relative;
+}
+
+.display_phase1 .image_old {
+    position: absolute;
+    top: 0;
+    left: 0; 
+    visibility: hidden;
+}
+
+.display_phase1 .image_new {
+    visibility: visible;
+}
+
 
 /*.drag_box {
     width:450px;

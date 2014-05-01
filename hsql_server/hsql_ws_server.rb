@@ -192,7 +192,7 @@ def convert_object(obj)
 end
 
 
-def convert_contents(obj)
+def convert_contents(obj, image_format="json")
   obj.each do |k, v|
     next unless v.class == BSON::OrderedHash
     if v["DataType"] == "image"
@@ -201,17 +201,31 @@ def convert_contents(obj)
       # p data
       height = v['Height']
       width = v['Width']
-
       mime_type = MIME::Types.type_for(file_name)[0].to_s
       data_base64 = Base64::encode64(data)
-      data_uri = "data:#{mime_type};base64,#{data_base64}"
-      image_size = ""
-      if height && width
-        image_size = sprintf("height=\"%d\" width=\"%d\"", height, width)
+
+      if image_format=="json"
+        image = { data: data_base64, type: mime_type}
+        if height && width
+          image[:height] = height.to_s
+          image[:width] = width.to_s
+        end
+        obj[k] = image.to_json
+      elsif image_format=="img-tag"
+        data_uri = "data:#{mime_type};base64,#{data_base64}"
+        image_size = ""
+        if height && width
+          image_size = sprintf("height=\"%d\" width=\"%d\"", height, width)
+        end
+        tag = sprintf("<img class=\"image_new\" src=\"%s\" alt=\"%s\" %s>",
+                      data_uri, k, image_size)
+        obj[k] = tag
+      elsif image_format=="data"
+        obj[k] = data_base64
+      else
+        log "Error: image format is invalid. "+image_format
+        obj[k] = ""
       end
-      image_tag = sprintf("<img class=\"image_new\" src=\"%s\" alt=\"%s\" %s>",
-                          data_uri, k, image_size)
-      obj[k] = image_tag
     end
   end
 end
