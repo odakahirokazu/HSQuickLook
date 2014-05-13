@@ -14,12 +14,26 @@
             "HXI2 USR-HK Conversion (develop)": "user_data/schema/develop/HXI2.USR.USR_HK_CONV.js",
             "HXI1 HK GRAPH (develop)": "user_data/schema/develop/HXI1.HK.GRAPH.js",
             "Image test (develop)": "user_data/schema/develop/HXI1.HK.GRAPH_GCTest.js",
+            "Plotter test (develop)": "user_data/schema/develop/Plotter_test.js",
             "HXI2 HK GRAPH (develop)": "user_data/schema/develop/HXI2.HK.GRAPH.js",
             "HXI1.USR.USR_HK.GRAPH": "user_data/schema/HXI1/HXI1.USR.USR_HK_GRAPH.js",
             "SGD1.USR.USR_HK": "user_data/schema/SGD1/SGD1.USR.USR_HK.js",
             "SMU_A_HW.ESHK1": "user_data/schema/SMU_A_HW/SMU_A_HW.ESHK1.js",
             "HXI1 USR-HK (develop)": "user_data/schema/develop/HXI1.USR.USR_HK_test.js",
             "HXI1 LC (develop)": "user_data/schema/develop/HXI1.CAMERA.IMAGES_test.js"
+        },
+        "SGD EIC/MIC": {
+            "SGD1 USR HK": "user_data/schema/SGD_EICMIC/SGD1.USR.USR_HK.js",
+            "SGD1 CC1 scaler": "user_data/schema/SGD_EICMIC/SGD1.CC1.SCL.js",
+            "SGD1 CC2 scaler": "user_data/schema/SGD_EICMIC/SGD1.CC2.SCL.js",
+            "SGD1 CC3 scaler": "user_data/schema/SGD_EICMIC/SGD1.CC3.SCL.js",
+            "SGD1 APMU1 scaler": "user_data/schema/SGD_EICMIC/SGD1.APMU1.APMU_SCL.js",
+            "SGD1 APMU2 scaler": "user_data/schema/SGD_EICMIC/SGD1.APMU2.APMU_SCL.js",
+            "SGD1 CC histograms": "user_data/schema/SGD_EICMIC/SGD1.CAMERA.HIST.js",
+            "SGD1 CC light curves": "user_data/schema/SGD_EICMIC/SGD1.CAMERA.LC.js",
+            "SGD1 Shield histograms": "user_data/schema/SGD_EICMIC/SGD1.SHIELD.HIST.js",          
+            "SGD1 trend curves": "user_data/schema/SGD_EICMIC/SGD1.HK.TREND.js",
+            "SGD1 Shield LC": "user_data/schema/SGD_EICMIC/SGD1.SHIELD.LC.js"
         },
         "HXI1": {
             "HXI1.USR.USR_HK.GRAPH": "user_data/schema/HXI1/HXI1.USR.USR_HK_GRAPH.js",
