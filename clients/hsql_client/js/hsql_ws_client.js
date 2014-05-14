@@ -552,6 +552,9 @@ var HSQuickLook = HSQuickLook || {};
                 } else {
                     g.setDiffMode(false);
                 }
+                if('upperBound' in plot){
+                    g.setUpperBound(plot.upperBound);
+                }
                 if ('options' in plot) {
                     var opt = plot.options;
                     setIfGiven(opt.legend, g.setDataLabel);

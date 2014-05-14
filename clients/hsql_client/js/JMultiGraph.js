@@ -23,7 +23,7 @@ var HSQuickLook = HSQuickLook || {};
     };
 
     HSQuickLook.JMultiGraph.JMultiGraph = function() {
-        var plots = []
+        var plots = [];
         var queryToPlaceholder = "";
         var showSeriesLine = true;
         var options = {
@@ -56,7 +56,7 @@ var HSQuickLook = HSQuickLook || {};
 
         this.setQueryToPlaceholder = function(path) {
             queryToPlaceholder = path;
-        }
+        };
 
         this.enableRescale = function(enadisX, enadisY) {
             if (enadisX === undefined || enadisY === undefined) {

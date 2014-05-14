@@ -10,6 +10,7 @@ HSQuickLook.main.schema = [ {
             "group" : [ {
                 "source" : "EVNT_DERR_SIZE",
                 "mode" : "diff",
+                "upperBound" : (1<<16),
                 "conversion" : function(v) {
                     return v;
                 },
@@ -21,6 +22,7 @@ HSQuickLook.main.schema = [ {
             }, {
                 "source" : "EVNT_RCV_CNT",
                 "mode" : "diff",
+                "upperBound" : (1<<16),
                 "conversion" : function(v) {
                     return v;
                 },
@@ -31,6 +33,7 @@ HSQuickLook.main.schema = [ {
             }, {
                 "source" : "EVNT_REJ_CNT",
                 "mode" : "diff",
+                "upperBound" : (1<<16),
                 "conversion" : function(v) {
                     return v;
                 },
@@ -46,6 +49,7 @@ HSQuickLook.main.schema = [ {
             "group" : [ {
                 "source" : "EVNT_SEL_CNT_H",
                 "mode" : "diff",
+                "upperBound" : 4294967296,
                 "conversion" : function(v) {
                     return v;
                 },
@@ -56,6 +60,7 @@ HSQuickLook.main.schema = [ {
             }, {
                 "source" : "EVNT_SEL_CNT_M",
                 "mode" : "diff",
+                "upperBound" : 4294967296,
                 "conversion" : function(v) {
                     return v;
                 },
@@ -66,6 +71,7 @@ HSQuickLook.main.schema = [ {
             }, {
                 "source" : "EVNT_SEL_CNT_L",
                 "mode" : "diff",
+                "upperBound" : 4294967296,
                 "conversion" : function(v) {
                     return v;
                 },
@@ -81,6 +87,7 @@ HSQuickLook.main.schema = [ {
             "group" : [ {
                 "source" : "EVNT_TLM_REJ_CNT_H",
                 "mode" : "diff",
+                "upperBound" : 4294967296,
                 "conversion" : function(v) {
                     return v;
                 },
@@ -91,6 +98,7 @@ HSQuickLook.main.schema = [ {
             }, {
                 "source" : "EVNT_TLM_REJ_CNT_M",
                 "mode" : "diff",
+                "upperBound" : 4294967296,
                 "conversion" : function(v) {
                     return v;
                 },
@@ -101,6 +109,7 @@ HSQuickLook.main.schema = [ {
             }, {
                 "source" : "EVNT_TLM_REJ_CNT_L",
                 "mode" : "diff",
+                "upperBound" : 4294967296,
                 "conversion" : function(v) {
                     return v;
                 },

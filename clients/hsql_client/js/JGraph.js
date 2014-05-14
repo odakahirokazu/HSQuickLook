@@ -125,6 +125,7 @@ var HSQuickLook = HSQuickLook || {};
         var legendPosition = "nw";
         var diffMode = false;
         var lastData = void 0;
+        var upperBound = 0.0;
         var options = {
             legend : {
                 position : legendPosition,
@@ -157,14 +158,18 @@ var HSQuickLook = HSQuickLook || {};
         this.setDiffMode = function(enadis) {
             diffMode = enadis;
         };
+        
+        this.setUpperBound = function(ub){
+            upperBound = ub;
+        }
 
         this.getPlotData = function() {
             return plotData;
-        }
+        };
 
         this.getLastPoint = function() {
             return data[data.length - 1];
-        }
+        };
 
         this.setQueryToPlaceholder = function(query) {
             if (typeof query == "string") {
@@ -412,7 +417,7 @@ var HSQuickLook = HSQuickLook || {};
                 options.yaxis.ticks = [ 0.00001, 0.0001, 0.001, 0.01, 0.1, 1,
                         10, 100, 1000, 10000, 100000, 1000000 ];
                 options.yaxis.transform = function(v) {
-                    return Math.log(v)
+                    return Math.log(v);
                 };
             }
         };
@@ -478,7 +483,12 @@ var HSQuickLook = HSQuickLook || {};
                         } else {
                             if (d[0] != lastData[0]) {
                                 var lastd = d.slice(0);
-                                d[1] -= lastData[1];
+                                if(d[1] < lastData[1]){                                    
+                                    d[1] = d[1] - lastData[1] + upperBound;
+                                }
+                                else{
+                                    d[1] -= lastData[1];
+                                }
                                 d[1] /= (d[0] - lastData[0]);
                                 if (capacity > 0 && data.length >= capacity) {
                                     data.splice(0, 1);
