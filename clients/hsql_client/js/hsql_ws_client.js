@@ -89,7 +89,7 @@ var HSQuickLook = HSQuickLook || {};
         $('title').html(title);
 
         if (host === void 0 || host == "") {
-            host = location.host;
+            host = location.hostname;
         }
         if (port === void 0) {
             host = "8080";
