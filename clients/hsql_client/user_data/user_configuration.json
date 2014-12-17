@@ -30,9 +30,11 @@
             "SGD1 APMU2 scaler": "user_data/schema/SGD_EICMIC/SGD1.APMU2.APMU_SCL.js",
             "SGD1 CC histograms": "user_data/schema/SGD_EICMIC/SGD1.CAMERA.HIST.js",
             "SGD1 CC light curves": "user_data/schema/SGD_EICMIC/SGD1.CAMERA.LC.js",
-            "SGD1 Shield histograms": "user_data/schema/SGD_EICMIC/SGD1.SHIELD.HIST.js",
+            "SGD1 APMU1 Shield histograms": "user_data/schema/SGD_EICMIC/SGD1.APMU1.SHIELD.HIST.js",
+            "SGD1 APMU2 Shield histograms": "user_data/schema/SGD_EICMIC/SGD1.APMU2.SHIELD.HIST.js",
             "SGD1 trend curves": "user_data/schema/SGD_EICMIC/SGD1.HK.TREND.js",
-            "SGD1 Shield LC": "user_data/schema/SGD_EICMIC/SGD1.SHIELD.LC.js"
+            "SGD1 APMU1 Shield LC": "user_data/schema/SGD_EICMIC/SGD1.APMU1.SHIELD.LC.js",
+			      "SGD1 APMU2 Shield LC": "user_data/schema/SGD_EICMIC/SGD1.APMU2.SHIELD.LC.js"
         },
         "My favorite": {
             "HXI1.USR.USR_HK": "user_data/schema/HXI1/HXI1.USR.USR_HK.js",
