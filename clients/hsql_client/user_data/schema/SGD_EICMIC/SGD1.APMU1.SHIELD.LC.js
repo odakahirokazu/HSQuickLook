@@ -39,7 +39,7 @@ HSQuickLook.main.schema = [
             "options": { "legend": "7", "color": "#F0F", "pointSize": 0.5 }
           }
         ],
-        "options" : {"xWidth" : 600}
+        "options" : {"xWidth": 600, "refreshCycle": 8 }
       },
       "FBGO8": {
         "type": "trend-graph",

@@ -21,12 +21,13 @@ var HSQuickLook = HSQuickLook || {};
    * Object prototype TrendCurve
    */
   HSQuickLook.graph.TrendCurve = function() {
+    var currentData = [void 0, void 0];
+
     this.placeholder = "";
     this.capacity = -1;
     this.differentialMode = false;
     this.upperBound = 0.0;
     this.rangeLocked = false;
-    this.currentData = [void 0, void 0];
     
     this.data = {
       label: "data1",
@@ -38,18 +39,21 @@ var HSQuickLook = HSQuickLook || {};
     this.options = {
       legend: { show: true, position: "nw" },
       series: { lines: { show: true, lineWidth: 1 }},
-      xaxis: {
-        axisLabel: "",
-        axisLabelUseCanvas: true,
-        min: -10.0,
-        max: +10.0
-      },
-      yaxis: {
-        axisLabel: "",
-        axisLabelUseCanvas: true,
-        min: -10.0,
-        max: +10.0
-      }
+      xaxis: { axisLabel: "", axisLabelUseCanvas: true, min: -10.0, max: +10.0 },
+      yaxis: { axisLabel: "", axisLabelUseCanvas: true, min: -10.0, max: +10.0 }
+    };
+
+    this.setCurrentData = function(x, y) {
+      currentData[0] = x;
+      currentData[1] = y;
+    };
+
+    this.getCurrentDataX = function() {
+      return currentData[0];
+    };
+
+    this.getCurrentDataY = function() {
+      return currentData[1];
     };
   };
 
@@ -91,29 +95,28 @@ var HSQuickLook = HSQuickLook || {};
     var data = this.data.data;
     var size = data.length;
     var capacity = this.capacity;
-    var lastData0 = this.currentData[0];
-    var lastData1 = this.currentData[1];
-    var newData0 = dataPoint[0];
-    var newData1 = dataPoint[1];
-    this.currentData[0] = newData0;
-    this.currentData[1] = newData1;
+    var lastDataX = this.getCurrentDataX();
+    var lastDataY = this.getCurrentDataY();
+    var newDataX = dataPoint[0];
+    var newDataY = dataPoint[1];
+    this.setCurrentData(newDataX, newDataY);
     
     if (this.differentialMode == true) {
-      if (lastData0 === void 0) {
+      if (lastDataX === void 0) {
         return;
       }
-      if (newData0-lastData0 > 0.0) {
-        if (newData1 < lastData1) {
-          newData1 += this.upperBound;
+      if (newDataX-lastDataX > 0.0) {
+        if (newDataY < lastDataY) {
+          newDataY += this.upperBound;
         }
-        newData1 = (newData1-lastData1)/(newData0-lastData0);
-        data.push([newData0, newData1]);
+        newDataY = (newDataY-lastDataY)/(newDataX-lastDataX);
+        data.push([newDataX, newDataY]);
         if (capacity>0 && size>=capacity) {
           data.shift();
         }
       }
     } else {
-      data.push([newData0, newData1]);
+      data.push([newDataX, newDataY]);
       if (capacity>0 && size>=capacity) {
         data.shift();
       }
@@ -125,7 +128,11 @@ var HSQuickLook = HSQuickLook || {};
    */
   HSQuickLook.graph.MultiGraph = function() {
     var plots = [];
+    var counter = 0;
+    
     this.placeholder = "";
+    this.refreshCycle = 4;
+    this.refreshPhase = 1;
     this.options = {
       legend: { show: true, position: "nw" },
       series: { lines: { show: true, lineWidth: 1 }},
@@ -138,7 +145,13 @@ var HSQuickLook = HSQuickLook || {};
     };
 
     this.plot = function() {
-      $.plot($(this.placeholder), plots, this.options);
+      if (counter == this.refreshCycle) {
+        counter = 0;
+      }
+      if (counter == this.refreshPhase) {
+        $.plot($(this.placeholder), plots, this.options);
+      }
+      counter += 1;
     };
   };
 

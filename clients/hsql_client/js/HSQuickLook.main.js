@@ -48,7 +48,7 @@ var HSQuickLook = HSQuickLook || {};
   $(document).ready(
     function() {
       $.ajaxSetup({
-        cache : false
+        cache: false
       });
       bindEventForms();
       $.getJSON("user_data/user_configuration.json")
@@ -293,7 +293,7 @@ var HSQuickLook = HSQuickLook || {};
     // main tables
     var target = $('div#main-tables').html("");
     var schema = HSQuickLook.main.schema;
-    for (var i = 0; i < schema.length; i++) {
+    for (var i=0; i<schema.length; i++) {
       var tableInfo = schema[i];
       if (tableInfo.collection !== void 0) {
         var table = createTable(tableInfo);
@@ -315,7 +315,7 @@ var HSQuickLook = HSQuickLook || {};
 
     var schema = HSQuickLook.main.schema;
     var timeUpdated = false;
-    for (var i = 0; i < schema.length; i++) {
+    for (var i=0; i<schema.length; i++) {
       var tableInfo = schema[i];
       var documentLabel = getDocumentLabel(tableInfo);
       var dataObject = dataEval[documentLabel];
@@ -529,9 +529,15 @@ var HSQuickLook = HSQuickLook || {};
       }
 
       var capacity = 600; // default 600 points (= 600 sec if 1Hz)
+      var refreshCycle = 4;
       if ('options' in info) {
         if ('xWidth' in info.options) {
           capacity = info.options.xWidth;
+          multiGraphs[elemID].capacity = capacity;
+        }
+        if ('refreshCycle' in info.options) {
+          refreshCycle = info.options.refreshCycle;
+          multiGraphs[elemID].refreshCycle = refreshCycle;
         }
       }
       xWidths[elemID] = capacity;
