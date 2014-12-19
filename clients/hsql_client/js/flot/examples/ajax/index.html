@@ -7,7 +7,6 @@
 	<!--[if lte IE 8]><script language="javascript" type="text/javascript" src="../../excanvas.min.js"></script><![endif]-->
 	<script language="javascript" type="text/javascript" src="../../jquery.js"></script>
 	<script language="javascript" type="text/javascript" src="../../jquery.flot.js"></script>
-	<p id="test"></p>
 	<script type="text/javascript">
 
 	$(function() {
@@ -40,10 +39,9 @@
 			// Find the URL in the link right next to us, then fetch the data
 
 			var dataurl = button.siblings("a").attr("href");
-//$("#test").html("dataurl");
+
 			function onDataReceived(series) {
 
-//$("#test").html("received!");
 				// Extract the first coordinate pair; jQuery has parsed it, so
 				// the data is now just an ordinary JavaScript object
 
@@ -59,13 +57,7 @@
 
 				$.plot("#placeholder", data, options);
 			}
-/*
-onDataReceived({
-    "label": "Europe (EU27)",
-    "data": [[1999, 3.0], [2000, 3.9], [2001, 2.0], [2002, 1.2], [2003, 1.3], [2004, 2.5], [2005, 2.0], [2006, 3.1], [2007, 2.9], [2008, 0.9]]
-})
-*/
-//$("#test").html("req");
+
 			$.ajax({
 				url: dataurl,
 				type: "GET",
@@ -174,7 +166,7 @@ onDataReceived({
 	</div>
 
 	<div id="footer">
-		Copyright &copy; 2007 - 2013 IOLA and Ole Laursen
+		Copyright &copy; 2007 - 2014 IOLA and Ole Laursen
 	</div>
 
 </body>
