@@ -1,9 +1,9 @@
 /*******************************************************************************
  * JGraph.js for HS Quick Look
  * 
- * Authors: Soki Sakurai
+ * Authors: Soki Sakurai, Hirokazu Odaka
  * Date: 2013-**-**
- * Date: 2014-12-19 | Hirokazu Odaka | code cleanup. remove unnecessary functions.
+ * Date: 2014-12-20 | Hirokazu Odaka | new design.
  * 
  ******************************************************************************/
 
@@ -27,7 +27,6 @@ var HSQuickLook = HSQuickLook || {};
     this.capacity = -1;
     this.differentialMode = false;
     this.upperBound = 0.0;
-    this.rangeLocked = false;
     
     this.data = {
       label: "data1",
@@ -39,8 +38,8 @@ var HSQuickLook = HSQuickLook || {};
     this.options = {
       legend: { show: true, position: "nw" },
       series: { lines: { show: true, lineWidth: 1 }},
-      xaxis: { axisLabel: "", axisLabelUseCanvas: true, min: -10.0, max: +10.0 },
-      yaxis: { axisLabel: "", axisLabelUseCanvas: true, min: -10.0, max: +10.0 }
+      xaxis: { min: -1.0, max: +1.0 },
+      yaxis: { min: -1.0, max: +1.0 }
     };
 
     this.setCurrentData = function(x, y) {
@@ -60,12 +59,13 @@ var HSQuickLook = HSQuickLook || {};
   var TrendCurve = HSQuickLook.graph.TrendCurve;
 
   TrendCurve.prototype.getLastYValue = function() {
-    var data = this.data.data;
-    var n = data.length;
+    var data = this.data.data,
+        n = data.length;
+
     if (n>0) {
       return data[n-1][1];
     } else {
-      return 0.0;
+      return void 0;
     }
   };
 
@@ -92,13 +92,14 @@ var HSQuickLook = HSQuickLook || {};
   };
   
   TrendCurve.prototype.pushData = function(dataPoint) {
-    var data = this.data.data;
-    var size = data.length;
-    var capacity = this.capacity;
-    var lastDataX = this.getCurrentDataX();
-    var lastDataY = this.getCurrentDataY();
-    var newDataX = dataPoint[0];
-    var newDataY = dataPoint[1];
+    var data = this.data.data,
+        size = data.length,
+        capacity = this.capacity,
+        lastDataX = this.getCurrentDataX(),
+        lastDataY = this.getCurrentDataY(),
+        newDataX = dataPoint[0],
+        newDataY = dataPoint[1];
+
     this.setCurrentData(newDataX, newDataY);
     
     if (this.differentialMode == true) {
@@ -124,24 +125,32 @@ var HSQuickLook = HSQuickLook || {};
   };
 
   /***************************************************************************
-   * Object prototype MultiGraph
+   * Object prototype MultiTrendCurves
    */
-  HSQuickLook.graph.MultiGraph = function() {
-    var plots = [];
-    var counter = 0;
+  HSQuickLook.graph.MultiTrendCurves = function() {
+    var trendCurves = [],
+        data = [],
+        counter = 0;
     
     this.placeholder = "";
     this.refreshCycle = 4;
     this.refreshPhase = 1;
+    this.timeOrigin = void 0;
+    this.xWidth = 600.0;
     this.options = {
       legend: { show: true, position: "nw" },
       series: { lines: { show: true, lineWidth: 1 }},
-      xaxis: { axisLabel: "Time (s)", axisLabelUseCanvas: true },
-      yaxis: { axisLabel: "", axisLabelUseCanvas: true }
+      xaxis: { axisLabel: "Time (s)", min: -1.0, max: +1.0 },
+      yaxis: { min: -1.0, max: +1.0 }
     };
 
-    this.addGraph = function(graph) {
-      plots.push(graph.data);
+    this.addTrendCurve = function(sourceID, curve) {
+      trendCurves[sourceID] = curve;
+      data.push(curve.data);
+    };
+
+    this.getTrendCurve = function(sourceID) {
+      return trendCurves[sourceID];
     };
 
     this.plot = function() {
@@ -149,21 +158,48 @@ var HSQuickLook = HSQuickLook || {};
         counter = 0;
       }
       if (counter == this.refreshPhase) {
-        $.plot($(this.placeholder), plots, this.options);
+        $.plot($(this.placeholder), data, this.options);
       }
       counter += 1;
     };
   };
 
-  var MultiGraph = HSQuickLook.graph.MultiGraph;
+  var MultiTrendCurves = HSQuickLook.graph.MultiTrendCurves;
 
-  MultiGraph.prototype.setRangeX = function(range) {
+  MultiTrendCurves.prototype.setRangeX = function(range) {
     this.options.xaxis.min = range[0];
     this.options.xaxis.max = range[1];
   };
 
-  MultiGraph.prototype.setRangeY = function(range) {
+  MultiTrendCurves.prototype.setRangeY = function(range) {
     this.options.yaxis.min = range[0];
     this.options.yaxis.max = range[1];
+  };
+
+  MultiTrendCurves.prototype.adjustRangeX = function(x) {
+    this.options.xaxis.min = x-this.xWidth+0.5;
+    this.options.xaxis.max = x+0.5;
+  };
+  
+  MultiTrendCurves.prototype.adjustRangeY = function(y) {
+    if (y === void 0) { return; }
+
+    var y0 = this.options.yaxis.min,
+        y1 = this.options.yaxis.max,
+        w = y1 - y0,
+        r = (y-y0)/w,
+        s = 1.0,
+        c = 0.95;
+
+    if (r > c) {
+      s = r/c;
+      y1 = y0 + w*s;
+      this.options.yaxis.max = y1;
+    }
+    else if (r < 1-c) {
+      s = (1.0-r)/c;
+      y0 = y1 - w*s;
+      this.options.yaxis.min = y0;
+    }
   };
 })(); /* end of the anonymous function */

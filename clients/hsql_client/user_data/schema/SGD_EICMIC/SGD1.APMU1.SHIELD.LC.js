@@ -4,7 +4,7 @@ HSQuickLook.main.schema = [
     "functionalObject": "/SGD1.APMU1",
     "attributeSequence": "APMU_SCL",
     "period": "1",
-    "tableName": "APMU_SCL",
+    "tableName": "APMU_Fast_BGO",
     "blockName": "APMU_SCL_block",
     "contents": {
       "FBGO1": {
@@ -39,7 +39,7 @@ HSQuickLook.main.schema = [
             "options": { "legend": "7", "color": "#F0F", "pointSize": 0.5 }
           }
         ],
-        "options" : {"xWidth": 600, "refreshCycle": 8 }
+        "options" : {"xWidth": 600, "refreshCycle": 5 }
       },
       "FBGO8": {
         "type": "trend-graph",
@@ -69,8 +69,18 @@ HSQuickLook.main.schema = [
             "options": { "legend": "13", "color": "#0FF", "pointSize": 0.5 }
           }
         ],
-        "options" : {"xWidth" : 600}
-      },
+        "options" : {"xWidth": 600, "refreshCycle": 5 }
+      }
+    }
+  },
+  {
+    "collection": "sgd1",
+    "functionalObject": "/SGD1.APMU1",
+    "attributeSequence": "APMU_SCL",
+    "period": "1",
+    "tableName": "APMU_HITPAT",
+    "blockName": "APMU_SCL_block",
+    "contents": {
       "HITPAT1": {
         "type": "trend-graph",
         "group": [
@@ -103,7 +113,7 @@ HSQuickLook.main.schema = [
             "options": { "legend": "7", "color": "#F0F", "pointSize": 0.5 }
           }
         ],
-        "options" : {"xWidth" : 600}
+        "options" : {"xWidth": 600, "refreshCycle": 5 }
       },
       "HITPAT8": {
         "type": "trend-graph",
@@ -133,7 +143,7 @@ HSQuickLook.main.schema = [
             "options": { "legend": "13", "color": "#0FF", "pointSize": 0.5 }
           }
         ],
-        "options" : {"xWidth" : 600}
+        "options" : {"xWidth": 600, "refreshCycle": 5 }
       }
     }
   }

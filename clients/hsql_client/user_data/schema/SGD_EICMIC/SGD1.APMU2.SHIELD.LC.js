@@ -39,7 +39,7 @@ HSQuickLook.main.schema = [
             "options": { "legend": "7", "color": "#F0F", "pointSize": 0.5 }
           }
         ],
-        "options" : {"xWidth" : 600}
+        "options" : {"xWidth": 600, "refreshCycle": 5 }
       },
       "FBGO8": {
         "type": "trend-graph",
@@ -69,7 +69,7 @@ HSQuickLook.main.schema = [
             "options": { "legend": "13", "color": "#0FF", "pointSize": 0.5 }
           }
         ],
-        "options" : {"xWidth" : 600}
+        "options" : {"xWidth": 600, "refreshCycle": 5 }
       },
       "HITPAT1": {
         "type": "trend-graph",
@@ -103,7 +103,7 @@ HSQuickLook.main.schema = [
             "options": { "legend": "7", "color": "#F0F", "pointSize": 0.5 }
           }
         ],
-        "options" : {"xWidth" : 600}
+        "options" : {"xWidth": 600, "refreshCycle": 5 }
       },
       "HITPAT8": {
         "type": "trend-graph",
@@ -133,7 +133,7 @@ HSQuickLook.main.schema = [
             "options": { "legend": "13", "color": "#0FF", "pointSize": 0.5 }
           }
         ],
-        "options" : {"xWidth" : 600}
+        "options" : {"xWidth": 600, "refreshCycle": 5 }
       }
     }
   }
