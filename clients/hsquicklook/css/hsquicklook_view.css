@@ -8,9 +8,10 @@ body {
 
 h1 {
     text-align: center;
+    color: #CCC;
     font-size: 14pt;
     padding-bottom: 0.2em;
-    border-bottom: solid 1px #AAA;
+    border-bottom: solid 1px #666;
 }
 
 h2 {

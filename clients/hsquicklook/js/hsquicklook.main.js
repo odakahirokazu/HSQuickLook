@@ -177,11 +177,11 @@ var HSQuickLook = HSQuickLook || {};
   function toggleTitleDisplay() {
     if (titleDisplay) {
       titleDisplay = false;
-      $("h1").addClass("section-nodisplay");
+      $("h1.title").addClass("section-nodisplay");
       $("#display-title-button").html("show title");
     } else {
       titleDisplay = true;
-      $("h1").removeClass("section-nodisplay");
+      $("h1.title").removeClass("section-nodisplay");
       $("#display-title-button").html("hide title");
     }
   }
@@ -296,6 +296,7 @@ var HSQuickLook = HSQuickLook || {};
     }
 
     $("title").html(dataSheetName);
+    $("h1.title").html(dataSheetName);
     
     resetGraphVariables();
 
