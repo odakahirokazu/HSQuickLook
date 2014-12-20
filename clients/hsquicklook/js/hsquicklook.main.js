@@ -28,6 +28,8 @@ var HSQuickLook = HSQuickLook || {};
       ws = null,
       schemaList,
       paused = false,
+      sectionDisplay = true,
+      titleDisplay = true,
       /* Variables about the trend graphs */
       graphs = new Object();
 
@@ -73,7 +75,11 @@ var HSQuickLook = HSQuickLook || {};
     $("input#request-time").click(enterDLMode);
 
     // log-section
-    $("input#button-clear-log").click(clearLog);
+    $("#clear-log-button").click(clearLog);
+
+    // display-control
+    $("#display-button").click(toggleSectionDisplay);
+    $("#display-title-button").click(toggleTitleDisplay);
   }
 
   function initialize(userConfig) {
@@ -152,6 +158,35 @@ var HSQuickLook = HSQuickLook || {};
   }
 
   /***************************************************************************
+   * Display
+   */
+  function toggleSectionDisplay() {
+    if (sectionDisplay) {
+      sectionDisplay = false;
+      $("div#control-section").addClass("section-nodisplay");
+      $("div#log-section").addClass("section-nodisplay");
+      $("#display-button").html("show control");
+    } else {
+      sectionDisplay = true;
+      $("div#control-section").removeClass("section-nodisplay");
+      $("div#log-section").removeClass("section-nodisplay");
+      $("#display-button").html("hide control");
+    }
+  }
+
+  function toggleTitleDisplay() {
+    if (titleDisplay) {
+      titleDisplay = false;
+      $("h1").addClass("section-nodisplay");
+      $("#display-title-button").html("show title");
+    } else {
+      titleDisplay = true;
+      $("h1").removeClass("section-nodisplay");
+      $("#display-title-button").html("hide title");
+    }
+  }
+
+  /***************************************************************************
    * WebSocket connection
    */
   function openConnection() {
@@ -161,7 +196,8 @@ var HSQuickLook = HSQuickLook || {};
     ws = new WebSocket(host);
 
     ws.onopen = function() {
-      log("WebSocket opened.");
+      var t = new Date();
+      log("WebSocket opened at "+t.toTimeString());
       sendTimeNow();
       $("#button-connect").val("Close");
       $("#button-connect").unbind("click", openConnection);
@@ -169,7 +205,8 @@ var HSQuickLook = HSQuickLook || {};
     };
 
     ws.onclose = function() {
-      log("WebSocket closed.");
+      var t = new Date();
+      log("WebSocket closed at "+t.toTimeString());
       $("#button-connect").val("Open");
       $("#button-connect").unbind("click");
       $("#button-connect").click(openConnection);

@@ -20,16 +20,22 @@
   </head>
 
   <body>
+    <div id="menu-section">
+      <span id="display-button" class="menu-button">hide control</span>
+      <span id="display-title-button" class="menu-button">hide title</span>
+      <span id="clear-log-button" class="menu-button">clear log</span>
+    </div>
+
     <h1 class="title">Quick Look</h1>
     
     <div id="control-section">
-      <h2>Control</h2>
+      <h2 class="section-heading">Control</h2>
       <form id="ws-form">
         <span>Connection to ws://</span>
         <input id="ws-host" type="text" value="localhost:8080" />
         <input id="button-connect" type="button" value="Open" />
       </form>
-
+      
       <form id="contents-form">
         <span>Contents: </span>
         <select id="selected-group"></select>
@@ -56,15 +62,12 @@
     </div>
 
     <div id="log-section">
-      <h2>Log</h2>
-      <form id="log-form">
-        <input id="button-clear-log" type="button" value="Clear" />
-      </form>
+      <h2 class="section-heading">Log</h2>
       <div id="log"></div>
     </div>
 
     <div id="data-section">
-      <h2>Data</h2>
+      <h2 class="section-heading">Data</h2>
       <p id="time" />
       <div id="main-tables" />
     </div>

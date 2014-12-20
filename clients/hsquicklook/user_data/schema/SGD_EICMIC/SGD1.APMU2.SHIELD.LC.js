@@ -4,7 +4,7 @@ HSQuickLook.main.schema = [
     "functionalObject": "/SGD1.APMU2",
     "attributeSequence": "APMU_SCL",
     "period": "1",
-    "tableName": "APMU_SCL",
+    "tableName": "APMU_Fast_BGO",
     "blockName": "APMU_SCL_block",
     "contents": {
       "FBGO1": {
@@ -70,7 +70,17 @@ HSQuickLook.main.schema = [
           }
         ],
         "options" : {"xWidth": 600, "refreshCycle": 5 }
-      },
+      }
+    }
+  },
+  {
+    "collection": "sgd1",
+    "functionalObject": "/SGD1.APMU2",
+    "attributeSequence": "APMU_SCL",
+    "period": "1",
+    "tableName": "APMU_HITPAT",
+    "blockName": "APMU_SCL_block",
+    "contents": {
       "HITPAT1": {
         "type": "trend-graph",
         "group": [
