@@ -25,7 +25,7 @@ h2 {
 
 div#menu-section {
     padding: 0.25em;
-    background-color: #333;
+    background-color: #444;
     line-height: 1.8em;
 }
 
@@ -36,15 +36,34 @@ div#menu-section {
     cursor: pointer;
     background-color: #666670;
     color: #CCD;
+
+    user-select: none;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    -o-user-select: none;
 }
 
-#control-section {
+.menu-button-on {
+    background-color: #AAAAA0;
+    color: #EEEEDD;
+}
+
+#control-section-frame {
     float: left;
     margin: 0px;
     width: 50%;
+}
+
+#log-section-frame {
+    margin-left: 50%;
+    width: auto;
+}
+
+#control-section {
+    padding: 0.5em;
     background-color: #224;
     color: #99A;
-    padding: 0.5em;
 }
 
 #control-section form {
@@ -59,9 +78,7 @@ input#time4 { width: 2.8em; }
 input#time5 { width: 2.8em; }
 
 #log-section {
-    margin-left: 50%;
-    width: auto;
-    padding: 0.5em 2.0em;
+    padding: 0.5em;
     background-color: #242;
     color: #9A9;
 }
@@ -80,10 +97,8 @@ input#time5 { width: 2.8em; }
 }
 
 img {
-    color: #FFF;
-    padding: 1em;
+    padding: 0.0em;
     font-family: monospace;
-    font-size: 12pt;
 }
 
 .status-error {
@@ -153,31 +168,12 @@ div#main-tables {
 	  box-sizing: border-box;
 	  width: 360px;
 	  height: 240px;
-/*
-    border: 1px solid #ddd;
-	  padding: 10px 10px 10px 10px;
-*/
-/*
-    background: #808080;
-	  background: linear-gradient(#f6f6f6 0, #fff 50px);
-	  background: -o-linear-gradient(#f6f6f6 0, #fff 50px);
-	  background: -ms-linear-gradient(#f6f6f6 0, #fff 50px);
-	  background: -moz-linear-gradient(#f6f6f6 0, #fff 50px);
-	  background: -webkit-linear-gradient(#f6f6f6 0, #fff 50px);
-	  box-shadow: 0 3px 10px rgba(0,0,0,0.15);
-	  -o-box-shadow: 0 3px 10px rgba(0,0,0,0.1);
-	  -ms-box-shadow: 0 3px 10px rgba(0,0,0,0.1);
-	  -moz-box-shadow: 0 3px 10px rgba(0,0,0,0.1);
-	  -webkit-box-shadow: 0 3px 10px rgba(0,0,0,0.1);
-*/
 }
 
 .graph-placeholder {
 	  background: #FFF;
 	  width: 100%;
 	  height: 100%;
-	  font-size: 14px;
-	  line-height: 1.2em;
 }
 
 .graph-timeorigin {

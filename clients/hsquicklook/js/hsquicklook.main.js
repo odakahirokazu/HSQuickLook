@@ -30,6 +30,7 @@ var HSQuickLook = HSQuickLook || {};
       paused = false,
       sectionDisplay = true,
       titleDisplay = true,
+      timeScaling = 1.0/64,
       /* Variables about the trend graphs */
       graphs = new Object();
 
@@ -85,6 +86,7 @@ var HSQuickLook = HSQuickLook || {};
     var title = userConfig["title"],
         host = userConfig["ws_host"],
         port = userConfig["ws_port"],
+        tiScaling = userConfig["ti_scaling"],
         group,
         groupHTML;
 
@@ -102,15 +104,38 @@ var HSQuickLook = HSQuickLook || {};
     }
     $("#ws-host").val(host + ":" + port);
 
+    if (tiScaling !== void 0) {
+      if (tiScaling==0) {
+        alert("Invalid user configuration: TI scaling is set to 0."); 
+      } else {
+        timeScaling = 1.0/tiScaling;
+      }
+    }
+
     schemaList = userConfig["schema_list"];
     for (group in schemaList) {
       groupHTML = $("<option />").html(group).attr("value", group);
       $("#selected-group").append(groupHTML);
     }
 
+    initializeManuBar();
     setCurrentTime();
     loadDataSheetList();
     openConnection();
+  }
+
+  function initializeManuBar() {
+    if (titleDisplay) {
+      $("#display-title-button").addClass("menu-button-on");
+    } else {
+      $("#display-title-button").removeClass("menu-button-on");
+    }
+
+    if (sectionDisplay) {
+      $("#display-button").addClass("menu-button-on");
+    } else {
+      $("#display-button").removeClass("menu-button-on");
+    }
   }
 
   function setCurrentTime() {
@@ -164,12 +189,12 @@ var HSQuickLook = HSQuickLook || {};
       sectionDisplay = false;
       $("div#control-section").addClass("section-nodisplay");
       $("div#log-section").addClass("section-nodisplay");
-      $("#display-button").html("show control");
+      $("#display-button").removeClass("menu-button-on");
     } else {
       sectionDisplay = true;
       $("div#control-section").removeClass("section-nodisplay");
       $("div#log-section").removeClass("section-nodisplay");
-      $("#display-button").html("hide control");
+      $("#display-button").addClass("menu-button-on");
     }
   }
 
@@ -177,22 +202,22 @@ var HSQuickLook = HSQuickLook || {};
     if (titleDisplay) {
       titleDisplay = false;
       $("h1.title").addClass("section-nodisplay");
-      $("#display-title-button").html("show title");
+      $("#display-title-button").removeClass("menu-button-on");
     } else {
       titleDisplay = true;
       $("h1.title").removeClass("section-nodisplay");
-      $("#display-title-button").html("hide title");
+      $("#display-title-button").addClass("menu-button-on");
     }
   }
 
   function toggleDraggable() {
     if (tableDraggable) {
       tableDraggable = false;
-      $("#draggable-button").html("draggable");
+      $("#draggable-button").removeClass("menu-button-on");
       $(".data-table").draggable("disable");
     } else {
       tableDraggable = true;
-      $("#draggable-button").html("fix pos.");
+      $("#draggable-button").addClass("menu-button-on");
       $(".data-table").draggable("enable");
     }
   }
@@ -345,14 +370,16 @@ var HSQuickLook = HSQuickLook || {};
       }
     }
 
+    // draggable
     $(".data-table").draggable();
     if (tableDraggable) {
-      $("#draggable-button").html("fix pos.");
+      $("#draggable-button").addClass("menu-button-on");
     } else {
-      $("#draggable-button").html("draggable");
+      $("#draggable-button").removeClass("menu-button-on");
       $(".data-table").draggable("disable");
     }
 
+    // range-reset
     if (graphRangeResetEnable) {
       $(".graph-placeholder").dblclick(
         function() {
@@ -387,7 +414,10 @@ var HSQuickLook = HSQuickLook || {};
           // display time
           ti = dataObject["TI"] >>> 0;
           unixtime = dataObject["UNIXTIME"];
-          $('p#time').html(unixtime + " | TI: " + ti);
+          $('p#time').html(unixtime
+                           + " | TI: " + ti
+                           + " | Time: " + ti*timeScaling
+                          );
           timeUpdated = true;
         }
         updateTable(tableInfo, dataObject, ti);
@@ -521,7 +551,7 @@ var HSQuickLook = HSQuickLook || {};
       info = contents[key];
       if (info.type == "trend-graph") {
         elemID = tableID + "_" + key;
-        time = ti/64.0;
+        time = ti*timeScaling;
         updateGraph(elemID, info, time, values, tableID);
       }
       else{
@@ -578,7 +608,7 @@ var HSQuickLook = HSQuickLook || {};
     var graph,
         xWidth, refreshCycle = 4,
         i = 0, plotInfo, sourceID, curve, capacity = 600,
-        container,
+        container, frameOption,
         timeOriginHTML;
 
     if (graphs[elemID] !== void 0) {
@@ -604,6 +634,9 @@ var HSQuickLook = HSQuickLook || {};
         graph.options.yaxis.min = info.options.yRange[0];
         graph.options.yaxis.max = info.options.yRange[1];
       }
+      if ('frame' in info.options) {
+        frameOption = info.options.frame;
+      }
     }
 
     for (i=0; i<info.group.length; i++) {
@@ -613,7 +646,7 @@ var HSQuickLook = HSQuickLook || {};
       graph.addTrendCurve(sourceID, curve);
     }
 
-    container = createPlotContainer(elemID);
+    container = createGraphContainer(elemID, frameOption);
     elemValueHTML.attr("id", elemID);
     elemValueHTML.append(container);
     
@@ -639,14 +672,14 @@ var HSQuickLook = HSQuickLook || {};
       graph.differentialMode = false;
     }
 
-    if('upperBound' in plotInfo){
+    if('upperBound' in plotInfo) {
       graph.upperBound = plotInfo.upperBound;
     }
 
     if ('options' in plotInfo) {
       options = plotInfo.options;
       if (options.legend !== void 0) {
-        graph.data.label = options.ledend;
+        graph.data.label = options.legend;
       }
       if (options.color !== void 0) {
         graph.data.color = options.color;
@@ -816,9 +849,14 @@ var HSQuickLook = HSQuickLook || {};
   /***************************************************************************
    * Trend curve plots
    */
-  function createPlotContainer(elemID) {
+  function createGraphContainer(elemID, frameOption) {
     var container, placeholder;
     container = $("<div />").attr("id", elemID+"_graph").addClass("graph-container");
+    if (frameOption !== void 0) {
+      container.css("width", frameOption.width);
+      container.css("height", frameOption.height);
+    }
+    
     placeholder = $("<div />").attr("id", elemID+"_placeholder").addClass("graph-placeholder");
     container.append(placeholder);
     return container;

@@ -23,50 +23,54 @@
 
   <body>
     <div id="menu-section">
-      <span id="display-button" class="menu-button">hide control</span>
-      <span id="display-title-button" class="menu-button">hide title</span>
+      <span id="display-button" class="menu-button">control</span>
+      <span id="display-title-button" class="menu-button">title</span>
       <span id="draggable-button" class="menu-button">draggable</span>
       <span id="clear-log-button" class="menu-button">clear log</span>
     </div>
 
     <h1 class="title">Quick Look</h1>
-    
-    <div id="control-section">
-      <h2 class="section-heading">Control</h2>
-      <form id="ws-form">
-        <span>Connection to ws://</span>
-        <input id="ws-host" type="text" value="localhost:8080" />
-        <input id="button-connect" type="button" value="Open" />
-      </form>
-      
-      <form id="contents-form">
-        <span>Contents: </span>
-        <select id="selected-group"></select>
-        <select id="selected-data-sheet"></select>
-      </form>
-      
-      <form id="mode-form">
-        <span>Mode: </span>
-        <label><input id="mode-ql" name="mode" type="radio" value="mode-ql" checked="checked" />Real time</label>
-        <label><input id="mode-paused" name="mode" type="radio" value="mode-paused" />Pause</label>
-        <label><input id="mode-dl" name="mode" type="radio" value="mode-dl" disabled="disabled" />Time specified</label>
-      </form>
 
-      <form id="time-form">
-        <span>Time: </span>
-        <input id="time0" type="number" value="2014" min="1" max="9999" />
-        <input id="time1" type="number" value="4" min="1" max="12" />
-        <input id="time2" type="number" value="1" min="1" max="31" />
-        <input id="time3" type="number" value="12" min="0" max="23" />
-        <input id="time4" type="number" value="0" min="0" max="59" />
-        <input id="time5" type="number" value="0" min="0" max="59" />
-        <input id="request-time" type="button" value="Request" />
-      </form>
+    <div id="control-section-frame">
+      <div id="control-section">
+        <h2 class="section-heading">Control</h2>
+        <form id="ws-form">
+          <span>Connection to ws://</span>
+          <input id="ws-host" type="text" value="localhost:8080" />
+          <input id="button-connect" type="button" value="Open" />
+        </form>
+        
+        <form id="contents-form">
+          <span>Contents: </span>
+          <select id="selected-group"></select>
+          <select id="selected-data-sheet"></select>
+        </form>
+        
+        <form id="mode-form">
+          <span>Mode: </span>
+          <label><input id="mode-ql" name="mode" type="radio" value="mode-ql" checked="checked" />Real time</label>
+          <label><input id="mode-paused" name="mode" type="radio" value="mode-paused" />Pause</label>
+          <label><input id="mode-dl" name="mode" type="radio" value="mode-dl" disabled="disabled" />Time specified</label>
+        </form>
+
+        <form id="time-form">
+          <span>Time: </span>
+          <input id="time0" type="number" value="2014" min="1" max="9999" />
+          <input id="time1" type="number" value="4" min="1" max="12" />
+          <input id="time2" type="number" value="1" min="1" max="31" />
+          <input id="time3" type="number" value="12" min="0" max="23" />
+          <input id="time4" type="number" value="0" min="0" max="59" />
+          <input id="time5" type="number" value="0" min="0" max="59" />
+          <input id="request-time" type="button" value="Request" />
+        </form>
+      </div>
     </div>
 
-    <div id="log-section">
-      <h2 class="section-heading">Log</h2>
-      <div id="log"></div>
+    <div id="log-section-frame">
+      <div id="log-section">
+        <h2 class="section-heading">Log</h2>
+        <div id="log"></div>
+      </div>
     </div>
 
     <div id="data-section">

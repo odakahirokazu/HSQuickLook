@@ -143,7 +143,7 @@ var HSQuickLook = HSQuickLook || {};
       legend: { show: true, position: "nw" },
       series: { lines: { show: true, lineWidth: 1 }},
       xaxis: { axisLabel: "Time (s)", min: -1.0, max: +1.0 },
-      yaxis: { min: -1.0, max: +1.0 }
+      yaxis: { axisLabel: "", min: -1.0, max: +1.0 }
     };
 
     this.addTrendCurve = function(sourceID, curve) {
