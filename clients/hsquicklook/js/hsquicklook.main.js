@@ -22,8 +22,8 @@ var HSQuickLook = HSQuickLook || {};
   /***************************************************************************
    * Parameters
    */
-  var draggableTables = false,
-      draggableGraphs = true,
+  var tableDraggable = false,
+      graphRangeResetEnable = true,
       /* Basic variables */
       ws = null,
       schemaList,
@@ -74,12 +74,11 @@ var HSQuickLook = HSQuickLook || {};
     $("input#time5").keypress(enterDLModeByEvent);
     $("input#request-time").click(enterDLMode);
 
-    // log-section
-    $("#clear-log-button").click(clearLog);
-
-    // display-control
+    // menu-section
     $("#display-button").click(toggleSectionDisplay);
     $("#display-title-button").click(toggleTitleDisplay);
+    $("#draggable-button").click(toggleDraggable);
+    $("#clear-log-button").click(clearLog);
   }
 
   function initialize(userConfig) {
@@ -183,6 +182,18 @@ var HSQuickLook = HSQuickLook || {};
       titleDisplay = true;
       $("h1.title").removeClass("section-nodisplay");
       $("#display-title-button").html("hide title");
+    }
+  }
+
+  function toggleDraggable() {
+    if (tableDraggable) {
+      tableDraggable = false;
+      $("#draggable-button").html("draggable");
+      $(".data-table").draggable("disable");
+    } else {
+      tableDraggable = true;
+      $("#draggable-button").html("fix pos.");
+      $(".data-table").draggable("enable");
     }
   }
 
@@ -334,8 +345,22 @@ var HSQuickLook = HSQuickLook || {};
       }
     }
 
-    if (draggableTables) {
-      $(".ql_table").draggable();
+    $(".data-table").draggable();
+    if (tableDraggable) {
+      $("#draggable-button").html("fix pos.");
+    } else {
+      $("#draggable-button").html("draggable");
+      $(".data-table").draggable("disable");
+    }
+
+    if (graphRangeResetEnable) {
+      $(".graph-placeholder").dblclick(
+        function() {
+          var elemID = this.id.replace("_placeholder", ""),
+              graph = graphs[elemID];
+          graph.resetRangeY();
+        }
+      );
     }
   }
 
@@ -431,7 +456,7 @@ var HSQuickLook = HSQuickLook || {};
     table.attr("frame", "border");
     table.attr("rules", "all");
     table.attr("id", "table_" + tableID);
-    table.addClass("ql_table");
+    table.addClass("data-table");
 
     thead = $("<thead />").html("");
     theadRow = $("<tr />").html("");
@@ -464,7 +489,7 @@ var HSQuickLook = HSQuickLook || {};
       value = 0;
       type = info.type;
       if (type == "image") {
-        value = "<img class=\"image_new\" /><img class=\"image_old\" />";
+        value = "<img class=\"image-new\" /><img class=\"image-old\" />";
       }
       tbody.append(makePair(key, value, info, tableID));
     }
@@ -703,9 +728,9 @@ var HSQuickLook = HSQuickLook || {};
         URL;
 
     target = $("#" + elemID);
-    target.removeClass("display_phase1").addClass("display_phase0");
-    image1 = target.children("img.image_new");
-    image2 = target.children("img.image_old");
+    target.removeClass("display-phase1").addClass("display-phase0");
+    image1 = target.children("img.image-new");
+    image2 = target.children("img.image-old");
     data = JSON.parse(value);
     data64 = data.data.replace(/\s/g, '');
     binaryData = atob(data64);
@@ -721,13 +746,12 @@ var HSQuickLook = HSQuickLook || {};
       "height" : height,
       "width" : width
     });
-    image1.removeClass("image_new").addClass("image_old");
-    image2.removeClass("image_old").addClass("image_new");
+    image1.removeClass("image-new").addClass("image-old");
+    image2.removeClass("image-old").addClass("image-new");
     
     setTimeout(
       function() {
-        target.removeClass("display_phase0").addClass(
-          "display_phase1");
+        target.removeClass("display-phase0").addClass("display-phase1");
       }, 250);
     
     if (oldBlobURL) {
@@ -797,7 +821,6 @@ var HSQuickLook = HSQuickLook || {};
     container = $("<div />").attr("id", elemID+"_graph").addClass("graph-container");
     placeholder = $("<div />").attr("id", elemID+"_placeholder").addClass("graph-placeholder");
     container.append(placeholder);
-    // dc.addClass("draggable");
     return container;
   }
   

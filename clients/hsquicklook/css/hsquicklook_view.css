@@ -119,33 +119,33 @@ div#main-tables {
     margin: 8px;
 }
 
-.display_phase0 {
+.display-phase0 {
     position: relative;
 }
 
-.display_phase0 .image_old {
+.display-phase0 .image-old {
     visibility: visible;
 }
 
-.display_phase0 .image_new {
+.display-phase0 .image-new {
     position: absolute;
     top: 0;
     left: 0; 
     visibility: hidden;
 }
 
-.display_phase1 {
+.display-phase1 {
     position: relative;
 }
 
-.display_phase1 .image_old {
+.display-phase1 .image-old {
     position: absolute;
     top: 0;
     left: 0; 
     visibility: hidden;
 }
 
-.display_phase1 .image_new {
+.display-phase1 .image-new {
     visibility: visible;
 }
 

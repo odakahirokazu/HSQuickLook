@@ -137,6 +137,8 @@ var HSQuickLook = HSQuickLook || {};
     this.refreshPhase = 1;
     this.timeOrigin = void 0;
     this.xWidth = 600.0;
+    this.yMin = -1.0;
+    this.yMax = +1.0;
     this.options = {
       legend: { show: true, position: "nw" },
       series: { lines: { show: true, lineWidth: 1 }},
@@ -172,8 +174,15 @@ var HSQuickLook = HSQuickLook || {};
   };
 
   MultiTrendCurves.prototype.setRangeY = function(range) {
+    this.yMin = range[0];
+    this.yMax = range[1];
     this.options.yaxis.min = range[0];
     this.options.yaxis.max = range[1];
+  };
+
+  MultiTrendCurves.prototype.resetRangeY = function() {
+    this.options.yaxis.min = this.yMin;
+    this.options.yaxis.max = this.yMax;
   };
 
   MultiTrendCurves.prototype.adjustRangeX = function(x) {
