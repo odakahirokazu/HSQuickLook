@@ -450,9 +450,9 @@ var HSQuickLook = HSQuickLook || {};
 
   function getTableID(tableInfo) {
     var collection = tableInfo.collection,
-        directory = tableInfo.functionalObject,
+        directory = tableInfo.directory,
         directory1 = directory.split('/').join('_').split('.').join('_'),
-        document = tableInfo.attributeSequence,
+        document = tableInfo.document,
         document1 = document.split('.').join('_'),
         table = getTableName(tableInfo);
     return (collection + '-' + directory1 + '-' + document1 + '-' + table);
@@ -460,20 +460,20 @@ var HSQuickLook = HSQuickLook || {};
 
   function getRequestMessage(tableInfo) {
     var collection = tableInfo.collection,
-        directory = tableInfo.functionalObject,
-        document = tableInfo.attributeSequence,
+        directory = tableInfo.directory,
+        document = tableInfo.document,
         period = tableInfo.period,
         message = '{"collection": "' + collection + '", '
-        + '"functionalObject": "' + directory + '", '
-        + '"attributeSequence": "' + document + '", ' + '"period": "'
+        + '"directory": "' + directory + '", '
+        + '"document": "' + document + '", ' + '"period": "'
         + period + '"}';
     return message;
   }
 
   function getDocumentLabel(tableInfo) {
     var collection = tableInfo.collection,
-        directory = tableInfo.functionalObject,
-        document = tableInfo.attributeSequence,
+        directory = tableInfo.directory,
+        document = tableInfo.document,
         documentLabel = collection + '/' + directory + '/' + document;
     return documentLabel;
   }

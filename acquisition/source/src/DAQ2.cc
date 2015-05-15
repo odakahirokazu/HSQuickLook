@@ -47,8 +47,8 @@ ANLStatus DAQ2::mod_ana()
 
   mongo::BSONObjBuilder b;
   b << "InstrumentName" << m_Instrument;
-  b << "FunctionalObjectName" << "DE";
-  b << "AttributeSequenceName" << "USER_HK";
+  b << "Directory" << "DE";
+  b << "Document" << "USER_HK";
   
   mongo::BSONObjBuilder b1c;
   b1c << "Detector" << m_Instrument

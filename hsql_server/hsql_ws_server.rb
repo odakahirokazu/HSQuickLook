@@ -33,21 +33,21 @@ end
 
 
 class QLDocument
-  def initialize(collection, functional_object, attribute_sequence, period)
+  def initialize(collection, directory, document, period)
     @collection = collection
-    @functional_object = functional_object
-    @attribute_sequence = attribute_sequence
+    @directory = directory
+    @document = document
     @period = period
-    @name = (collection.to_s+'/'+functional_object.to_s+'/'+attribute_sequence.to_s).to_sym
+    @name = (collection.to_s+'/'+directory.to_s+'/'+document.to_s).to_sym
   end
 
-  attr_reader :collection, :functional_object, :attribute_sequence, :period
+  attr_reader :collection, :directory, :document, :period
   attr_reader :name
 
   def read(db, time=nil)
     query = {
-      :FunctionalObjectName => @functional_object.to_s,
-      :AttributeSequenceName => @attribute_sequence.to_s
+      :Directory => @directory.to_s,
+      :Document => @document.to_s
     }
 
     if time
@@ -85,8 +85,8 @@ class ClientRequest
   attr_reader :client_id
   attr_accessor :time
 
-  def insert(collection, functional_object, attribute_sequence, period)
-    doc = QLDocument.new(collection, functional_object, attribute_sequence, period)
+  def insert(collection, directory, document, period)
+    doc = QLDocument.new(collection, directory, document, period)
     @documents << doc
   end
 
@@ -245,10 +245,10 @@ class HSQuickLookServer
     o = JSON.parse(mes)
     if collection = o["collection"]
       collection = collection.to_sym
-      fo = o["functionalObject"].to_sym
-      as = o["attributeSequence"].to_sym
+      directory = o["directory"].to_sym
+      document = o["document"].to_sym
       period = o["period"].to_i
-      @client_manager.get(client_id).insert(collection, fo, as, period)
+      @client_manager.get(client_id).insert(collection, directory, document, period)
     elsif time_request = o["time"]
       time = nil
       if time_request[0..1] == "DL"

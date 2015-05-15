@@ -50,8 +50,8 @@ ANLStatus DAQ3::mod_ana()
 
   mongo::BSONObjBuilder b;
   b << "InstrumentName" << m_Instrument;
-  b << "FunctionalObjectName" << "ANALYSIS";
-  b << "AttributeSequenceName" << "IMAGES";
+  b << "Directory" << "ANALYSIS";
+  b << "Document" << "IMAGES";
 
   mongo::BSONObjBuilder b1;
   b1 << "BlockName" << "Block_images";
