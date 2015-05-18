@@ -2,8 +2,8 @@ HSQuickLook.main.schema =
 [
 {
 	"collection":"hxi2",
-	"functionalObject":"/HXI2.USR",
-	"attributeSequence":"MIO2_PRM_TBL_0",
+	"directory":"/HXI2.USR",
+	"document":"MIO2_PRM_TBL_0",
 	"period":"1",
 	"blockName":"",
 	"contents":{

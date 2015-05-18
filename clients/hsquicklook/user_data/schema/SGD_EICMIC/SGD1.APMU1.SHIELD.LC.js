@@ -1,8 +1,8 @@
 HSQuickLook.main.schema = [
   {
     "collection": "sgd1",
-    "functionalObject": "/SGD1.APMU1",
-    "attributeSequence": "APMU_SCL",
+    "directory": "/SGD1.APMU1",
+    "document": "APMU_SCL",
     "period": "1",
     "tableName": "APMU_Fast_BGO",
     "blockName": "APMU_SCL_block",
@@ -75,8 +75,8 @@ HSQuickLook.main.schema = [
   },
   {
     "collection": "sgd1",
-    "functionalObject": "/SGD1.APMU1",
-    "attributeSequence": "APMU_SCL",
+    "directory": "/SGD1.APMU1",
+    "document": "APMU_SCL",
     "period": "1",
     "tableName": "APMU_HITPAT",
     "blockName": "APMU_SCL_block",

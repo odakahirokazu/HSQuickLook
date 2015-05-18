@@ -2,8 +2,8 @@ HSQuickLook.main.schema =
 [
 {
 	"collection":"hxi1",
-	"functionalObject":"/HXI1.CPU_SWR",
-	"attributeSequence":"CHKSUM",
+	"directory":"/HXI1.CPU_SWR",
+	"document":"CHKSUM",
 	"period":"1",
 	"blockName":"",
 	"contents":{

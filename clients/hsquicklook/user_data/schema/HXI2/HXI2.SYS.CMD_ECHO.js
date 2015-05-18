@@ -2,8 +2,8 @@ HSQuickLook.main.schema =
 [
 {
 	"collection":"hxi2",
-	"functionalObject":"/HXI2.SYS",
-	"attributeSequence":"CMD_ECHO",
+	"directory":"/HXI2.SYS",
+	"document":"CMD_ECHO",
 	"period":"1",
 	"blockName":"CMD_ECHO_HEADER",
 	"contents":{
@@ -14,8 +14,8 @@ HSQuickLook.main.schema =
 },
 {
 	"collection":"hxi2",
-	"functionalObject":"/HXI2.SYS",
-	"attributeSequence":"CMD_ECHO",
+	"directory":"/HXI2.SYS",
+	"document":"CMD_ECHO",
 	"period":"1",
 	"blockName":"TC_PKT",
 	"contents":{

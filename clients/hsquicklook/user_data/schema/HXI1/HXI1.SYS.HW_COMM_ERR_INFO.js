@@ -2,8 +2,8 @@ HSQuickLook.main.schema =
 [
 {
 	"collection":"hxi1",
-	"functionalObject":"/HXI1.SYS",
-	"attributeSequence":"HW_COMM_ERR_INFO",
+	"directory":"/HXI1.SYS",
+	"document":"HW_COMM_ERR_INFO",
 	"period":"1",
 	"blockName":"",
 	"contents":{

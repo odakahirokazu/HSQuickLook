@@ -2,8 +2,8 @@ HSQuickLook.main.schema =
 [
 {
 	"collection":"sgd2",
-	"functionalObject":"/SGD2.SYS",
-	"attributeSequence":"CMD_ECHO",
+	"directory":"/SGD2.SYS",
+	"document":"CMD_ECHO",
 	"period":"1",
 	"blockName":"CMD_ECHO_HEADER",
 	"contents":{
@@ -14,8 +14,8 @@ HSQuickLook.main.schema =
 },
 {
 	"collection":"sgd2",
-	"functionalObject":"/SGD2.SYS",
-	"attributeSequence":"CMD_ECHO",
+	"directory":"/SGD2.SYS",
+	"document":"CMD_ECHO",
 	"period":"1",
 	"blockName":"TC_PKT",
 	"contents":{

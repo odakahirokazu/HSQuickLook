@@ -2,8 +2,8 @@ HSQuickLook.main.schema =
 [
 {
 	"collection":"sgd1",
-	"functionalObject":"/SGD1.SYS",
-	"attributeSequence":"API_RESULT",
+	"directory":"/SGD1.SYS",
+	"document":"API_RESULT",
 	"period":"1",
 	"blockName":"",
 	"contents":{

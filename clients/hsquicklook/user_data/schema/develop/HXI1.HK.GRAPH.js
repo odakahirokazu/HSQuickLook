@@ -3,8 +3,8 @@ HSQuickLook.main.schema =
 {
  "tableName" : "graph_HXI_USR_HK",
  "collection" : "hxi1",
- "functionalObject": "/HXI1.QL",
- "attributeSequence": "HK_HXI1.USR.USR_HK",
+ "directory": "/HXI1.QL",
+ "document": "HK_HXI1.USR.USR_HK",
  "period" : 4,
  "blockName" : "Block_hk_HXI1.USR.USR_HK",
  "contents" : {
@@ -23,8 +23,8 @@ HSQuickLook.main.schema =
 {
  "tableName" : "graph_HXI_SCL",
  "collection" : "hxi1",
- "functionalObject": "/HXI1.QL",
- "attributeSequence": "HK_HXI1.CAM.SCL",
+ "directory": "/HXI1.QL",
+ "document": "HK_HXI1.CAM.SCL",
  "period" : 4,
  "blockName" : "Block_hk_HXI1.CAM.SCL",
  "contents" : {
@@ -37,8 +37,8 @@ HSQuickLook.main.schema =
 {
  "tableName" : "graph_HXI_APMU_SCL",
  "collection" : "hxi1",
- "functionalObject": "/HXI1.QL",
- "attributeSequence": "HK_HXI1.APMU.APMU_SCL",
+ "directory": "/HXI1.QL",
+ "document": "HK_HXI1.APMU.APMU_SCL",
  "period" : 8,
  "blockName" : "Block_hk_HXI1.APMU.APMU_SCL",
  "contents" : {

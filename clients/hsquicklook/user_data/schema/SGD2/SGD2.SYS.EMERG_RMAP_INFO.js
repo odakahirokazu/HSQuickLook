@@ -2,8 +2,8 @@ HSQuickLook.main.schema =
 [
 {
 	"collection":"sgd2",
-	"functionalObject":"/SGD2.SYS",
-	"attributeSequence":"EMERG_RMAP_INFO",
+	"directory":"/SGD2.SYS",
+	"document":"EMERG_RMAP_INFO",
 	"period":"1",
 	"blockName":"",
 	"contents":{

@@ -2,8 +2,8 @@ HSQuickLook.main.schema =
 [
 {
 	"collection":"hxi1",
-	"functionalObject":"/HXI1.USR",
-	"attributeSequence":"USR_HK",
+	"directory":"/HXI1.USR",
+	"document":"USR_HK",
 	"period":"1",
 	"blockName":"APP_VAL_block",
 	"contents":{
@@ -44,8 +44,8 @@ HSQuickLook.main.schema =
 },
 {
 	"collection":"hxi1",
-	"functionalObject":"/HXI1.USR",
-	"attributeSequence":"USR_HK",
+	"directory":"/HXI1.USR",
+	"document":"USR_HK",
 	"period":"1",
 	"blockName":"MIO1_REG_block",
 	"contents":{
@@ -91,8 +91,8 @@ HSQuickLook.main.schema =
 },
 {
 	"collection":"hxi1",
-	"functionalObject":"/HXI1.USR",
-	"attributeSequence":"USR_HK",
+	"directory":"/HXI1.USR",
+	"document":"USR_HK",
 	"period":"1",
 	"blockName":"MIO2_REG_block",
 	"contents":{
@@ -111,8 +111,8 @@ HSQuickLook.main.schema =
 },
 {
 	"collection":"hxi1",
-	"functionalObject":"/HXI1.USR",
-	"attributeSequence":"USR_HK",
+	"directory":"/HXI1.USR",
+	"document":"USR_HK",
 	"period":"1",
 	"blockName":"CPMU_HK_block",
 	"contents":{
@@ -165,8 +165,8 @@ HSQuickLook.main.schema =
 },
 {
 	"collection":"hxi1",
-	"functionalObject":"/HXI1.USR",
-	"attributeSequence":"USR_HK",
+	"directory":"/HXI1.USR",
+	"document":"USR_HK",
 	"period":"1",
 	"blockName":"APMU_HK_block",
 	"contents":{
@@ -211,8 +211,8 @@ HSQuickLook.main.schema =
 },
 {
 	"collection":"hxi1",
-	"functionalObject":"/HXI1.USR",
-	"attributeSequence":"USR_HK",
+	"directory":"/HXI1.USR",
+	"document":"USR_HK",
 	"period":"1",
 	"blockName":"APMU_SCL_block",
 	"contents":{
@@ -233,8 +233,8 @@ HSQuickLook.main.schema =
 },
 {
 	"collection":"hxi1",
-	"functionalObject":"/HXI1.USR",
-	"attributeSequence":"USR_HK",
+	"directory":"/HXI1.USR",
+	"document":"USR_HK",
 	"period":"1",
 	"blockName":"EVNT_CNT_block",
 	"contents":{

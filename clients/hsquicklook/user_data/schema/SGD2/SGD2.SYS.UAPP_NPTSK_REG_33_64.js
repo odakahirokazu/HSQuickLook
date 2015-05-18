@@ -2,8 +2,8 @@ HSQuickLook.main.schema =
 [
 {
 	"collection":"sgd2",
-	"functionalObject":"/SGD2.SYS",
-	"attributeSequence":"UAPP_NPTSK_REG_33_64",
+	"directory":"/SGD2.SYS",
+	"document":"UAPP_NPTSK_REG_33_64",
 	"period":"1",
 	"blockName":"",
 	"contents":{

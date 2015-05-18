@@ -2,8 +2,8 @@ HSQuickLook.main.schema =
 [
 {
 	"collection":"sgd1",
-	"functionalObject":"/SGD1.CC1",
-	"attributeSequence":"EVNT_H",
+	"directory":"/SGD1.CC1",
+	"document":"EVNT_H",
 	"period":"1",
 	"blockName":"",
 	"contents":{

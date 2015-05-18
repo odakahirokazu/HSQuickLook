@@ -2,8 +2,8 @@ HSQuickLook.main.schema =
 [
 {
 	"collection":"hxi1",
-	"functionalObject":"/HXI1.USR",
-	"attributeSequence":"OBS_TBL_3",
+	"directory":"/HXI1.USR",
+	"document":"OBS_TBL_3",
 	"period":"1",
 	"blockName":"",
 	"contents":{

@@ -2,8 +2,8 @@ HSQuickLook.main.schema =
 [
 {
 	"collection":"hxi1",
-	"functionalObject":"/HXI1.FPGA_SWR",
-	"attributeSequence":"CHKSUM",
+	"directory":"/HXI1.FPGA_SWR",
+	"document":"CHKSUM",
 	"period":"1",
 	"blockName":"",
 	"contents":{

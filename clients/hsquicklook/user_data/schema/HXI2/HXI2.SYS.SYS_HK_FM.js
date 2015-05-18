@@ -2,8 +2,8 @@ HSQuickLook.main.schema =
 [
 {
 	"collection":"hxi2",
-	"functionalObject":"/HXI2.SYS",
-	"attributeSequence":"SYS_HK_FM",
+	"directory":"/HXI2.SYS",
+	"document":"SYS_HK_FM",
 	"period":"1",
 	"blockName":"SYS_STAT",
 	"contents":{
@@ -33,8 +33,8 @@ HSQuickLook.main.schema =
 },
 {
 	"collection":"hxi2",
-	"functionalObject":"/HXI2.SYS",
-	"attributeSequence":"SYS_HK_FM",
+	"directory":"/HXI2.SYS",
+	"document":"SYS_HK_FM",
 	"period":"1",
 	"blockName":"TIMECODE_TI",
 	"contents":{
@@ -55,8 +55,8 @@ HSQuickLook.main.schema =
 },
 {
 	"collection":"hxi2",
-	"functionalObject":"/HXI2.SYS",
-	"attributeSequence":"SYS_HK_FM",
+	"directory":"/HXI2.SYS",
+	"document":"SYS_HK_FM",
 	"period":"1",
 	"blockName":"CMD",
 	"contents":{
@@ -83,8 +83,8 @@ HSQuickLook.main.schema =
 },
 {
 	"collection":"hxi2",
-	"functionalObject":"/HXI2.SYS",
-	"attributeSequence":"SYS_HK_FM",
+	"directory":"/HXI2.SYS",
+	"document":"SYS_HK_FM",
 	"period":"1",
 	"blockName":"GCOLL",
 	"contents":{
@@ -100,8 +100,8 @@ HSQuickLook.main.schema =
 },
 {
 	"collection":"hxi2",
-	"functionalObject":"/HXI2.SYS",
-	"attributeSequence":"SYS_HK_FM",
+	"directory":"/HXI2.SYS",
+	"document":"SYS_HK_FM",
 	"period":"1",
 	"blockName":"FCOLL",
 	"contents":{
@@ -114,8 +114,8 @@ HSQuickLook.main.schema =
 },
 {
 	"collection":"hxi2",
-	"functionalObject":"/HXI2.SYS",
-	"attributeSequence":"SYS_HK_FM",
+	"directory":"/HXI2.SYS",
+	"document":"SYS_HK_FM",
 	"period":"1",
 	"blockName":"SEG",
 	"contents":{
@@ -124,8 +124,8 @@ HSQuickLook.main.schema =
 },
 {
 	"collection":"hxi2",
-	"functionalObject":"/HXI2.SYS",
-	"attributeSequence":"SYS_HK_FM",
+	"directory":"/HXI2.SYS",
+	"document":"SYS_HK_FM",
 	"period":"1",
 	"blockName":"PCD",
 	"contents":{
@@ -136,8 +136,8 @@ HSQuickLook.main.schema =
 },
 {
 	"collection":"hxi2",
-	"functionalObject":"/HXI2.SYS",
-	"attributeSequence":"SYS_HK_FM",
+	"directory":"/HXI2.SYS",
+	"document":"SYS_HK_FM",
 	"period":"1",
 	"blockName":"SPW",
 	"contents":{
@@ -317,8 +317,8 @@ HSQuickLook.main.schema =
 },
 {
 	"collection":"hxi2",
-	"functionalObject":"/HXI2.SYS",
-	"attributeSequence":"SYS_HK_FM",
+	"directory":"/HXI2.SYS",
+	"document":"SYS_HK_FM",
 	"period":"1",
 	"blockName":"ESHK_COPY",
 	"contents":{
@@ -330,8 +330,8 @@ HSQuickLook.main.schema =
 },
 {
 	"collection":"hxi2",
-	"functionalObject":"/HXI2.SYS",
-	"attributeSequence":"SYS_HK_FM",
+	"directory":"/HXI2.SYS",
+	"document":"SYS_HK_FM",
 	"period":"1",
 	"blockName":"MEM",
 	"contents":{
@@ -380,8 +380,8 @@ HSQuickLook.main.schema =
 },
 {
 	"collection":"hxi2",
-	"functionalObject":"/HXI2.SYS",
-	"attributeSequence":"SYS_HK_FM",
+	"directory":"/HXI2.SYS",
+	"document":"SYS_HK_FM",
 	"period":"1",
 	"blockName":"SAA",
 	"contents":{

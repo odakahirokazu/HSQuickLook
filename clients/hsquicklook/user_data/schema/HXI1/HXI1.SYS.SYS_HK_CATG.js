@@ -2,8 +2,8 @@ HSQuickLook.main.schema =
 [
 {
 	"collection":"hxi1",
-	"functionalObject":"/HXI1.SYS",
-	"attributeSequence":"SYS_HK_CATG",
+	"directory":"/HXI1.SYS",
+	"document":"SYS_HK_CATG",
 	"period":"1",
 	"blockName":"",
 	"contents":{

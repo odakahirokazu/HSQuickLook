@@ -2,8 +2,8 @@ HSQuickLook.main.schema =
 [
 {
 	"collection":"sgd1",
-	"functionalObject":"/SGD1.USR",
-	"attributeSequence":"USR_HK",
+	"directory":"/SGD1.USR",
+	"document":"USR_HK",
 	"period":"1",
 	"blockName":"APP_VAL_block",
 	"contents":{
@@ -82,8 +82,8 @@ HSQuickLook.main.schema =
 },
 {
 	"collection":"sgd1",
-	"functionalObject":"/SGD1.USR",
-	"attributeSequence":"USR_HK",
+	"directory":"/SGD1.USR",
+	"document":"USR_HK",
 	"period":"1",
 	"blockName":"MIO1_REG_block",
 	"contents":{
@@ -144,8 +144,8 @@ HSQuickLook.main.schema =
 },
 {
 	"collection":"sgd1",
-	"functionalObject":"/SGD1.USR",
-	"attributeSequence":"USR_HK",
+	"directory":"/SGD1.USR",
+	"document":"USR_HK",
 	"period":"1",
 	"blockName":"MIO2_REG_block",
 	"contents":{
@@ -190,8 +190,8 @@ HSQuickLook.main.schema =
 },
 {
 	"collection":"sgd1",
-	"functionalObject":"/SGD1.USR",
-	"attributeSequence":"USR_HK",
+	"directory":"/SGD1.USR",
+	"document":"USR_HK",
 	"period":"1",
 	"blockName":"CPMU_HK_block",
 	"contents":{
@@ -244,8 +244,8 @@ HSQuickLook.main.schema =
 },
 {
 	"collection":"sgd1",
-	"functionalObject":"/SGD1.USR",
-	"attributeSequence":"USR_HK",
+	"directory":"/SGD1.USR",
+	"document":"USR_HK",
 	"period":"1",
 	"blockName":"APMU1_HK_block",
 	"contents":{
@@ -290,8 +290,8 @@ HSQuickLook.main.schema =
 },
 {
 	"collection":"sgd1",
-	"functionalObject":"/SGD1.USR",
-	"attributeSequence":"USR_HK",
+	"directory":"/SGD1.USR",
+	"document":"USR_HK",
 	"period":"1",
 	"blockName":"APMU2_HK_block",
 	"contents":{
@@ -336,8 +336,8 @@ HSQuickLook.main.schema =
 },
 {
 	"collection":"sgd1",
-	"functionalObject":"/SGD1.USR",
-	"attributeSequence":"USR_HK",
+	"directory":"/SGD1.USR",
+	"document":"USR_HK",
 	"period":"1",
 	"blockName":"APMU1_SCL_block",
 	"contents":{
@@ -358,8 +358,8 @@ HSQuickLook.main.schema =
 },
 {
 	"collection":"sgd1",
-	"functionalObject":"/SGD1.USR",
-	"attributeSequence":"USR_HK",
+	"directory":"/SGD1.USR",
+	"document":"USR_HK",
 	"period":"1",
 	"blockName":"APMU2_SCL_block",
 	"contents":{
@@ -380,8 +380,8 @@ HSQuickLook.main.schema =
 },
 {
 	"collection":"sgd1",
-	"functionalObject":"/SGD1.USR",
-	"attributeSequence":"USR_HK",
+	"directory":"/SGD1.USR",
+	"document":"USR_HK",
 	"period":"1",
 	"blockName":"CC1_EVNT_CNT_block",
 	"contents":{
@@ -417,8 +417,8 @@ HSQuickLook.main.schema =
 },
 {
 	"collection":"sgd1",
-	"functionalObject":"/SGD1.USR",
-	"attributeSequence":"USR_HK",
+	"directory":"/SGD1.USR",
+	"document":"USR_HK",
 	"period":"1",
 	"blockName":"CC2_EVNT_CNT_block",
 	"contents":{
@@ -454,8 +454,8 @@ HSQuickLook.main.schema =
 },
 {
 	"collection":"sgd1",
-	"functionalObject":"/SGD1.USR",
-	"attributeSequence":"USR_HK",
+	"directory":"/SGD1.USR",
+	"document":"USR_HK",
 	"period":"1",
 	"blockName":"CC3_EVNT_CNT_block",
 	"contents":{

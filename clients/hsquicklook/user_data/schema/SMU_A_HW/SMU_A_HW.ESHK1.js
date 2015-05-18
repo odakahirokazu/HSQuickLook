@@ -2,8 +2,8 @@ HSQuickLook.main.schema =
 [
 {
 	"collection":"hksys",
-	"functionalObject":"/SMU_A_HW",
-	"attributeSequence":"ESHK1",
+	"directory":"/SMU_A_HW",
+	"document":"ESHK1",
 	"period":"1",
 	"blockName":"HW_block",
 	"contents":{

@@ -2,8 +2,8 @@ HSQuickLook.main.schema =
 [
 {
 	"collection":"hxi2",
-	"functionalObject":"/HXI2.CAM",
-	"attributeSequence":"EVNT_L",
+	"directory":"/HXI2.CAM",
+	"document":"EVNT_L",
 	"period":"1",
 	"blockName":"",
 	"contents":{

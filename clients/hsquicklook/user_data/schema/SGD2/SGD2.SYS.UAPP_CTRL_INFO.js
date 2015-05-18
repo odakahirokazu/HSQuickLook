@@ -2,8 +2,8 @@ HSQuickLook.main.schema =
 [
 {
 	"collection":"sgd2",
-	"functionalObject":"/SGD2.SYS",
-	"attributeSequence":"UAPP_CTRL_INFO",
+	"directory":"/SGD2.SYS",
+	"document":"UAPP_CTRL_INFO",
 	"period":"1",
 	"blockName":"",
 	"contents":{

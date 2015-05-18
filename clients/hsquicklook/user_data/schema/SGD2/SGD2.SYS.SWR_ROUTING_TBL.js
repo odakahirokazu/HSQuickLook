@@ -2,8 +2,8 @@ HSQuickLook.main.schema =
 [
 {
 	"collection":"sgd2",
-	"functionalObject":"/SGD2.SYS",
-	"attributeSequence":"SWR_ROUTING_TBL",
+	"directory":"/SGD2.SYS",
+	"document":"SWR_ROUTING_TBL",
 	"period":"1",
 	"blockName":"RTBL_HEADER",
 	"contents":{
@@ -12,8 +12,8 @@ HSQuickLook.main.schema =
 },
 {
 	"collection":"sgd2",
-	"functionalObject":"/SGD2.SYS",
-	"attributeSequence":"SWR_ROUTING_TBL",
+	"directory":"/SGD2.SYS",
+	"document":"SWR_ROUTING_TBL",
 	"period":"1",
 	"blockName":"RTBL_DATA",
 	"contents":{

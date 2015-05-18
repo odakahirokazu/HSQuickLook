@@ -2,8 +2,8 @@ HSQuickLook.main.schema =
 [
 {
 	"collection":"sgd2",
-	"functionalObject":"/SGD2.SYS",
-	"attributeSequence":"CHKSUM",
+	"directory":"/SGD2.SYS",
+	"document":"CHKSUM",
 	"period":"1",
 	"blockName":"",
 	"contents":{

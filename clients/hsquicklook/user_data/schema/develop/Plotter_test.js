@@ -1,7 +1,7 @@
 HSQuickLook.main.schema = [ {
     "collection" : "hxi1",
-    "functionalObject" : "/HXI1.USR",
-    "attributeSequence" : "USR_HK",
+    "directory" : "/HXI1.USR",
+    "document" : "USR_HK",
     "period" : "1",
     "blockName" : "APP_VAL_block",
     "contents" : {

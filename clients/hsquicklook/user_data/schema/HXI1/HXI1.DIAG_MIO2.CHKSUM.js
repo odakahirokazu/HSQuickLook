@@ -2,8 +2,8 @@ HSQuickLook.main.schema =
 [
 {
 	"collection":"hxi1",
-	"functionalObject":"/HXI1.DIAG_MIO2",
-	"attributeSequence":"CHKSUM",
+	"directory":"/HXI1.DIAG_MIO2",
+	"document":"CHKSUM",
 	"period":"1",
 	"blockName":"",
 	"contents":{

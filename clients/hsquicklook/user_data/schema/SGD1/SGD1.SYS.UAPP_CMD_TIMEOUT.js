@@ -2,8 +2,8 @@ HSQuickLook.main.schema =
 [
 {
 	"collection":"sgd1",
-	"functionalObject":"/SGD1.SYS",
-	"attributeSequence":"UAPP_CMD_TIMEOUT",
+	"directory":"/SGD1.SYS",
+	"document":"UAPP_CMD_TIMEOUT",
 	"period":"1",
 	"blockName":"",
 	"contents":{

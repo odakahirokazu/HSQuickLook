@@ -2,8 +2,8 @@ HSQuickLook.main.schema =
 [
 {
 	"collection":"hxi2",
-	"functionalObject":"/HXI2.SYS",
-	"attributeSequence":"ERR_LOG",
+	"directory":"/HXI2.SYS",
+	"document":"ERR_LOG",
 	"period":"1",
 	"blockName":"ELOG_HEADER",
 	"contents":{
@@ -12,8 +12,8 @@ HSQuickLook.main.schema =
 },
 {
 	"collection":"hxi2",
-	"functionalObject":"/HXI2.SYS",
-	"attributeSequence":"ERR_LOG",
+	"directory":"/HXI2.SYS",
+	"document":"ERR_LOG",
 	"period":"1",
 	"blockName":"SYS_SW",
 	"contents":{
@@ -31,8 +31,8 @@ HSQuickLook.main.schema =
 },
 {
 	"collection":"hxi2",
-	"functionalObject":"/HXI2.SYS",
-	"attributeSequence":"ERR_LOG",
+	"directory":"/HXI2.SYS",
+	"document":"ERR_LOG",
 	"period":"1",
 	"blockName":"SH4",
 	"contents":{
@@ -221,8 +221,8 @@ HSQuickLook.main.schema =
 },
 {
 	"collection":"hxi2",
-	"functionalObject":"/HXI2.SYS",
-	"attributeSequence":"ERR_LOG",
+	"directory":"/HXI2.SYS",
+	"document":"ERR_LOG",
 	"period":"1",
 	"blockName":"CPU_RMAP",
 	"contents":{
@@ -231,8 +231,8 @@ HSQuickLook.main.schema =
 },
 {
 	"collection":"hxi2",
-	"functionalObject":"/HXI2.SYS",
-	"attributeSequence":"ERR_LOG",
+	"directory":"/HXI2.SYS",
+	"document":"ERR_LOG",
 	"period":"1",
 	"blockName":"CPU_IF_FPGA",
 	"contents":{
@@ -314,8 +314,8 @@ HSQuickLook.main.schema =
 },
 {
 	"collection":"hxi2",
-	"functionalObject":"/HXI2.SYS",
-	"attributeSequence":"ERR_LOG",
+	"directory":"/HXI2.SYS",
+	"document":"ERR_LOG",
 	"period":"1",
 	"blockName":"RESERVED",
 	"contents":{

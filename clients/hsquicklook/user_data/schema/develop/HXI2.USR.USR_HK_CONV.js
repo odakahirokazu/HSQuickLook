@@ -7,8 +7,8 @@ HSQuickLook.main.schema =
     [
       {
 	      "collection":"hxi2",
-	      "functionalObject":"/HXI2.USR",
-	      "attributeSequence":"USR_HK",
+	      "directory":"/HXI2.USR",
+	      "document":"USR_HK",
 	      "period":"1",
 	      "blockName":"CPMU_HK_block",
 	      "contents":{
@@ -59,8 +59,8 @@ HSQuickLook.main.schema =
       },
       {
 	      "collection":"hxi2",
-	      "functionalObject":"/HXI2.USR",
-	      "attributeSequence":"USR_HK",
+	      "directory":"/HXI2.USR",
+	      "document":"USR_HK",
 	      "period":"1",
 	      "blockName":"APMU_HK_block",
 	      "contents":{

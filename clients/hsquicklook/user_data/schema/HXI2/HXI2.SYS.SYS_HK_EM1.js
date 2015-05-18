@@ -2,8 +2,8 @@ HSQuickLook.main.schema =
 [
 {
 	"collection":"hxi2",
-	"functionalObject":"/HXI2.SYS",
-	"attributeSequence":"SYS_HK_EM1",
+	"directory":"/HXI2.SYS",
+	"document":"SYS_HK_EM1",
 	"period":"1",
 	"blockName":"SYS_STAT_EM1",
 	"contents":{
@@ -27,8 +27,8 @@ HSQuickLook.main.schema =
 },
 {
 	"collection":"hxi2",
-	"functionalObject":"/HXI2.SYS",
-	"attributeSequence":"SYS_HK_EM1",
+	"directory":"/HXI2.SYS",
+	"document":"SYS_HK_EM1",
 	"period":"1",
 	"blockName":"TIMECODE_TI_EM1",
 	"contents":{
@@ -49,8 +49,8 @@ HSQuickLook.main.schema =
 },
 {
 	"collection":"hxi2",
-	"functionalObject":"/HXI2.SYS",
-	"attributeSequence":"SYS_HK_EM1",
+	"directory":"/HXI2.SYS",
+	"document":"SYS_HK_EM1",
 	"period":"1",
 	"blockName":"CMD_EM1",
 	"contents":{
@@ -73,8 +73,8 @@ HSQuickLook.main.schema =
 },
 {
 	"collection":"hxi2",
-	"functionalObject":"/HXI2.SYS",
-	"attributeSequence":"SYS_HK_EM1",
+	"directory":"/HXI2.SYS",
+	"document":"SYS_HK_EM1",
 	"period":"1",
 	"blockName":"GCOLL_EM1",
 	"contents":{
@@ -86,8 +86,8 @@ HSQuickLook.main.schema =
 },
 {
 	"collection":"hxi2",
-	"functionalObject":"/HXI2.SYS",
-	"attributeSequence":"SYS_HK_EM1",
+	"directory":"/HXI2.SYS",
+	"document":"SYS_HK_EM1",
 	"period":"1",
 	"blockName":"FCOLL_EM1",
 	"contents":{
@@ -98,8 +98,8 @@ HSQuickLook.main.schema =
 },
 {
 	"collection":"hxi2",
-	"functionalObject":"/HXI2.SYS",
-	"attributeSequence":"SYS_HK_EM1",
+	"directory":"/HXI2.SYS",
+	"document":"SYS_HK_EM1",
 	"period":"1",
 	"blockName":"SPW_EM1",
 	"contents":{
@@ -282,8 +282,8 @@ HSQuickLook.main.schema =
 },
 {
 	"collection":"hxi2",
-	"functionalObject":"/HXI2.SYS",
-	"attributeSequence":"SYS_HK_EM1",
+	"directory":"/HXI2.SYS",
+	"document":"SYS_HK_EM1",
 	"period":"1",
 	"blockName":"ESHK_COPY_EM1",
 	"contents":{
@@ -295,8 +295,8 @@ HSQuickLook.main.schema =
 },
 {
 	"collection":"hxi2",
-	"functionalObject":"/HXI2.SYS",
-	"attributeSequence":"SYS_HK_EM1",
+	"directory":"/HXI2.SYS",
+	"document":"SYS_HK_EM1",
 	"period":"1",
 	"blockName":"MEM_EM1",
 	"contents":{
@@ -335,8 +335,8 @@ HSQuickLook.main.schema =
 },
 {
 	"collection":"hxi2",
-	"functionalObject":"/HXI2.SYS",
-	"attributeSequence":"SYS_HK_EM1",
+	"directory":"/HXI2.SYS",
+	"document":"SYS_HK_EM1",
 	"period":"1",
 	"blockName":"PCD_EM1",
 	"contents":{

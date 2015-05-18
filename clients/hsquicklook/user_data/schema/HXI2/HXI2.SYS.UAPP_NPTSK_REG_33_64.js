@@ -2,8 +2,8 @@ HSQuickLook.main.schema =
 [
 {
 	"collection":"hxi2",
-	"functionalObject":"/HXI2.SYS",
-	"attributeSequence":"UAPP_NPTSK_REG_33_64",
+	"directory":"/HXI2.SYS",
+	"document":"UAPP_NPTSK_REG_33_64",
 	"period":"1",
 	"blockName":"",
 	"contents":{

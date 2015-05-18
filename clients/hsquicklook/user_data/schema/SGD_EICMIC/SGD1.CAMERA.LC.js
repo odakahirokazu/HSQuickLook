@@ -2,8 +2,8 @@ HSQuickLook.main.schema =
 [
 {
  "collection" : "sgd1",
- "functionalObject": "/SGD1.QL",
- "attributeSequence": "Camera",
+ "directory": "/SGD1.QL",
+ "document": "Camera",
  "period" : 2,
  "blockName" : "Block_hist_all",
  "contents" : {

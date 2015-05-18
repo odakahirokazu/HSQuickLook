@@ -2,8 +2,8 @@ HSQuickLook.main.schema =
 [
 {
 	"collection":"hxi2",
-	"functionalObject":"/HXI2.SYS",
-	"attributeSequence":"SWR_PATH_ADDR",
+	"directory":"/HXI2.SYS",
+	"document":"SWR_PATH_ADDR",
 	"period":"1",
 	"blockName":"",
 	"contents":{

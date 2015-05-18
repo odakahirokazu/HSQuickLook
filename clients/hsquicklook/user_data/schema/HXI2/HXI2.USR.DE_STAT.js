@@ -2,8 +2,8 @@ HSQuickLook.main.schema =
 [
 {
 	"collection":"hxi2",
-	"functionalObject":"/HXI2.USR",
-	"attributeSequence":"DE_STAT",
+	"directory":"/HXI2.USR",
+	"document":"DE_STAT",
 	"period":"1",
 	"blockName":"TM_CTRL_block",
 	"contents":{
@@ -67,8 +67,8 @@ HSQuickLook.main.schema =
 },
 {
 	"collection":"hxi2",
-	"functionalObject":"/HXI2.USR",
-	"attributeSequence":"DE_STAT",
+	"directory":"/HXI2.USR",
+	"document":"DE_STAT",
 	"period":"1",
 	"blockName":"HV_CTRL_block",
 	"contents":{
@@ -151,8 +151,8 @@ HSQuickLook.main.schema =
 },
 {
 	"collection":"hxi2",
-	"functionalObject":"/HXI2.USR",
-	"attributeSequence":"DE_STAT",
+	"directory":"/HXI2.USR",
+	"document":"DE_STAT",
 	"period":"1",
 	"blockName":"CAL_CTRL_block",
 	"contents":{

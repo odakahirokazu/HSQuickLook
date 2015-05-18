@@ -2,8 +2,8 @@ HSQuickLook.main.schema =
 [
 {
 	"collection":"sgd2",
-	"functionalObject":"/SGD2.APMU2",
-	"attributeSequence":"APMU_SCL",
+	"directory":"/SGD2.APMU2",
+	"document":"APMU_SCL",
 	"period":"1",
 	"blockName":"APMU_SCL_block",
 	"contents":{

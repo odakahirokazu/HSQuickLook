@@ -1,8 +1,8 @@
 HSQuickLook.main.schema = [
   {
     "collection": "sgd1",
-    "functionalObject": "/SGD1.USR",
-    "attributeSequence": "USR_HK",
+    "directory": "/SGD1.USR",
+    "document": "USR_HK",
     "period": "1",
     "tableName": "USR_HK_CC1",
     "blockName": "APP_VAL_block",
@@ -38,8 +38,8 @@ HSQuickLook.main.schema = [
   },
   {
     "collection": "sgd1",
-    "functionalObject": "/SGD1.USR",
-    "attributeSequence": "USR_HK",
+    "directory": "/SGD1.USR",
+    "document": "USR_HK",
     "period": "1",
     "tableName": "USR_HK_CC2",
     "blockName": "APP_VAL_block",
@@ -75,8 +75,8 @@ HSQuickLook.main.schema = [
   },
   {
     "collection": "sgd1",
-    "functionalObject": "/SGD1.USR",
-    "attributeSequence": "USR_HK",
+    "directory": "/SGD1.USR",
+    "document": "USR_HK",
     "period": "1",
     "tableName": "USR_HK_CC3",
     "blockName": "APP_VAL_block",

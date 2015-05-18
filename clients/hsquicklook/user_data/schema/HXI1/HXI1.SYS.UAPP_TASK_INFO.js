@@ -2,8 +2,8 @@ HSQuickLook.main.schema =
 [
 {
 	"collection":"hxi1",
-	"functionalObject":"/HXI1.SYS",
-	"attributeSequence":"UAPP_TASK_INFO",
+	"directory":"/HXI1.SYS",
+	"document":"UAPP_TASK_INFO",
 	"period":"1",
 	"blockName":"",
 	"contents":{
