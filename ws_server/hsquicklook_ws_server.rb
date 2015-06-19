@@ -1,29 +1,29 @@
 #!/usr/bin/env ruby
 # -*- coding: utf-8 -*-
 
-########################################
-#   hsql WebSocket server
-#   Hirokazu Odaka
+######################################################################
+#   HSQuickLook WebSocket server
+#   Author: Hirokazu Odaka
 #   2012-10-08
 #   2013-02-13
 #   2013-08-02 | DL
 #   2013-09-06 | modify image tag
 #   2013-10-08 | use data URI scheme for images
-########################################
+#   2015-06-19 | for ruby/mongo 2.0
+######################################################################
 
-require 'rubygems'
 require 'em-websocket'
 require 'mongo'
 require 'json'
 require 'mime/types'
 
-########################################
+######################################################################
 ### QL definition
-########################################
+######################################################################
 DBName = ( ARGV[0] or "qldb" )
 Host = ( ARGV[1] or "localhost" )
 Port = ( ARGV[2] ? ARGV[2].to_i : 27017 )
-########################################
+######################################################################
 
 
 def log(message, io=STDOUT)
@@ -52,21 +52,19 @@ class QLDocument
 
     if time
       query[:UNIXTIME] = {"$gte" => time}
-      option = {:sort => ["$natural", :ascending]}
+      option = {"$natural" => +1 }
     else
-      option = {:sort => ["$natural", :descending]}
+      option = {"$natural" => -1 }
     end
 
-    obj = db[@collection.to_s].find_one(query, option)
-
-    # p query
-    # p obj
-
-    if obj.class != BSON::OrderedHash
-      obj = {}
+    documents = db[@collection.to_s].find(query).sort(option).limit(1)
+    documents.each do |document|
+      if document.class != BSON::Document
+        document = {}
+      end
+      return document
     end
-
-    return obj
+    return nil
   end
 
   def active_phase?(time_index)
@@ -194,10 +192,10 @@ end
 
 def convert_contents(obj, image_format="json")
   obj.each do |k, v|
-    next unless v.class == BSON::OrderedHash
+    next unless v.class == BSON::Document
     if v["DataType"] == "image"
       file_name = v["FileName"]
-      data = v['Data'].to_s
+      data = v['Data'].data
       # p data
       height = v['Height']
       width = v['Width']
@@ -237,8 +235,9 @@ class HSQuickLookServer
   end
 
   def mongodb(host, port, db_name)
-    connection = Mongo::Connection.new(host, port)
-    @db = connection.db(db_name)
+    connection = "#{host}:#{port}"
+    client = Mongo::Client.new([connection], database: db_name)
+    @db = client.database
   end
 
   def interpret_message(mes, client_id)
@@ -326,15 +325,17 @@ class HSQuickLookServer
   end
 end
 
+######################################################################
+################################ Main ################################
+######################################################################
 
-### Main ###
 puts '************************************************************'
 puts '*                                                          *'
 puts '*             HSQuickLook WebSocket Server                 *'
 puts '*                                                          *'
-puts '*                Version 1.0 (2015-05-18)                  *'
-puts '*                    Since 2013-01-10                      *'
-puts '*                     Hirokazu Odaka                       *'
+puts '*               Version 1.0 (2015-06-19)                   *'
+puts '*                   Since 2013-01-10                       *'
+puts '*             Hirokazu Odaka, Soki Sakurai                 *'
 puts '*                                                          *'
 puts '************************************************************'
 puts ''
@@ -343,6 +344,10 @@ puts 'Database: '+DBName
 puts ''
 STDOUT.flush
 
+Mongo::Logger.logger.level = Logger::INFO
+
 server = HSQuickLookServer.new
 server.mongodb(Host, Port, DBName)
 server.run
+
+######################################################################
