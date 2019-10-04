@@ -166,9 +166,13 @@ class ClientManager
           obj = @document_store.checkout(doc.name, time)
           if obj==nil
             obj = doc.read(db, time)
+            if obj==nil
+              next
+            end
             @document_store.push(doc.name, time, obj)
           end
-          json = convert_object(obj)
+          # json = convert_object(obj)
+          convert_object(obj)
           @data[cid][doc.name] = obj
         end
       end
