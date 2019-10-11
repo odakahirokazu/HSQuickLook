@@ -9,38 +9,33 @@
 %}
 
 %include "std_vector.i"
-%include "anl.i"
-
+%import(module="anlnext/ANL") "anlnext/ruby/ANL.i"
 
 // interface to my modules
-namespace hxisgd {
+namespace hsquicklook {
 
-class MongoDBClient : public anl::BasicModule
+class MongoDBClient : public anlnext::BasicModule
 {
 public:
   MongoDBClient();
-  ~MongoDBClient();
 };
 
-class WaitFor : public anl::BasicModule
+class WaitFor : public anlnext::BasicModule
 {
 public:
   WaitFor();
-  ~WaitFor();
 };
 
-}
-
-class DAQ2 : public anl::BasicModule
+class DAQ2 : public anlnext::BasicModule
 {
 public:
   DAQ2();
-  ~DAQ2();
 };
 
-class DAQ3 : public anl::BasicModule
+class DAQ3 : public anlnext::BasicModule
 {
 public:
   DAQ3();
-  ~DAQ3();
 };
+
+}

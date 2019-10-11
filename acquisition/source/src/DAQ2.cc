@@ -1,84 +1,96 @@
 #include "DAQ2.hh"
 
-#include <cstdlib>
-#include <fstream>
+#include <bsoncxx/json.hpp>
+#include <bsoncxx/builder/stream/document.hpp>
 #include "MongoDBClient.hh"
 
-using namespace anl;
+using namespace anlnext;
+
+namespace hsquicklook {
 
 DAQ2::DAQ2()
-  : m_Connection(0),
-    m_Instrument("HXI-1")
+  : m_Instrument("HXI-1")
 {
 }
 
-
-DAQ2::~DAQ2()
+ANLStatus DAQ2::mod_define()
 {
-}
-
-
-ANLStatus DAQ2::mod_startup()
-{
-  register_parameter(&m_Instrument, "Instrument");
-
+  define_parameter("instrument", &mod_class::m_Instrument);
   return AS_OK;
 }
 
-
-ANLStatus DAQ2::mod_init()
+ANLStatus DAQ2::mod_initialize()
 {
-  GetANLModuleNC("MongoDBClient", &m_Connection);
+  using bsoncxx::builder::stream::document;
+  using bsoncxx::builder::stream::finalize;
+
+  get_module_NC("MongoDBClient", &m_MDBClient);
+  mongocxx::database& db = m_MDBClient->getDatabase();
 
   const int size(1*1024*1024);
-  const std::string nsMain("hxiql.main");
-  m_Connection->createCappedCollection(nsMain, size);
+  const std::string dbName("main");
+  if (!db.has_collection(dbName)) {
+    auto doc = bsoncxx::builder::stream::document{};
+    db.create_collection(dbName,
+                         doc <<
+                         "capped" << true <<
+                         "size" << size << finalize);
+  }
 
   return AS_OK;
 }
 
-
-ANLStatus DAQ2::mod_ana()
+ANLStatus DAQ2::mod_analyze()
 {
-  const std::string nsMain("hxiql.main");
-  static int ii(0);
+  using bsoncxx::builder::stream::close_array;
+  using bsoncxx::builder::stream::close_document;
+  using bsoncxx::builder::stream::document;
+  using bsoncxx::builder::stream::finalize;
+  using bsoncxx::builder::stream::open_array;
+  using bsoncxx::builder::stream::open_document;
 
+  mongocxx::database& db = m_MDBClient->getDatabase();
+  mongocxx::collection col = db["main"];
+  auto doc = bsoncxx::builder::stream::document{};
+
+  static int ii(0);
   time_t t(0); time(&t);
 
-  mongo::BSONObjBuilder b;
-  b << "InstrumentName" << m_Instrument;
-  b << "Directory" << "DE";
-  b << "Document" << "USER_HK";
-  
-  mongo::BSONObjBuilder b1c;
-  b1c << "Detector" << m_Instrument
-      << "EventID" << ii
-      << "Error" << std::rand()%3
-      << "Time" << static_cast<int>(t);
-  
-  mongo::BSONObjBuilder b1;
-  b1 << "BlockName" << "Block_1";
-  b1 << "Contents" << b1c.obj();
-  
-  mongo::BSONObjBuilder b2c;
-  b2c << "Detector" << m_Instrument
-      << "EventID" << ii
-      << "Error" << std::rand()%3
-      << "Time" << static_cast<int>(t);
-  
-  mongo::BSONObjBuilder b2;
-  b2 << "BlockName" << "Block_2";
-  b2 << "Contents" << b2c.obj();
-  
-  mongo::BSONArrayBuilder bab;
-  bab << b1.obj() << b2.obj();
-  
-  b << "Blocks" << bab.arr();
-  
-  mongo::BSONObj p = b.obj();
-  m_Connection->insert(nsMain, p);
+  bsoncxx::document::value docValue
+    = doc
+    << "TI" << static_cast<int>(t)
+    << "UNIXTIME" << static_cast<int>(t)
+    << "InstrumentName" << m_Instrument
+    << "Directory" << "DE"
+    << "Document" << "USER_HK"
+    << "Blocks" << open_array
+    << open_document
+    << "BlockName" << "Block_1"
+    << "Contents"
+    << open_document
+    << "Detector" << m_Instrument
+    << "EventID" << ii
+    << "Error" << std::rand()%3
+    << "Time" << static_cast<int>(t)
+    << close_document
+    << close_document
+    << open_document
+    << "BlockName" << "Block_2"
+    << "Contents"
+    << open_document
+    << "Detector" << m_Instrument
+    << "EventID" << ii
+    << "Error" << std::rand()%3
+    << "Time" << static_cast<int>(t)
+    << close_document
+    << close_document
+    << close_array
+    << finalize;
+  col.insert_one(docValue.view());
 
   ++ii;
 
   return AS_OK;
 }
+
+} /* namespace hsquicklook */

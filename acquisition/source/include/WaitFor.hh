@@ -6,30 +6,27 @@
  *
  */
 
-#ifndef HXISGD_WaitFor_HH
-#define HXISGD_WaitFor_HH
+#ifndef HSQUICKLOOK_WaitFor_H
+#define HSQUICKLOOK_WaitFor_H 1
 
-#include "BasicModule.hh"
+#include <anlnext/BasicModule.hh>
 
-namespace hxisgd
+namespace hsquicklook
 {
 
-class WaitFor : public anl::BasicModule
+class WaitFor : public anlnext::BasicModule
 {
+  DEFINE_ANL_MODULE(WaitFor, 2.0);
 public:
   WaitFor();
-  ~WaitFor();
-
-  std::string module_name() const { return "WaitFor"; }
-  std::string module_version() const { return "1.0"; }
   
-  anl::ANLStatus mod_startup();
-  anl::ANLStatus mod_ana();
+  anlnext::ANLStatus mod_define() override;
+  anlnext::ANLStatus mod_analyze() override;
 
 private:
-  int wait;
+  int wait_;
 };
 
-} // namespace hxisgd
+} /* namespace hsquicklook */
 
-#endif /* HXISGD_WaitFor_HH */
+#endif /* HSQUICKLOOK_WaitFor_H */

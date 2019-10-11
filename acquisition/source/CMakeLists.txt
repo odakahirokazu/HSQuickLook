@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 2.8)
+cmake_minimum_required(VERSION 3.8)
 
 ### Initial definition of cmake variables
 set(CMAKE_INSTALL_PREFIX $ENV{HOME} CACHE PATH "install prefix")
@@ -7,51 +7,48 @@ set(CMAKE_CXX_FLAGS_DEBUG "-g -W -Wall" CACHE STRING "CXX_FLAGS for debug")
 set(CMAKE_C_FLAGS_DEBUG "-g -W -Wall" CACHE STRING "C_FLAGS for debug")
 set(CMAKE_CXX_FLAGS_RELEASE "-O3 -W -Wall" CACHE STRING "CXX_FLAGS for release")
 set(CMAKE_C_FLAGS_RELEASE "-O3 -W -Wall" CACHE STRING "C_FLAGS for release")
+set(CMAKE_MACOSX_RPATH 1)
 
 ### Definition of project
 project(DAQTest)
+add_definitions("-std=c++11")
+set(CMAKE_MODULE_PATH ${DAQTest_SOURCE_DIR}/cmake ${CMAKE_MODULE_PATH})
+
+message("-- Install destination prefix: ${CMAKE_INSTALL_PREFIX}")
+set(CMAKE_INSTALL_RPATH "${CMAKE_INSTALL_PREFIX}/lib")
 
 set(MY_LIBRARY DAQTest)
-set(USE_RUBY ON)
 
 ### External libraries
 ### BOOST ###
-find_package(BOOST 1.48.0 REQUIRED)
-set(BOOST_INC_DIR ${Boost_INCLUDE_DIRS})
-set(BOOST_LIB_DIR ${Boost_LIBRARY_DIRS})
-if(NOT (Boost_VERSION VERSION_LESS 105000))
-  find_package(BOOST 1.50.0 COMPONENTS system REQUIRED)
-  if(Boost_system_LIBRARY)
-    set(BOOST_LIB ${Boost_system_LIBRARY})
-  else(Boost_system_LIBRARY)
-    if(Boost_USE_MULTITHREADED)
-      set(BOOST_LIB boost_system-mt)
-    else()
-      set(BOOST_LIB boost_system)
-    endif()
-  endif(Boost_system_LIBRARY)
-endif()
+find_package(Boost 1.60.0 REQUIRED COMPONENTS system filesystem)
+message("-- Boost_INCLUDE_DIRS: ${Boost_INCLUDE_DIRS}")
+message("-- Boost_LIBRARIES: ${Boost_LIBRARIES}")
 
 ### ANL ###
 if(NOT DEFINED ANLNEXT_INSTALL)
-  if($ENV{ANLNEXT_INSTALL})
+  if(DEFINED ENV{ANLNEXT_INSTALL})
     set(ANLNEXT_INSTALL $ENV{ANLNEXT_INSTALL})
-  else($ENV{ANLNEXT_INSTALL})
+  else()
     set(ANLNEXT_INSTALL $ENV{HOME})
-  endif($ENV{ANLNEXT_INSTALL})
+  endif()
 endif(NOT DEFINED ANLNEXT_INSTALL)
-set(ANLNEXT_INC_DIR ${ANLNEXT_INSTALL}/include/anl)
+set(ANLNEXT_INC_DIR ${ANLNEXT_INSTALL}/include)
 set(ANLNEXT_LIB_DIR ${ANLNEXT_INSTALL}/lib)
 set(ANLNEXT_LIB ANLNext)
-set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} ${ANLNEXT_LIB_DIR}/anl)
+set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} ${ANLNEXT_LIB_DIR}/anlnext)
 message("-- ANLNEXT_INSTALL = ${ANLNEXT_INSTALL}")
 
-# add_definitions(-DANL_USE_TVECTOR -DANL_USE_HEPVECTOR)
+### MongoDB ###
+find_package(libmongocxx REQUIRED)
+message("-- LIBMONGOCXX_INCLUDE_DIRS: ${LIBMONGOCXX_INCLUDE_DIRS}")
+message("-- LIBMONGOCXX_LIBRARIES: ${LIBMONGOCXX_LIBRARIES}")
 
 include_directories(
   include
+  ${BOOST_INCLUDE_DIRS}
   ${ANLNEXT_INC_DIR}
-  $ENV{HOME}/include
+  ${LIBMONGOCXX_INCLUDE_DIRS}
   )
 
 link_directories(
@@ -70,13 +67,11 @@ add_library(${MY_LIBRARY} SHARED
 )
 
 target_link_libraries(${MY_LIBRARY}
-  ANLNext
-  mongoclient
-  boost_system-mt boost_thread-mt boost_filesystem-mt boost_program_options-mt
+  ${ANLNEXT_LIB}
+  ${Boost_LIBRARIES}
+  ${LIBMONGOCXX_LIBRARIES}
   )
 
 install(TARGETS ${MY_LIBRARY} LIBRARY DESTINATION ${CMAKE_INSTALL_PREFIX}/lib)
 
-if(USE_RUBY)
-  add_subdirectory(ruby)
-endif(USE_RUBY)
+add_subdirectory(rubyext)

@@ -6,29 +6,31 @@
  *
  */
 
-#ifndef DAQ2_HH
-#define DAQ2_HH
+#ifndef HSQUICKLOOK_DAQ2_H
+#define HSQUICKLOOK_DAQ2_H 1
 
-#include "BasicModule.hh"
+#include <anlnext/BasicModule.hh>
 
-namespace hxisgd { class MongoDBClient; }
+namespace hsquicklook {
 
-class DAQ2 : public anl::BasicModule
+class MongoDBClient;
+
+class DAQ2 : public anlnext::BasicModule
 {
+  DEFINE_ANL_MODULE(DAQ2, 2.0);
+
 public:
   DAQ2();
-  ~DAQ2();
 
-  std::string module_name() const { return "DAQ2"; }
-  std::string module_version() const { return "1.0"; }
-  
-  anl::ANLStatus mod_startup();
-  anl::ANLStatus mod_init();
-  anl::ANLStatus mod_ana();
+  anlnext::ANLStatus mod_define() override;
+  anlnext::ANLStatus mod_initialize() override;
+  anlnext::ANLStatus mod_analyze() override;
 
 private:
-  hxisgd::MongoDBClient* m_Connection;
+  MongoDBClient* m_MDBClient = nullptr;
   std::string m_Instrument;
 };
 
-#endif // DAQ2_HH
+} /* namespace hsquicklook */
+
+#endif /* HSQUICKLOOK_DAQ2_H */

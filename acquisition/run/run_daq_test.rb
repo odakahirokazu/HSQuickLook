@@ -1,37 +1,36 @@
 #!/usr/bin/env ruby
 
 require 'dAQTest'
-require 'ANLLib'
+require 'anlnext'
 
-include DAQTest
+class DAQApp < ANL::ANLApp
+  def initialize(database, host)
+    @database = database
+    @host = host
+    super()
+  end
 
-dbName = ( ARGV[0] or "hxiql" )
-dbHost = ( ARGV[1] or "localhost" )
+  def setup()
+    chain DAQTest::MongoDBClient
+    with_parameters(host: @host,
+                    database: @database)
 
-app = ANLApp.new
-app.chain :MongoDBClient
-app.chain :WaitFor
-app.chain :DAQ2
-app.chain :DAQ3
+    chain DAQTest::WaitFor
+    with_parameters(time: 100000)
 
-app.set_parameters :MongoDBClient, {
-  "MongoDB host" => dbHost,
-  "Database name" => dbName,
-}
+    chain DAQTest::DAQ2
+    with_parameters(instrument: "HXI-1")
 
-app.set_parameters :WaitFor, {
-  "Time us" => 100000,
-}
+    chain DAQTest::DAQ3
+    with_parameters(instrument: "HXI-1",
+                    filename: "image.png",
+                    height: 600,
+                    width: 600)
+  end
+end
 
-app.set_parameters :DAQ2, {
-  "Instrument" => "HXI-1",
-}
+database = ( ARGV[0] or "qldb" )
+host = ( ARGV[1] or "localhost" )
 
-app.set_parameters :DAQ3, {
-  "Instrument" => "HXI-1",
-  "Image file" => "image.png",
-  "Image height" => 600,
-  "Image width" => 600,
-}
-
-app.run(-1, 10)
+a = DAQApp.new(database, host)
+a.run(1000000, 1)

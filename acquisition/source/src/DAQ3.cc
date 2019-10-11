@@ -1,90 +1,107 @@
 #include "DAQ3.hh"
 
-#include <cstdlib>
 #include <fstream>
+#include <bsoncxx/json.hpp>
+#include <bsoncxx/builder/stream/document.hpp>
 #include "MongoDBClient.hh"
 
-using namespace anl;
+using namespace anlnext;
+
+namespace hsquicklook {
 
 DAQ3::DAQ3()
-  : m_Connection(0),
-    m_Instrument("HXI-1"),
-    m_ImageFileName("image.png"), m_ImageHeight(600), m_ImageWidth(600)
+  : m_Instrument("HXI-1"),
+    m_ImageFileName("image.png"),
+    m_ImageHeight(600),
+    m_ImageWidth(600)
 {
 }
 
-
-DAQ3::~DAQ3()
+ANLStatus DAQ3::mod_define()
 {
-}
-
-
-ANLStatus DAQ3::mod_startup()
-{
-  register_parameter(&m_Instrument, "Instrument");
-  register_parameter(&m_ImageFileName, "Image file");
-  register_parameter(&m_ImageHeight, "Image height");
-  register_parameter(&m_ImageWidth, "Image width");
+  define_parameter("instrument", &mod_class::m_Instrument);
+  define_parameter("filename", &mod_class::m_ImageFileName);
+  define_parameter("width", &mod_class::m_ImageWidth);
+  define_parameter("height", &mod_class::m_ImageHeight);
   return AS_OK;
 }
 
-
-ANLStatus DAQ3::mod_init()
+ANLStatus DAQ3::mod_initialize()
 {
-  GetANLModuleNC("MongoDBClient", &m_Connection);
+  using bsoncxx::builder::stream::document;
+  using bsoncxx::builder::stream::finalize;
+
+  get_module_NC("MongoDBClient", &m_MDBClient);
+  mongocxx::database& db = m_MDBClient->getDatabase();
 
   const int size(100*1024*1024);
-  const std::string ns("hxiql.image");
-  m_Connection->createCappedCollection(ns, size);
+  const std::string dbName("image");
+  if (!db.has_collection(dbName)) {
+    auto doc = bsoncxx::builder::stream::document{};
+    db.create_collection(dbName,
+                         doc <<
+                         "capped" << true <<
+                         "size" << size << finalize);
+  }
 
   return AS_OK;
 }
 
-
-ANLStatus DAQ3::mod_ana()
+ANLStatus DAQ3::mod_analyze()
 {
-  const std::string ns("hxiql.image");
-  static int ii(0);
+  using bsoncxx::builder::stream::close_array;
+  using bsoncxx::builder::stream::close_document;
+  using bsoncxx::builder::stream::document;
+  using bsoncxx::builder::stream::finalize;
+  using bsoncxx::builder::stream::open_array;
+  using bsoncxx::builder::stream::open_document;
 
+  mongocxx::database& db = m_MDBClient->getDatabase();
+  mongocxx::collection col = db["image"];
+  auto doc = bsoncxx::builder::stream::document{};
+
+  static int ii(0);
   time_t t(0); time(&t);
 
-  mongo::BSONObjBuilder b;
-  b << "InstrumentName" << m_Instrument;
-  b << "Directory" << "ANALYSIS";
-  b << "Document" << "IMAGES";
+  const uint32_t size = 10*1024*1024;
+  static uint8_t buf[size];
+  const std::string filename(m_ImageFileName);
+  std::ifstream fin(filename.c_str(), std::ios::in|std::ios::binary);
+  fin.read((char*)buf, size);
+  const uint32_t readSize = fin.gcount();
+  fin.close();
+  bsoncxx::types::b_binary image{bsoncxx::binary_sub_type::k_binary,
+                                 readSize,
+                                 buf};
 
-  mongo::BSONObjBuilder b1;
-  b1 << "BlockName" << "Block_images";
-  mongo::BSONObjBuilder b1c;
-  {
-    mongo::BSONObjBuilder bimg;
-    {
-      const size_t SIZE = 10*1024*1024;
-      static char buf[SIZE];
-      std::string filename(m_ImageFileName);
-      std::ifstream fin(filename.c_str(), std::ios::in|std::ios::binary);
-      fin.read(buf, SIZE);
-      size_t readSize = fin.gcount();
-      
-      bimg.append("DataType", "image");
-      bimg.append("FileName", m_ImageFileName);
-      bimg.append("Size", static_cast<int>(readSize));
-      bimg.appendBinData("Data", readSize, mongo::BinDataGeneral, buf);
-      bimg.append("Height", m_ImageHeight);
-      bimg.append("Width", m_ImageWidth);
-    }
-    b1c << "HXI_IMAGE" << bimg.obj();
-  }
-  b1 << "Contents" << b1c.obj();
-  
-  mongo::BSONArrayBuilder bab;
-  bab << b1.obj();
-  b << "Blocks" << bab.arr();
-  
-  mongo::BSONObj p = b.obj();
-  m_Connection->insert(ns, p);
+  bsoncxx::document::value docValue
+    = doc
+    << "InstrumentName" << m_Instrument
+    << "Directory" << "Analysis"
+    << "Document" << "Images"
+    << "Blocks" << open_array
+    << open_document
+    << "BlockName" << "Block_images"
+    << "Contents"
+    << open_document
+    << "HXI_IMAGE"
+    << open_document
+    << "DataType" << "image"
+    << "FileName" << m_ImageFileName
+    << "Size" << static_cast<int>(readSize)
+    << "Data" << image
+    << "Width" << m_ImageWidth
+    << "Height" << m_ImageHeight
+    << close_document
+    << close_document
+    << close_document
+    << close_array
+    << finalize;
+  col.insert_one(docValue.view());
 
   ++ii;
 
   return AS_OK;
 }
+
+} /* namespace hsquicklook */

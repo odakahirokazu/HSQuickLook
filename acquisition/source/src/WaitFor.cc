@@ -1,30 +1,25 @@
 #include "WaitFor.hh"
 #include "unistd.h"
 
-using namespace anl;
-using namespace hxisgd;
+using namespace anlnext;
 
+namespace hsquicklook {
 
 WaitFor::WaitFor()
-  : wait(1000000)
+  : wait_(1000000)
 {
 }
 
-
-WaitFor::~WaitFor()
+ANLStatus WaitFor::mod_define()
 {
-}
-
-
-ANLStatus WaitFor::mod_startup()
-{
-  register_parameter(&wait, "Time us");
+  define_parameter("time", &mod_class::wait_);
   return AS_OK;
 }
 
-
-ANLStatus WaitFor::mod_ana()
+ANLStatus WaitFor::mod_analyze()
 {
-  usleep(wait);
+  usleep(wait_);
   return AS_OK;
 }
+
+} /* namespace hsquicklook */

@@ -1,43 +1,31 @@
 #include "MongoDBClient.hh"
+#include <boost/format.hpp>
 
-using namespace anl;
+using namespace anlnext;
 
-namespace hxisgd
+namespace hsquicklook
 {
 
 MongoDBClient::MongoDBClient()
   : m_MDBHost("localhost"), m_MDBName("hxiql")
 {
-  m_Connection = new mongo::DBClientConnection;
 }
 
-
-MongoDBClient::~MongoDBClient()
+ANLStatus MongoDBClient::mod_define()
 {
-  delete m_Connection;
-}
-
-
-ANLStatus MongoDBClient::mod_startup()
-{
-  register_parameter(&m_MDBHost, "MongoDB host");
-  register_parameter(&m_MDBName, "Database name");
+  define_parameter("host", &mod_class::m_MDBHost);
+  define_parameter("database", &mod_class::m_MDBName);
 
   return AS_OK;
 }
 
-
-ANLStatus MongoDBClient::mod_init()
+ANLStatus MongoDBClient::mod_initialize()
 {
-  try {
-    m_Connection->connect(m_MDBHost);
-  }
-  catch (mongo::DBException& e) {
-    std::cout << "Exception: " << e.what() << std::endl;
-    return AS_QUIT_ERR;
-  }
+  mongocxx::uri uri((boost::format("mongodb://%s:27017")%m_MDBHost).str());
+  m_Client.reset(new mongocxx::client(uri));
+  m_DB = m_Client->database(m_MDBName);
 
   return AS_OK;
 }
 
-} // namespace hxisgd
+} /* namespace hsquicklook */
