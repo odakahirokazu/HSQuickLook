@@ -28,22 +28,8 @@ ANLStatus DAQ3::mod_define()
 
 ANLStatus DAQ3::mod_initialize()
 {
-  using bsoncxx::builder::stream::document;
-  using bsoncxx::builder::stream::finalize;
-
   get_module_NC("MongoDBClient", &m_MDBClient);
-  mongocxx::database& db = m_MDBClient->getDatabase();
-
-  const int size(100*1024*1024);
-  const std::string dbName("image");
-  if (!db.has_collection(dbName)) {
-    auto doc = bsoncxx::builder::stream::document{};
-    db.create_collection(dbName,
-                         doc <<
-                         "capped" << true <<
-                         "size" << size << finalize);
-  }
-
+  m_MDBClient->createCappedCollection("image", 100*1024*1024);
   return AS_OK;
 }
 

@@ -27,10 +27,9 @@ public:
   anlnext::ANLStatus mod_define() override;
   anlnext::ANLStatus mod_initialize() override;
 
+  void createCappedCollection(const std::string& name, int size);
+
 #if 0
-  bool createCollection(const std::string& ns, long long size=0,
-                        bool capped=false, int max=0, mongo::BSONObj* info=0);
-  bool createCappedCollection(const std::string& ns, long long size=0);
   void insert(const std::string& ns, const mongo::BSONObj& obj, int flags=0);
   void insert(const std::string &ns, const std::vector<mongo::BSONObj>& v, int flags=0);
 #endif

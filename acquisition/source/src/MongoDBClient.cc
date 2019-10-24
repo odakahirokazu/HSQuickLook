@@ -1,5 +1,6 @@
 #include "MongoDBClient.hh"
 #include <boost/format.hpp>
+#include <bsoncxx/builder/stream/document.hpp>
 
 using namespace anlnext;
 
@@ -7,7 +8,7 @@ namespace hsquicklook
 {
 
 MongoDBClient::MongoDBClient()
-  : m_MDBHost("localhost"), m_MDBName("hxiql")
+  : m_MDBHost("localhost"), m_MDBName("hsquicklook")
 {
 }
 
@@ -26,6 +27,20 @@ ANLStatus MongoDBClient::mod_initialize()
   m_DB = m_Client->database(m_MDBName);
 
   return AS_OK;
+}
+
+void MongoDBClient::createCappedCollection(const std::string& name, const int size)
+{
+  using bsoncxx::builder::stream::document;
+  using bsoncxx::builder::stream::finalize;
+
+  if (!m_DB.has_collection(name)) {
+    auto doc = bsoncxx::builder::stream::document{};
+    m_DB.create_collection(name,
+                           doc <<
+                           "capped" << true <<
+                           "size" << size << finalize);
+  }
 }
 
 } /* namespace hsquicklook */
