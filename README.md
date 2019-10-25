@@ -3,7 +3,7 @@ HSQuickLook
 
 Multi-purpose web-based data monitoring system.
 
-- Version: 0.0.0
+- Version: 1.1
 - Authors: Hirokazu Odaka and Soki Sakurai
 
 
@@ -11,16 +11,81 @@ Multi-purpose web-based data monitoring system.
 
 HSQuickLook is a web-based data monitoring application.
 
+HSQuickLook consists of four separate software, which are from the data root to user visualization:
 
-## Getting Started
+1. data analyzer (pushes data documents to MongoDB)
+2. MongoDB
+3. WebSocket server (requests data documents and returns them to clients via WebSocket)
+4. User visualization client running on a web browser
+
+## Getting started
+
+### Install
+
+#### (1) MongoDB
+
+It is easy to install MongoDB via Homebrew
+
+https://docs.mongodb.com/manual/tutorial/install-mongodb-on-os-x/
+
+MongoDB C++ client library is necessary:
+
+    brew install mongo-cxx-driver
+
+#### (2) data analyzer
+
+HSQuickLook includes an example of a data analyzer. It uses ANL Next framework, is written in C++, and provides us with a Ruby interface.
+
+Install ANL Next (which requires Boost, Ruby, SWIG).
+
+Then, go to HSQuickLook/analyzer and make a build directory
+
+    cd analyzer
+    mkdir build
+
+Execute cmake and make
+
+    cmake ../source
+    make
+    make install
+
+#### (3) WS server (hsquicklook_ws_server.rb)
+
+This requires several packages
+
+    gem install mongo
+    gem install eventmachine
+    gem install em-websocket
+    gen install bson_ext
+    gem install mime-types
+
+### How to run
+
+Run MongoDB.
+
+    brew services start mongodb-community
+
+Run WS server.
+
+    cd ws_server
+    ./hsquicklook_ws_server.rb
+
+Open a client with Safari (or any other web browser you like).
+
+    open clients/hsquicklook/index.html
+
+You may need to disable cross-origin restriction (find it in Develop manu)
+
+Run an analyzer
+
+    cd analyzer/run
+    ./run_analyzer.rb
+
+Have a fun on the web browser.
 
 ## Schema
 
-## Frequently Asked Questions
-
-### xxx
-
-#### ?
+## Frequently asked questions
 
 ## Information
 
