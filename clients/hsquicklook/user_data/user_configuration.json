@@ -1,12 +1,12 @@
 {
-    "ws_host": "",
+    "ws_host": "localhost",
     "ws_port": "8080",
     "title": "HSQuickLook",
     "ti_scaling": 64,
     "schema_list": {
-        "DAQ Test": {
-            "DAQ2": "user_data/schema/DAQTest/DAQ2.js",
-            "DAQ3": "user_data/schema/DAQTest/DAQ3.js"
+        "Example": {
+            "Normal document example": "user_data/schema/Example/example1.js",
+            "Image example": "user_data/schema/Example/example2.js"
         }
     }
 }

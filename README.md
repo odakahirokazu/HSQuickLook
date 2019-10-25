@@ -7,25 +7,22 @@ Multi-purpose web-based data monitoring system.
 - Authors: Hirokazu Odaka and Soki Sakurai
 
 
-Introduction
-----------------------------------------
+## Introduction
 
-HSQuickLook is web-based data monitoring application.
-
-
-Getting Started
-----------------------------------------
+HSQuickLook is a web-based data monitoring application.
 
 
-Frequently Asked Questions
-----------------------------------------
+## Getting Started
+
+## Schema
+
+## Frequently Asked Questions
 
 ### xxx
 
 #### ?
 
-Information
-----------------------------------------
+## Information
 
 ### Contact
 

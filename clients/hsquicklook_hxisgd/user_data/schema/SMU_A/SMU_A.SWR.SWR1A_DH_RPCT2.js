@@ -1,4 +1,0 @@
-HSQuickLook.main.schema =
-[
-
-];

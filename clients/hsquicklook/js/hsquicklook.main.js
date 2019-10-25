@@ -349,7 +349,7 @@ var HSQuickLook = HSQuickLook || {};
 
   function buildDataSheet() {
     var ti = "-1",
-        unixtime = "2112-09-03 00:00:00 UTC", /* dummy time */
+        time = "2112-09-03 00:00:00 UTC", /* dummy time */
         target = $('div#main-tables').html(""),
         schema = HSQuickLook.main.schema,
         i = 0,
@@ -357,7 +357,7 @@ var HSQuickLook = HSQuickLook || {};
         tableHTML;
 
     // display the dummy time
-    $('p#time').html(unixtime + " | TI: " + ti);
+    $('p#time').html(time + " | TI: " + ti);
 
     // main tables
     for (i=0; i<schema.length; i++) {
@@ -400,7 +400,8 @@ var HSQuickLook = HSQuickLook || {};
         documentLabel,
         dataObject,
         ti = 0,
-        unixtime = 0;
+        unixtime = 0,
+        time = 0;
     
     if (dataEval == []) { return; }
 
@@ -412,9 +413,10 @@ var HSQuickLook = HSQuickLook || {};
       if (dataObject !== void 0) {
         if (!timeUpdated) {
           // display time
-          ti = dataObject["TI"] >>> 0;
-          unixtime = dataObject["UNIXTIME"];
-          $('p#time').html(unixtime
+          ti = dataObject["TI"];
+          unixtime = dataObject["unixtime"];
+          time = new Date(unixtime*1000);
+          $('p#time').html(time.toString()
                            + " | TI: " + ti
                            + " | Time: " + ti*timeScaling
                           );
