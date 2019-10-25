@@ -10,6 +10,7 @@
 #   2013-09-06 | modify image tag
 #   2013-10-08 | use data URI scheme for images
 #   2015-06-19 | for ruby/mongo 2.0
+#   2019-10-25 | change keywords
 ######################################################################
 
 require 'em-websocket'
@@ -46,12 +47,12 @@ class QLDocument
 
   def read(db, time=nil)
     query = {
-      :Directory => @directory.to_s,
-      :Document => @document.to_s
+      :__directory__ => @directory.to_s,
+      :__document__ => @document.to_s
     }
 
     if time
-      query[:UNIXTIME] = {"$gte" => time}
+      query[:__unixtime__] = {"$gte" => time}
       option = {"$natural" => +1 }
     else
       option = {"$natural" => -1 }
@@ -182,10 +183,10 @@ end
 
 
 def convert_object(obj)
-  blocks = obj["Blocks"]
+  blocks = obj["__blocks__"]
   if blocks
     blocks.each do |block|
-      contents = ( block["Contents"] or {} )
+      contents = ( block["__contents__"] or {} )
       convert_contents(contents)
     end
   end
@@ -197,12 +198,12 @@ end
 def convert_contents(obj, image_format="json")
   obj.each do |k, v|
     next unless v.class == BSON::Document
-    if v["DataType"] == "image"
-      file_name = v["FileName"]
-      data = v['Data'].data
+    if v["__data_type__"] == "image"
+      file_name = v["__filename__"]
+      data = v['__data__'].data
       # p data
-      height = v['Height']
-      width = v['Width']
+      height = v['__height__']
+      width = v['__width__']
       mime_type = MIME::Types.type_for(file_name)[0].to_s
       data_base64 = Base64::encode64(data)
 
@@ -337,9 +338,9 @@ puts '************************************************************'
 puts '*                                                          *'
 puts '*             HSQuickLook WebSocket Server                 *'
 puts '*                                                          *'
-puts '*               Version 1.0 (2015-06-19)                   *'
+puts '*               Version 1.1 (2019-10-25)                   *'
 puts '*                   Since 2013-01-10                       *'
-puts '*             Hirokazu Odaka, Soki Sakurai                 *'
+puts '*            Hirokazu Odaka and Soki Sakurai               *'
 puts '*                                                          *'
 puts '************************************************************'
 puts ''

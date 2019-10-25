@@ -5,6 +5,7 @@
  * Date: 2012-10-14 (alpha)
  * Date: 2014-04-07 (v0.5.1)
  * Date: 2014-12-20 (v0.6.1)
+ * Date: 2019-10-25 (v0.7) | change keywords
  * 
  ******************************************************************************/
 
@@ -413,8 +414,8 @@ var HSQuickLook = HSQuickLook || {};
       if (dataObject !== void 0) {
         if (!timeUpdated) {
           // display time
-          ti = dataObject["TI"];
-          unixtime = dataObject["unixtime"];
+          ti = dataObject["__ti__"];
+          unixtime = dataObject["__unixtime__"];
           time = new Date(unixtime*1000);
           $('p#time').html(time.toString()
                            + " | TI: " + ti
@@ -528,7 +529,7 @@ var HSQuickLook = HSQuickLook || {};
   }
 
   function updateTable(tableInfo, data, ti) {
-    var blocks = data["Blocks"],
+    var blocks = data["__blocks__"],
         blockData = void 0,
         ib = 0,
         values, tableID, contents,
@@ -536,7 +537,7 @@ var HSQuickLook = HSQuickLook || {};
         source, value;
 
     for (ib=0; ib<blocks.length; ib++) {
-      if (blocks[ib]["BlockName"] == tableInfo.blockName) {
+      if (blocks[ib]["__block_name__"] == tableInfo.blockName) {
         blockData = blocks[ib];
         break;
       }
@@ -545,7 +546,7 @@ var HSQuickLook = HSQuickLook || {};
       return false;
     }
 
-    values = blockData["Contents"];
+    values = blockData["__contents__"];
     tableID = getTableID(tableInfo);
     contents = tableInfo.contents;
 

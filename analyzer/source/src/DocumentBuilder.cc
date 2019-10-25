@@ -15,12 +15,12 @@ bsoncxx::document::value make_image_value(uint8_t* buf,
                                  size,
                                  buf};
   bsoncxx::document::value value = bsoncxx::builder::stream::document{}
-  << "DataType" << "image"
-  << "FileName" << filename
-  << "Size" << static_cast<int>(size)
-  << "Data" << image
-  << "Width" << width
-  << "Height" << height
+  << "__data_type__" << "image"
+  << "__filename__" << filename
+  << "__size__" << static_cast<int>(size)
+  << "__data__" << image
+  << "__width__" << width
+  << "__height__" << height
   << bsoncxx::builder::stream::finalize;
   return value;
 }
@@ -61,15 +61,15 @@ bsoncxx::document::value DocumentBuilder::generate()
   using bsoncxx::builder::stream::close_document;
   
   bsoncxx::builder::stream::document builder{};
-  builder << "Directory" << directory_
-          << "Document" << name_
-          << "TI" << ti_
-          << "unixtime" << static_cast<int64_t>(unixtime_);
-  auto builder_array_opened = builder << "Blocks" << open_array;
+  builder << "__directory__" << directory_
+          << "__document__" << name_
+          << "__ti__" << ti_
+          << "__unixtime__" << static_cast<int64_t>(unixtime_);
+  auto builder_array_opened = builder << "__blocks__" << open_array;
   for (auto& block: blocks_) {
     builder_array_opened << open_document
-                         << "BlockName" << block.first
-                         << "Contents" << block.second
+                         << "__block_name__" << block.first
+                         << "__contents__" << block.second
                          << close_document;
   }
   auto builder_array_closed = builder_array_opened << close_array;
