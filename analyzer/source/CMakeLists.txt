@@ -18,6 +18,7 @@ message("-- Install destination prefix: ${CMAKE_INSTALL_PREFIX}")
 set(CMAKE_INSTALL_RPATH "${CMAKE_INSTALL_PREFIX}/lib")
 
 set(MY_LIBRARY HSQuickLookAnalyzer)
+set(HSQUICKLOOK_INSTALL_HEADERS TRUE)
 
 ### External libraries
 ### BOOST ###
@@ -78,5 +79,10 @@ target_link_libraries(${MY_LIBRARY}
   )
 
 install(TARGETS ${MY_LIBRARY} LIBRARY DESTINATION ${CMAKE_INSTALL_PREFIX}/lib)
+
+if(HSQUICKLOOK_INSTALL_HEADERS)
+  install(FILES include/DocumentBuilder.hh include/MongoDBClient.hh
+    DESTINATION ${CMAKE_INSTALL_PREFIX}/include/hsquicklook)
+endif(HSQUICKLOOK_INSTALL_HEADERS)
 
 add_subdirectory(rubyext)
