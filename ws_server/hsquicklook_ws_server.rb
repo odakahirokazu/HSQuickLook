@@ -50,13 +50,10 @@ class QLDocument
       :__directory__ => @directory.to_s,
       :__document__ => @document.to_s
     }
-
     if time
-      query[:__unixtime__] = {"$gte" => time}
-      option = {"$natural" => +1 }
-    else
-      option = {"$natural" => -1 }
+      query[:__unixtime__] = {"$lte" => time}
     end
+    option = {"$natural" => -1 }
 
     documents = db[@collection.to_s].find(query).sort(option).limit(1)
     documents.each do |document|
@@ -256,7 +253,7 @@ class HSQuickLookServer
     elsif time_request = o["time"]
       time = nil
       if time_request[0..1] == "DL"
-        time = Time.utc(*time_request[3..-1].strip.split(':'))
+        time = Time.utc(*time_request[3..-1].strip.split(':')).to_i
       elsif time_request[0..1] == "QL"
         time = nil
       end

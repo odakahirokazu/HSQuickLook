@@ -417,7 +417,7 @@ var HSQuickLook = HSQuickLook || {};
           ti = dataObject["__ti__"];
           unixtime = dataObject["__unixtime__"];
           time = new Date(unixtime*1000);
-          $('p#time').html(time.toString()
+          $('p#time').html(time.toUTCString()
                            + " | TI: " + ti
                            + " | Time: " + ti*timeScaling
                           );
