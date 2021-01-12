@@ -41,15 +41,13 @@ set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} ${ANLNEXT_LIB_DIR}/anlnext)
 message("-- ANLNEXT_INSTALL = ${ANLNEXT_INSTALL}")
 
 ### MongoDB ###
-find_package(libmongocxx REQUIRED)
-message("-- LIBMONGOCXX_INCLUDE_DIRS: ${LIBMONGOCXX_INCLUDE_DIRS}")
-message("-- LIBMONGOCXX_LIBRARIES: ${LIBMONGOCXX_LIBRARIES}")
+find_package(mongocxx REQUIRED)
 
+################################
 include_directories(
   include
   ${BOOST_INCLUDE_DIRS}
   ${ANLNEXT_INC_DIR}
-  ${LIBMONGOCXX_INCLUDE_DIRS}
   )
 
 link_directories(
@@ -73,9 +71,10 @@ add_library(${MY_LIBRARY} SHARED
 )
 
 target_link_libraries(${MY_LIBRARY}
+  PRIVATE
   ${ANLNEXT_LIB}
   ${Boost_LIBRARIES}
-  ${LIBMONGOCXX_LIBRARIES}
+  mongo::mongocxx_shared
   )
 
 install(TARGETS ${MY_LIBRARY} LIBRARY DESTINATION ${CMAKE_INSTALL_PREFIX}/lib)

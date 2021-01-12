@@ -17,6 +17,7 @@ set(RUBY_EXT_LIBRARY_DIRS
 set(RUBY_EXT_LIBRARIES
   HSQuickLookAnalyzer
   ${ANLNEXT_LIB}
+  mongo::mongocxx_shared
   )
 
 ########################################################
