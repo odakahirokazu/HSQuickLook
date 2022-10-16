@@ -13,8 +13,8 @@
 #   2019-10-25 | change keywords
 ######################################################################
 
-require 'em-websocket'
 require 'mongo'
+require 'em-websocket'
 require 'json'
 require 'mime/types'
 
