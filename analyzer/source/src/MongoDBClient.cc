@@ -43,10 +43,31 @@ void MongoDBClient::createCappedCollection(const std::string& name, const int si
   }
 }
 
+void MongoDBClient::createCollection(const std::string& name)
+{
+  using bsoncxx::builder::stream::document;
+  using bsoncxx::builder::stream::finalize;
+
+  if (!m_DB.has_collection(name)) {
+    auto doc = bsoncxx::builder::stream::document{};
+    m_DB.create_collection(name,
+                           doc <<
+                           "capped" << false << finalize);
+  }
+}
+
 void MongoDBClient::push(const std::string& collection, const bsoncxx::document::value& doc)
 {
   mongocxx::collection col = m_DB[collection];
   col.insert_one(doc.view());
+}
+
+void MongoDBClient::push_many(const std::string& collection, std::vector<bsoncxx::document::value>& docs)
+{
+  mongocxx::collection col = m_DB[collection];
+  if (docs.size() > 0) {
+    col.insert_many(docs);
+  }
 }
 
 } /* namespace hsquicklook */

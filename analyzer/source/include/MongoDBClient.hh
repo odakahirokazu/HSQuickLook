@@ -11,6 +11,7 @@
 #define HSQUICKLOOK_MongoDBClient_H 1
 
 #include <memory>
+#include <vector>
 #include <anlnext/BasicModule.hh>
 #include <mongocxx/instance.hpp>
 #include <mongocxx/client.hpp>
@@ -29,7 +30,9 @@ public:
   anlnext::ANLStatus mod_initialize() override;
 
   void createCappedCollection(const std::string& name, int size);
+  void createCollection(const std::string& name);
   void push(const std::string& collection, const bsoncxx::document::value& doc);
+  void push_many(const std::string& collection, std::vector<bsoncxx::document::value>& docs);
 
   mongocxx::database& getDatabase()
   { return m_DB; }
