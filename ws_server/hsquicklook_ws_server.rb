@@ -12,7 +12,7 @@
 #   2015-06-19 | for ruby/mongo 2.0
 #   2019-10-25 | change keywords
 #   2022-10-19 | use pure ruby mode of EventMachine
-#   2022-10-19 | rename block to section
+#   2022-10-19 | 1.4 | rename block to section
 ######################################################################
 
 EventMachinePureRubyMode = false
@@ -341,7 +341,7 @@ puts '************************************************************'
 puts '*                                                          *'
 puts '*             HSQuickLook WebSocket Server                 *'
 puts '*                                                          *'
-puts '*               Version 1.1 (2019-10-25)                   *'
+puts '*               Version 1.4 (2022-10-20)                   *'
 puts '*                   Since 2013-01-10                       *'
 puts '*            Hirokazu Odaka and Soki Sakurai               *'
 puts '*                                                          *'
