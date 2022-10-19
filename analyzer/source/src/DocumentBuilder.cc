@@ -41,16 +41,16 @@ void DocumentBuilder::setTimeNow()
   setTime(t);
 }
 
-void DocumentBuilder::addBlock(const std::string& name,
-                               const bsoncxx::document::value& contents)
+void DocumentBuilder::addSection(const std::string& name,
+                                 const bsoncxx::document::value& contents)
 {
-  blocks_.push_back(std::make_pair(name, contents));
+  sections_.push_back(std::make_pair(name, contents));
 }
 
-void DocumentBuilder::addBlock(const std::string& name,
-                               bsoncxx::document::value&& contents)
+void DocumentBuilder::addSection(const std::string& name,
+                                 bsoncxx::document::value&& contents)
 {
-  blocks_.push_back(std::make_pair(name, contents));
+  sections_.push_back(std::make_pair(name, contents));
 }
 
 bsoncxx::document::value DocumentBuilder::generate()
@@ -65,10 +65,10 @@ bsoncxx::document::value DocumentBuilder::generate()
           << "__document__" << name_
           << "__ti__" << ti_
           << "__unixtime__" << static_cast<int64_t>(unixtime_);
-  auto builder_array_opened = builder << "__blocks__" << open_array;
-  for (auto& block: blocks_) {
+  auto builder_array_opened = builder << "__sections__" << open_array;
+  for (auto& block: sections_) {
     builder_array_opened << open_document
-                         << "__block_name__" << block.first
+                         << "__section__" << block.first
                          << "__contents__" << block.second
                          << close_document;
   }

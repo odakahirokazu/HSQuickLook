@@ -1,12 +1,13 @@
 {
-    "ws_host": "localhost",
-    "ws_port": "8080",
-    "title": "HSQuickLook",
-    "ti_scaling": 64,
-    "schema_list": {
-        "Example": {
-            "Normal document example": "user_data/schema/Example/example1.js",
-            "Image example": "user_data/schema/Example/example2.js"
-        }
+  "ws_host": "localhost",
+  "ws_port": "8080",
+  "title": "HSQuickLook",
+  "ti_scaling": 64,
+  "schema_list": {
+    "Example": {
+      "Basic example": "user_data/schema/Example/example1.js",
+      "Image example": "user_data/schema/Example/example2.js",
+      "Graph example": "user_data/schema/Example/example3.js"
     }
+  }
 }

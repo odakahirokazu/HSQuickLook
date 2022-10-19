@@ -12,6 +12,7 @@
 #   2015-06-19 | for ruby/mongo 2.0
 #   2019-10-25 | change keywords
 #   2022-10-19 | use pure ruby mode of EventMachine
+#   2022-10-19 | rename block to section
 ######################################################################
 
 EventMachinePureRubyMode = false
@@ -26,7 +27,7 @@ require 'mime/types'
 ######################################################################
 ### QL definition
 ######################################################################
-DBName = ( ARGV[0] or "qldb" )
+DBName = ( ARGV[0] or "quicklook" )
 Host = ( ARGV[1] or "localhost" )
 Port = ( ARGV[2] ? ARGV[2].to_i : 27017 )
 ######################################################################
@@ -185,10 +186,10 @@ end
 
 
 def convert_object(obj)
-  blocks = obj["__blocks__"]
-  if blocks
-    blocks.each do |block|
-      contents = ( block["__contents__"] or {} )
+  sections = obj["__sections__"]
+  if sections
+    sections.each do |section|
+      contents = ( section["__contents__"] or {} )
       convert_contents(contents)
     end
   end

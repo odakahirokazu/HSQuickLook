@@ -11,20 +11,19 @@ using namespace anlnext;
 namespace hsquicklook {
 
 AnalyzerModuleExample1::AnalyzerModuleExample1()
-  : m_Instrument("HXI-1")
 {
 }
 
 ANLStatus AnalyzerModuleExample1::mod_define()
 {
-  define_parameter("instrument", &mod_class::m_Instrument);
   return AS_OK;
 }
 
 ANLStatus AnalyzerModuleExample1::mod_initialize()
 {
-  get_module_NC("MongoDBClient", &m_MDBClient);
-  m_MDBClient->createCappedCollection("main", 1*1024*1024);
+  get_module_NC("MongoDBClient", &mongodb_client_);
+  mongodb_client_->createCappedCollection("main", 1*1024*1024);
+
   return AS_OK;
 }
 
@@ -33,37 +32,43 @@ ANLStatus AnalyzerModuleExample1::mod_analyze()
   static int ii(0);
   time_t t(0); time(&t);
   const int64_t ti = static_cast<int64_t>(t)*64;
+  static int count1(0);
+  static int count2(0);
 
-  DocumentBuilder builder("DE", "USER_HK");
+  DocumentBuilder builder("Detector", "BasicStatus");
   builder.setTI(ti);
   builder.setTimeNow();
 
   {
-    const std::string block_name = "Block_1";
-    auto block = bsoncxx::builder::stream::document{}
-    << "Detector" << m_Instrument
-    << "EventID" << ii
-    << "Error" << std::rand()%3
-    << "Time" << static_cast<int>(t)
-    << bsoncxx::builder::stream::finalize;
-    builder.addBlock(block_name, block);
+    const std::string section_name = "Detector_1";
+    auto section = bsoncxx::builder::stream::document{}
+      << "Detector" << "Main Detector 101"
+      << "EventID" << ii
+      << "Error" << std::rand()%3
+      << "Count" << count1
+      << "Time" << static_cast<int>(t)
+      << bsoncxx::builder::stream::finalize;
+    builder.addSection(section_name, section);
   }
 
   {
-    const std::string block_name = "Block_2";
-    auto block = bsoncxx::builder::stream::document{}
-    << "Detector" << m_Instrument
-    << "EventID" << ii
-    << "Error" << std::rand()%3
-    << "Time" << static_cast<int>(t)
-    << bsoncxx::builder::stream::finalize;
-    builder.addBlock(block_name, block);
+    const std::string section_name = "Detector_2";
+    auto section = bsoncxx::builder::stream::document{}
+      << "Detector" << "Main Detector 102"
+      << "EventID" << ii
+      << "Error" << std::rand()%3
+      << "Count" << count2
+      << "Time" << static_cast<int>(t)
+      << bsoncxx::builder::stream::finalize;
+    builder.addSection(section_name, section);
   }
 
   auto doc = builder.generate();
-  m_MDBClient->push("main", doc);
+  mongodb_client_->push("main", doc);
 
   ++ii;
+  count1 += 500 + std::rand()%25;
+  count2 += 20000 + std::rand()%200;
 
   return AS_OK;
 }

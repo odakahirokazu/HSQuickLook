@@ -19,17 +19,15 @@ class AnalyzerExample < ANL::ANLApp
     with_parameters(time: 100000)
 
     chain HSQuickLook::AnalyzerModuleExample1
-    with_parameters(instrument: "HXI-1")
 
     chain HSQuickLook::AnalyzerModuleExample2
-    with_parameters(instrument: "HXI-1",
-                    filename: "image.png",
+    with_parameters(filename: "image.png",
                     height: 600,
                     width: 600)
   end
 end
 
-database = ( ARGV[0] or "qldb" )
+database = ( ARGV[0] or "quicklook" )
 host = ( ARGV[1] or "localhost" )
 
 a = AnalyzerExample.new(database, host)

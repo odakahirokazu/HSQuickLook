@@ -3,6 +3,7 @@
  *
  * @author Hirokazu Odaka
  * @date 2019-10-25
+ * @date 2022-10-19 | rename black to section
  *
  */
 
@@ -32,10 +33,10 @@ public:
   void setTime(time_t v) { unixtime_ = v; }
   void setTimeNow();
   void setTI(int64_t v) { ti_ = v; }
-  void addBlock(const std::string& name,
-                const bsoncxx::document::value& contents);
-  void addBlock(const std::string& name,
-                bsoncxx::document::value&& contents);
+  void addSection(const std::string& name,
+                  const bsoncxx::document::value& contents);
+  void addSection(const std::string& name,
+                  bsoncxx::document::value&& contents);
   bsoncxx::document::value generate();
 
 private:
@@ -43,7 +44,7 @@ private:
   std::string name_;
   time_t unixtime_;
   int64_t ti_;
-  std::list<std::pair<std::string, bsoncxx::document::value>> blocks_;
+  std::list<std::pair<std::string, bsoncxx::document::value>> sections_;
 };
 
 } /* namespace hsquicklook */

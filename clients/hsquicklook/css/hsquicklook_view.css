@@ -19,11 +19,11 @@ h2 {
     font-size: 11pt;
 }
 
-.section-heading {
+.panel-heading {
     display: none;
 }
 
-div#menu-section {
+div#menu-panel {
     padding: 0.25em;
     background-color: #444;
     line-height: 1.8em;
@@ -49,24 +49,24 @@ div#menu-section {
     color: #EEEEDD;
 }
 
-#control-section-frame {
+#control-panel-frame {
     float: left;
     margin: 0px;
     width: 50%;
 }
 
-#log-section-frame {
+#log-panel-frame {
     margin-left: 50%;
     width: auto;
 }
 
-#control-section {
+#control-panel {
     padding: 0.5em;
     background-color: #224;
     color: #99A;
 }
 
-#control-section form {
+#control-panel form {
     margin: 0.5em;
 }
 
@@ -77,22 +77,22 @@ input#time3 { width: 2.8em; }
 input#time4 { width: 2.8em; }
 input#time5 { width: 2.8em; }
 
-#log-section {
+#log-panel {
     padding: 0.5em;
     background-color: #242;
     color: #9A9;
 }
 
-#log-section #log {
+#log-panel #log {
     padding: 0.5em;
 }
 
-#data-section {
+#data-panel {
     clear: left;
     padding: 0.5em;
 }
 
-.section-nodisplay {
+.panel-nodisplay {
     display: none;
 }
 

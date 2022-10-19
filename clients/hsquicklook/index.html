@@ -10,7 +10,7 @@
     <script type="application/javascript" src="js/jquery-3.6.1.min.js"></script>
     <script type="application/javascript" src="js/jquery-ui.min.js"></script>
     <script type="application/javascript" src="js/jquery.flot.min.js"></script>
-    <script type="application/javascript" src="js/sprintf.min.js"></script>
+    <script type="application/javascript" src="js/sprintf-0.6.js"></script>
     <script type="application/javascript" src="js/hsquicklook.graph.js"></script>
     <script type="application/javascript" src="js/hsquicklook.main.js"></script>
     <link rel="stylesheet" href="css/hsquicklook_view.css" type="text/css" />
@@ -22,7 +22,7 @@
   </head>
 
   <body>
-    <div id="menu-section">
+    <div id="menu-panel">
       <span id="display-button" class="menu-button">control</span>
       <span id="display-title-button" class="menu-button">title</span>
       <span id="draggable-button" class="menu-button">draggable</span>
@@ -31,9 +31,9 @@
 
     <h1 class="title">Quick Look</h1>
 
-    <div id="control-section-frame">
-      <div id="control-section">
-        <h2 class="section-heading">Control</h2>
+    <div id="control-panel-frame">
+      <div id="control-panel">
+        <h2 class="panel-heading">Control</h2>
         <form id="ws-form">
           <span>Connection to ws://</span>
           <input id="ws-host" type="text" value="localhost:8080" />
@@ -66,15 +66,15 @@
       </div>
     </div>
 
-    <div id="log-section-frame">
-      <div id="log-section">
-        <h2 class="section-heading">Log</h2>
+    <div id="log-panel-frame">
+      <div id="log-panel">
+        <h2 class="panel-heading">Log</h2>
         <div id="log"></div>
       </div>
     </div>
 
-    <div id="data-section">
-      <h2 class="section-heading">Data</h2>
+    <div id="data-panel">
+      <h2 class="panel-heading">Data</h2>
       <p id="time" />
       <div id="main-tables" />
     </div>

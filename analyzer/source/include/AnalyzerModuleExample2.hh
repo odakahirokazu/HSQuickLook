@@ -1,11 +1,3 @@
-/**
- * MyModule sample module of the ANL Next framework
- *
- * @author 
- * @date
- *
- */
-
 #ifndef HSQUICKLOOK_AnalyzerModuleExample2_H
 #define HSQUICKLOOK_AnalyzerModuleExample2_H 1
 
@@ -17,8 +9,7 @@ class MongoDBClient;
 
 class AnalyzerModuleExample2 : public anlnext::BasicModule
 {
-  DEFINE_ANL_MODULE(AnalyzerModuleExample2, 2.0);
-
+  DEFINE_ANL_MODULE(AnalyzerModuleExample2, 3.0);
 public:
   AnalyzerModuleExample2();
 
@@ -27,11 +18,10 @@ public:
   anlnext::ANLStatus mod_analyze() override;
 
   private:
-  MongoDBClient* m_MDBClient = nullptr;
-  std::string m_Instrument;
-  std::string m_ImageFileName;
-  int m_ImageHeight = 0;
-  int m_ImageWidth = 0;
+  MongoDBClient* mongodb_client_ = nullptr;
+  std::string image_filename_;
+  int image_height_ = 0;
+  int image_width_ = 0;
 };
 
 } /* namespace hsquicklook */

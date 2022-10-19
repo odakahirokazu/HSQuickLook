@@ -6,6 +6,7 @@
  * Date: 2014-04-07 (v0.5.1)
  * Date: 2014-12-20 (v0.6.1)
  * Date: 2019-10-25 (v0.7) | change keywords
+ * Date: 2022-10-19 (v1.0) | rename block to section, and tweaks
  * 
  ******************************************************************************/
 
@@ -29,7 +30,7 @@ var HSQuickLook = HSQuickLook || {};
       ws = null,
       schemaList,
       paused = false,
-      sectionDisplay = true,
+      controlDisplay = true,
       titleDisplay = true,
       timeScaling = 1.0/64,
       /* Variables about the trend graphs */
@@ -76,8 +77,8 @@ var HSQuickLook = HSQuickLook || {};
     $("input#time5").keypress(enterDLModeByEvent);
     $("input#request-time").click(enterDLMode);
 
-    // menu-section
-    $("#display-button").click(toggleSectionDisplay);
+    // title and control panels
+    $("#display-button").click(toggleControlDisplay);
     $("#display-title-button").click(toggleTitleDisplay);
     $("#draggable-button").click(toggleDraggable);
     $("#clear-log-button").click(clearLog);
@@ -132,7 +133,7 @@ var HSQuickLook = HSQuickLook || {};
       $("#display-title-button").removeClass("menu-button-on");
     }
 
-    if (sectionDisplay) {
+    if (controlDisplay) {
       $("#display-button").addClass("menu-button-on");
     } else {
       $("#display-button").removeClass("menu-button-on");
@@ -185,16 +186,16 @@ var HSQuickLook = HSQuickLook || {};
   /***************************************************************************
    * Display
    */
-  function toggleSectionDisplay() {
-    if (sectionDisplay) {
-      sectionDisplay = false;
-      $("div#control-section").addClass("section-nodisplay");
-      $("div#log-section").addClass("section-nodisplay");
+  function toggleControlDisplay() {
+    if (controlDisplay) {
+      controlDisplay = false;
+      $("div#control-panel").addClass("panel-nodisplay");
+      $("div#log-panel").addClass("panel-nodisplay");
       $("#display-button").removeClass("menu-button-on");
     } else {
-      sectionDisplay = true;
-      $("div#control-section").removeClass("section-nodisplay");
-      $("div#log-section").removeClass("section-nodisplay");
+      controlDisplay = true;
+      $("div#control-panel").removeClass("panel-nodisplay");
+      $("div#log-panel").removeClass("panel-nodisplay");
       $("#display-button").addClass("menu-button-on");
     }
   }
@@ -202,11 +203,11 @@ var HSQuickLook = HSQuickLook || {};
   function toggleTitleDisplay() {
     if (titleDisplay) {
       titleDisplay = false;
-      $("h1.title").addClass("section-nodisplay");
+      $("h1.title").addClass("panel-nodisplay");
       $("#display-title-button").removeClass("menu-button-on");
     } else {
       titleDisplay = true;
-      $("h1.title").removeClass("section-nodisplay");
+      $("h1.title").removeClass("panel-nodisplay");
       $("#display-title-button").addClass("menu-button-on");
     }
   }
@@ -431,14 +432,14 @@ var HSQuickLook = HSQuickLook || {};
   /***************************************************************************
    * Data table
    */
-  function getBlockName(tableInfo) {
-    return tableInfo.blockName;
+  function getSectionName(tableInfo) {
+    return tableInfo.section;
   }
 
   function getTableName(tableInfo) {
     var tableName = tableInfo.tableName;
     if (tableName === void 0) {
-      return getBlockName(tableInfo);
+      return getSectionName(tableInfo);
     }
     return tableName;
   }
@@ -529,24 +530,24 @@ var HSQuickLook = HSQuickLook || {};
   }
 
   function updateTable(tableInfo, data, ti) {
-    var blocks = data["__blocks__"],
-        blockData = void 0,
+    var sections = data["__sections__"],
+        sectionData = void 0,
         ib = 0,
         values, tableID, contents,
         key, info, elemID, time,
         source, value;
 
-    for (ib=0; ib<blocks.length; ib++) {
-      if (blocks[ib]["__block_name__"] == tableInfo.blockName) {
-        blockData = blocks[ib];
+    for (ib=0; ib<sections.length; ib++) {
+      if (sections[ib]["__section__"] == tableInfo.section) {
+        sectionData = sections[ib];
         break;
       }
     }
-    if (blockData === void 0) {
+    if (sectionData === void 0) {
       return false;
     }
 
-    values = blockData["__contents__"];
+    values = sectionData["__contents__"];
     tableID = getTableID(tableInfo);
     contents = tableInfo.contents;
 
