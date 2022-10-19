@@ -11,9 +11,14 @@
 #   2013-10-08 | use data URI scheme for images
 #   2015-06-19 | for ruby/mongo 2.0
 #   2019-10-25 | change keywords
+#   2022-10-19 | use pure ruby mode of EventMachine
 ######################################################################
 
+EventMachinePureRubyMode = false
+
 require 'mongo'
+require 'em/pure_ruby' if EventMachinePureRubyMode
+require 'eventmachine'
 require 'em-websocket'
 require 'json'
 require 'mime/types'
