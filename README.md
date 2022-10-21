@@ -74,7 +74,8 @@ Open a client with Safari (or any other web browser you like).
 
     open clients/hsquicklook/index.html
 
-You may need to disable cross-origin restriction (find it in Develop manu)
+This is local file access for test, so you may need to disable local file restriction (find it in Develop manu).
+This client runs on an HTTP server for remote access.
 
 Run an analyzer
 
@@ -92,8 +93,8 @@ Have a fun on the web browser.
 ### Contact
 
 - Hirokazu Odaka 
-- ISAS/JAXA
-- odaka(AT)astro.isas.jaxa.jp
+- The University of Tokyo
+- hirokazu.odaka(at)phys.s.u-tokyo.ac.jp
 
 ### GitHub
 
@@ -109,14 +110,12 @@ https://github.com/odakahirokazu/HSQuickLook/
 
 The author's developing/testing environment is as follows:
 
-- MacBook Pro
-- OS X Mavericks (10.10.1)
-- Apple LLVM version 6.0 (clang-600.0.56) (based on LLVM 3.5svn)
+- iMac
+- macOS Monterey (12.6)
+- Apple clang version 14.0.0 (clang-1400.0.29.102)
 - Homebrew
-- ruby 2.1.5p273 (2014-11-13 revision 48405)
-- Safari 8.0.2
-
-We also test on Firefox and Google Chrome.
+- ruby 2.7.6
+- Safari 16.0
 
 ### Contributions Are Welcome
 
