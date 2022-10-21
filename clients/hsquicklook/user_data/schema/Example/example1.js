@@ -10,7 +10,7 @@ HSQuickLook.main.schema =
 		      "Detector": {"type": "string"},
 		      "EventID": {"type": "int", "format": "%d"},
 		      "Error": {"type": "int", "status": function(v){ return (v==0) ? "safe" : "error"; } , "format": "%d"},
-          "Flags": {"type": "uint", "format": "0x%08X", "status": function(v){ return ((v&0x1)==0x1) ? "error" : ((v&0x2)==0x2) ? "warning" : "safe";} },
+          "Flags": {"type": "uint", "format": "0x%08X", "status": function(v){ return ((v&0x1)==0x1) ? "error" : ((v&0x2)==0x10) ? "warning" : "safe";} },
           "Flags-status": {"source": "Flags", "type": "uint", "conversion": function(v){ return ((v&0x1)==0x1) ? "error" : ((v&0x10)==0x10) ? "warning" : "safe";} },
           "Count": {"type": "int", "format": "%d"},
 		      "Time": {"type": "int", "format": "%d"}
