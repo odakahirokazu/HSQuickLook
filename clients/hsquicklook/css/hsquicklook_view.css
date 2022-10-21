@@ -23,10 +23,18 @@ h2 {
     display: none;
 }
 
-div#menu-panel {
+div#header-panel {
     padding: 0.25em;
     background-color: #444;
     line-height: 1.8em;
+}
+
+div#menu-panel {
+    float: left;
+}
+
+div#status-panel {
+    text-align: right;
 }
 
 .menu-button {
@@ -47,6 +55,25 @@ div#menu-panel {
 .menu-button-on {
     background-color: #AAAAA0;
     color: #EEEEDD;
+}
+
+.status-button {
+    margin: 5px;
+    border-radius: 8px 8px 8px 8px;
+    padding: 2pt 8pt;
+    background-color: #665555;
+    color: #CCD;
+
+    user-select: none;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    -o-user-select: none;
+}
+
+.status-button-on {
+    background-color: #99BBBB;
+    color: #EEFFFF;
 }
 
 #control-panel-frame {

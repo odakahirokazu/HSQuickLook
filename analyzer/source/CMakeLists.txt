@@ -11,7 +11,7 @@ set(CMAKE_MACOSX_RPATH 1)
 
 ### Definition of project
 project(HSQuickLookAnalyzer)
-add_definitions("-std=c++14")
+set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_MODULE_PATH ${DAQTest_SOURCE_DIR}/cmake ${CMAKE_MODULE_PATH})
 
 message("-- Install destination prefix: ${CMAKE_INSTALL_PREFIX}")

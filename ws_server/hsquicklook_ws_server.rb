@@ -15,7 +15,7 @@
 #   2022-10-19 | 1.4 | rename block to section
 ######################################################################
 
-EventMachinePureRubyMode = false
+EventMachinePureRubyMode = true
 
 require 'mongo'
 require 'em/pure_ruby' if EventMachinePureRubyMode

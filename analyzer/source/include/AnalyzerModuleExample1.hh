@@ -2,6 +2,7 @@
 #define HSQUICKLOOK_AnalyzerModuleExample1_H 1
 
 #include <anlnext/BasicModule.hh>
+#include <random>
 
 namespace hsquicklook {
 
@@ -19,6 +20,7 @@ public:
 
 private:
   MongoDBClient* mongodb_client_ = nullptr;
+  std::mt19937 random_engine_;
 };
 
 } /* namespace hsquicklook */

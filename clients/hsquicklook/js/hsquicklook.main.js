@@ -240,6 +240,8 @@ var HSQuickLook = HSQuickLook || {};
       $("#button-connect").val("Close");
       $("#button-connect").unbind("click", openConnection);
       $("#button-connect").click(closeConnection);
+      $("#status-connection").html("Open");
+      $("#status-connection").addClass("status-button-on");
     };
 
     ws.onclose = function() {
@@ -248,6 +250,8 @@ var HSQuickLook = HSQuickLook || {};
       $("#button-connect").val("Open");
       $("#button-connect").unbind("click");
       $("#button-connect").click(openConnection);
+      $("#status-connection").html("Close");
+      $("#status-connection").removeClass("status-button-on");
     };
 
     ws.onmessage = function(e) {
