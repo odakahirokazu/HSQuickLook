@@ -23,7 +23,7 @@ h2 {
     display: none;
 }
 
-div#header-panel {
+div#header-panel-frame {
     padding: 0.25em;
     background-color: #444;
     line-height: 1.8em;
@@ -79,12 +79,7 @@ div#status-panel {
 #control-panel-frame {
     float: left;
     margin: 0px;
-    width: 50%;
-}
-
-#log-panel-frame {
-    margin-left: 50%;
-    width: auto;
+    width: 72ex;
 }
 
 #control-panel {
@@ -114,9 +109,15 @@ input#time5 { width: 2.8em; }
     padding: 0.5em;
 }
 
+#data-panel-frame {
+    float: left;
+}
+
 #data-panel {
-    clear: left;
-    padding: 0.5em;
+    padding-top: 0.5em;
+    padding-bottom: 0.5em;
+    padding-left: 2em;
+    padding-right: 0.5em;
 }
 
 .panel-nodisplay {
