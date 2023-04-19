@@ -15,8 +15,9 @@
 #   2022-10-19 | 1.4 | rename block to section
 ######################################################################
 
-EventMachinePureRubyMode = true
+EventMachinePureRubyMode = false
 
+require 'sorted_set'
 require 'mongo'
 require 'em/pure_ruby' if EventMachinePureRubyMode
 require 'eventmachine'
