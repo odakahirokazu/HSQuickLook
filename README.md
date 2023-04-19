@@ -59,6 +59,9 @@ This requires several packages
     gen install bson_ext
     gem install mime-types
 
+For Ruby 3.0 or higher you need sorted_set.
+    get install sorted_set
+
 ### How to run
 
 Run MongoDB.
