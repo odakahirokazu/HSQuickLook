@@ -6,7 +6,7 @@ set(CLASS_LIST_FILE class_list_${TARGET_EXT_LIBRARY}.hh)
 set(RUBY_EXT_INCLUDE_DIRS
   ../include
   ${ANLNEXT_INC_DIR}
-  ${BOOST_INC_DIR}
+  ${Boost_INCLUDE_DIRS}
   ./interface
   )
 set(RUBY_EXT_LIBRARY_DIRS

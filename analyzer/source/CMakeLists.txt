@@ -46,7 +46,7 @@ find_package(mongocxx REQUIRED)
 ################################
 include_directories(
   include
-  ${BOOST_INCLUDE_DIRS}
+  ${Boost_INCLUDE_DIRS}
   ${ANLNEXT_INC_DIR}
   )
 
