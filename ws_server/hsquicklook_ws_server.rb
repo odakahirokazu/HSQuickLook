@@ -176,7 +176,6 @@ class ClientManager
             end
             @document_store.push(doc.name, time, obj)
           end
-          # json = convert_object(obj)
           convert_object(obj)
           @data[cid][doc.name] = obj
         end
