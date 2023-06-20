@@ -143,12 +143,12 @@ var HSQuickLook = HSQuickLook || {};
 
   function setCurrentTime() {
     var t = new Date();
-    $('input#time0').attr("value", t.getUTCFullYear());
-    $('input#time1').attr("value", t.getUTCMonth() + 1);
-    $('input#time2').attr("value", t.getUTCDate());
-    $('input#time3').attr("value", t.getUTCHours());
-    $('input#time4').attr("value", t.getUTCMinutes());
-    $('input#time5').attr("value", t.getUTCSeconds());
+    $('input#time0').val(t.getUTCFullYear());
+    $('input#time1').val(t.getUTCMonth() + 1);
+    $('input#time2').val(t.getUTCDate());
+    $('input#time3').val(t.getUTCHours());
+    $('input#time4').val(t.getUTCMinutes());
+    $('input#time5').val(t.getUTCSeconds());
   }
 
   function loadDataSheetList() {
@@ -274,12 +274,9 @@ var HSQuickLook = HSQuickLook || {};
    * Time control
    */
   function enterQLMode() {
-    if (paused) {
-      paused = false;
-    } else {
-      $("input#mode-paused").attr("disabled", false);
-      sendTimeNow();
-    }
+    paused = false;
+    $("input#mode-paused").attr("disabled", false);
+    sendTimeNow();
   }
 
   function enterDLMode() {
