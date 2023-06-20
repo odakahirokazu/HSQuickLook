@@ -75,7 +75,8 @@ var HSQuickLook = HSQuickLook || {};
     $("input#time3").keypress(enterDLModeByEvent);
     $("input#time4").keypress(enterDLModeByEvent);
     $("input#time5").keypress(enterDLModeByEvent);
-    $("input#request-time").click(enterDLMode);
+    $("input#request-data").click(enterDLMode);
+    $("input#reset-time").click(setCurrentTime);
 
     // title and control panels
     $("#display-button").click(toggleControlDisplay);
