@@ -3,7 +3,7 @@ HSQuickLook
 
 Multi-purpose web-based data monitoring system.
 
-- Version: 1.4
+- Version: 1.5
 - Authors: Hirokazu Odaka and Soki Sakurai
 
 
@@ -112,13 +112,12 @@ https://github.com/odakahirokazu/HSQuickLook/
 #### Test environment
 
 The author's developing/testing environment is as follows:
-
-- iMac
-- macOS Monterey (12.6)
-- Apple clang version 14.0.0 (clang-1400.0.29.102)
+- Mac Studio
+- macOS 13.4
+- Apple clang version 14.0.3
 - Homebrew
-- ruby 2.7.6
-- Safari 16.0
+- ruby 3.2.2
+- Safari 16.5
 
 ### Contributions Are Welcome
 
