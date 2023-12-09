@@ -7,7 +7,7 @@
  * Date: 2014-12-20 (v0.6.1)
  * Date: 2019-10-25 (v0.7) | change keywords
  * Date: 2022-10-19 (v1.0) | rename block to section, and tweaks
- * Date: 2023-12-09 (v1.1) | check a number type at table/graph updating
+ * Date: 2023-12-09 (v1.5) | check a number type at table/graph updating
  * 
  ******************************************************************************/
 
@@ -866,12 +866,12 @@ var HSQuickLook = HSQuickLook || {};
   }
 
   function checkNumberType(value, type) {
-    if (type=="number" || type=="int" || type=="uint" || type="float") {
-      if (typeof value == "number") {
-        return true;
+    if (type=="number" || type=="int" || type=="uint" || type=="float") {
+      if (typeof value != "number") {
+        return false;
       }
     }
-    return false;
+    return true;
   }
 
   /***************************************************************************
