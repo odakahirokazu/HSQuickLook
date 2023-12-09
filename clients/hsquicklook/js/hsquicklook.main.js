@@ -7,6 +7,7 @@
  * Date: 2014-12-20 (v0.6.1)
  * Date: 2019-10-25 (v0.7) | change keywords
  * Date: 2022-10-19 (v1.0) | rename block to section, and tweaks
+ * Date: 2023-12-09 (v1.1) | check a number type at table/graph updating
  * 
  ******************************************************************************/
 
@@ -395,30 +396,30 @@ var HSQuickLook = HSQuickLook || {};
     }
   }
 
-  function updateDataSheet(data) {
-    var dataEval = JSON.parse(data),
+  function updateDataSheet(dataJSON) {
+    var data = JSON.parse(dataJSON),
         schema,
         timeUpdated = false,
         i = 0,
         tableInfo,
         documentLabel,
-        dataObject,
+        documentData,
         ti = 0,
         unixtime = 0,
         time = 0;
     
-    if (dataEval == []) { return; }
+    if (data == []) { return; }
 
     schema = HSQuickLook.main.schema;
     for (i=0; i<schema.length; i++) {
       tableInfo = schema[i];
       documentLabel = getDocumentLabel(tableInfo);
-      dataObject = dataEval[documentLabel];
-      if (dataObject !== void 0) {
+      documentData = data[documentLabel];
+      if (documentData !== void 0) {
         if (!timeUpdated) {
           // display time
-          ti = dataObject["__ti__"];
-          unixtime = dataObject["__unixtime__"];
+          ti = documentData["__ti__"];
+          unixtime = documentData["__unixtime__"];
           time = new Date(unixtime*1000);
           $('p#time').html(time.toUTCString()
                            + " | TI: " + ti
@@ -426,7 +427,7 @@ var HSQuickLook = HSQuickLook || {};
                           );
           timeUpdated = true;
         }
-        updateTable(tableInfo, dataObject, ti);
+        updateTable(tableInfo, documentData, ti);
       }
     }
   }
@@ -734,7 +735,7 @@ var HSQuickLook = HSQuickLook || {};
 
   function updateGraph(elemID, info, time, values, tableID) {
     var graph, xValue,
-        i = 0, plotInfo, source, convertedValue, sourceID, curve;
+        i = 0, plotInfo, source, yValueRaw, yValue, sourceID, curve;
 
     graph = graphs[elemID];
     if (graph.timeOrigin === void 0) {
@@ -746,12 +747,15 @@ var HSQuickLook = HSQuickLook || {};
     for (i=0; i<info.group.length; i++) {
       plotInfo = info.group[i];
       source = plotInfo.source;
-      convertedValue = Number(convertValue(plotInfo, values[source]));
-      sourceID = tableID + "-" + source;
+      yValueRaw = values[source];
+      yValue = Number(convertValue(plotInfo, yValueRaw));
 
-      curve = graph.getTrendCurve(sourceID);
-      curve.pushData([xValue, convertedValue]);
-      graph.adjustRangeY(curve.getLastYValue());
+      if (yValue != Number.NaN) {
+        sourceID = tableID + "-" + source;
+        curve = graph.getTrendCurve(sourceID);
+        curve.pushData([xValue, yValue]);
+        graph.adjustRangeY(curve.getLastYValue());
+      }
     }
     
     graph.adjustRangeX(xValue);
@@ -848,9 +852,26 @@ var HSQuickLook = HSQuickLook || {};
   }
 
   function formatValue(info, value) {
-    var format = info.format,
-        valueFormated = (format === void 0) ? value : sprintf(format, value);
-    return valueFormated;
+    var type = info.type,
+        format = info.format;
+    if (format === void 0) {
+      return value;
+    }
+
+    if (!checkNumberType(value, type)) {
+      return "____";
+    }
+
+    return sprintf(format, value);
+  }
+
+  function checkNumberType(value, type) {
+    if (type=="number" || type=="int" || type=="uint" || type="float") {
+      if (typeof value == "number") {
+        return true;
+      }
+    }
+    return false;
   }
 
   /***************************************************************************
