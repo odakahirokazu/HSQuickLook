@@ -1,6 +1,6 @@
 /*******************************************************************************
  * HS Quick Look
- * 
+ *
  * Authors: Hirokazu Odaka, Soki Sakurai
  * Date: 2012-10-14 (alpha)
  * Date: 2014-04-07 (v0.5.1)
@@ -8,7 +8,7 @@
  * Date: 2019-10-25 (v0.7) | change keywords
  * Date: 2022-10-19 (v1.0) | rename block to section, and tweaks
  * Date: 2023-12-09 (v1.1) | check a number type at table/graph updating
- * 
+ *
  ******************************************************************************/
 
 /* Global variable */
@@ -110,7 +110,7 @@ var HSQuickLook = HSQuickLook || {};
 
     if (tiScaling !== void 0) {
       if (tiScaling==0) {
-        alert("Invalid user configuration: TI scaling is set to 0."); 
+        alert("Invalid user configuration: TI scaling is set to 0.");
       } else {
         timeScaling = 1.0/tiScaling;
       }
@@ -263,7 +263,7 @@ var HSQuickLook = HSQuickLook || {};
       }
     };
   }
-  
+
   function closeConnection() {
     if (ws) {
       ws.close();
@@ -338,7 +338,7 @@ var HSQuickLook = HSQuickLook || {};
 
     $("title").html(dataSheetName);
     $("h1.title").html(dataSheetName);
-    
+
     resetGraphVariables();
 
     $.ajax({
@@ -407,7 +407,7 @@ var HSQuickLook = HSQuickLook || {};
         ti = 0,
         unixtime = 0,
         time = 0;
-    
+
     if (data == []) { return; }
 
     schema = HSQuickLook.main.schema;
@@ -574,10 +574,10 @@ var HSQuickLook = HSQuickLook || {};
             return values[s];
           });
         }
-        
+
         if (value === void 0) {
           continue;
-        }    
+        }
         updateValue(key, value, info, tableID);
       }
     }
@@ -593,9 +593,9 @@ var HSQuickLook = HSQuickLook || {};
         elemID = tableID + "-" + key,
         pair, elemKeyHTML, elemValueHTML,
         value, status, valueFormated;
-    
+
     elemKeyHTML = $("<td />").attr("id", elemID+"-key").html(key);
-    
+
     if (type == "trend-graph") {
       elemValueHTML = $("<td />").attr("id", elemID).html("");
       appendTrendCurve(elemValueHTML, elemID, info, tableID);
@@ -607,7 +607,7 @@ var HSQuickLook = HSQuickLook || {};
       elemValueHTML = $("<td />").attr("id", elemID).html(valueFormated);
       addValueClass(elemValueHTML, status, type);
     }
-    
+
     pair = $("<tr />").append(elemKeyHTML).append(elemValueHTML);
     return pair;
   }
@@ -639,8 +639,7 @@ var HSQuickLook = HSQuickLook || {};
         graph.refreshCycle = refreshCycle;
       }
       if ('yRange' in info.options) {
-        graph.options.yaxis.min = info.options.yRange[0];
-        graph.options.yaxis.max = info.options.yRange[1];
+        graph.layout.yaxis.range = info.options.yRange;
       }
       if ('frame' in info.options) {
         frameOption = info.options.frame;
@@ -657,7 +656,7 @@ var HSQuickLook = HSQuickLook || {};
     container = createGraphContainer(elemID, frameOption);
     elemValueHTML.attr("id", elemID);
     elemValueHTML.append(container);
-    
+
     timeOriginHTML = $("<div />").attr("id", elemID+"-timeorigin").html("Origin of time: ");
     timeOriginHTML.addClass("graph-timeorigin");
     timeOriginHTML.append($("<span />").attr("id", elemID+"-timeorigin-value"));
@@ -671,9 +670,9 @@ var HSQuickLook = HSQuickLook || {};
     graph.setCapacity(capacity);
     graph.setRangeX([0.0, 30.0]);
     graph.setRangeY([-0.5, 10.0]);
-    graph.options.xaxis.axisLabel = "Time (s)";
-    graph.options.yaxis.axisLabel = "Value";
-    
+    graph.layout.xaxis.title = "Time (s)";
+    graph.layout.yaxis.title = "Value";
+
     if (plotInfo.mode == "diff") {
       graph.differentialMode = true;
     } else {
@@ -687,14 +686,14 @@ var HSQuickLook = HSQuickLook || {};
     if ('options' in plotInfo) {
       options = plotInfo.options;
       if (options.legend !== void 0) {
-        graph.data.label = options.legend;
+        graph.data.name = options.legend;
       }
       if (options.color !== void 0) {
-        graph.data.color = options.color;
-        graph.data.points.fillColor = options.color;
+        graph.data.line.color = options.color;
+        graph.data.marker.color = options.color;
       }
       if (options.pointSize !== void 0) {
-        graph.data.points.radius = options.pointSize;
+        graph.data.marker.size = options.pointSize;
       }
     }
 
@@ -717,7 +716,7 @@ var HSQuickLook = HSQuickLook || {};
         status,
         type = info.type,
         valueFormated;
-    
+
     if (type == "image") {
       updateImage(key, rawValue, info, tableID);
     } else if (type == "trend-graph") {
@@ -754,10 +753,9 @@ var HSQuickLook = HSQuickLook || {};
         sourceID = tableID + "-" + source;
         curve = graph.getTrendCurve(sourceID);
         curve.pushData([xValue, yValue]);
-        graph.adjustRangeY(curve.getLastYValue());
       }
     }
-    
+
     graph.adjustRangeX(xValue);
     graph.plot();
   }
@@ -781,7 +779,7 @@ var HSQuickLook = HSQuickLook || {};
     mimeType = data.type;
     height = data.height;
     width = data.width;
-    
+
     oldBlobURL = image2.attr("src");
     currentBlobURL = image1.attr("src");
     newBlobURL = createImageURL(binaryData, mimeType);
@@ -792,12 +790,12 @@ var HSQuickLook = HSQuickLook || {};
     });
     image1.removeClass("image-new").addClass("image-old");
     image2.removeClass("image-old").addClass("image-new");
-    
+
     setTimeout(
       function() {
         target.removeClass("display-phase0").addClass("display-phase1");
       }, 250);
-    
+
     if (oldBlobURL) {
       URL = window.URL || window.webkitURL;
       URL.revokeObjectURL(oldBlobURL);
@@ -809,7 +807,7 @@ var HSQuickLook = HSQuickLook || {};
         view = new Uint8Array(buf),
         i = 0,
         blob, URL, blobURL;
-    
+
     for (i=0; i<view.length; i++) {
       view[i] = binaryData.charCodeAt(i);
     }
@@ -866,7 +864,7 @@ var HSQuickLook = HSQuickLook || {};
   }
 
   function checkNumberType(value, type) {
-    if (type=="number" || type=="int" || type=="uint" || type="float") {
+    if (type=="number" || type=="int" || type=="uint" || type=="float") {
       if (typeof value == "number") {
         return true;
       }
@@ -884,12 +882,12 @@ var HSQuickLook = HSQuickLook || {};
       container.css("width", frameOption.width);
       container.css("height", frameOption.height);
     }
-    
+
     placeholder = $("<div />").attr("id", elemID+"-placeholder").addClass("graph-placeholder");
     container.append(placeholder);
     return container;
   }
-  
+
   function resetGraphVariables() {
     delete graphs;
     graphs = new Object();
