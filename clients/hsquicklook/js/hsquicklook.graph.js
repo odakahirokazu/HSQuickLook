@@ -381,11 +381,7 @@ var HSQuickLook = HSQuickLook || {};
     if (range === null) {
       return;
     }
-    if (this.layout.yaxis.type === "log") {
-      this.setRangeY([Math.log10(range[0]), Math.log10(range[1])]);
-    }
-    else {
-    this.setRangeY(range);}
+    this.setRangeY(range);
   };
 })(); /* end of the anonymous function */
 
