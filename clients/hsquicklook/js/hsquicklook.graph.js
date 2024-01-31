@@ -404,7 +404,7 @@ GetAppropriateRangeY = function(currentRange, y) {
   else if (r < 1 - c) {
     s = (1.0 - r) / c;
     y0 = y1 - w * s;
-    ret[1] = y0;
+    ret[0] = y0;
   }
   return ret;
   }
