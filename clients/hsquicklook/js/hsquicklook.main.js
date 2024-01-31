@@ -753,6 +753,9 @@ var HSQuickLook = HSQuickLook || {};
         sourceID = tableID + "-" + source;
         curve = graph.getTrendCurve(sourceID);
         curve.pushData([xValue, yValue]);
+        if (graph.drawn === false){
+          graph.adjustRangeY(yValue);
+        }
       }
     }
     
