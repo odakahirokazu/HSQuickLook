@@ -275,8 +275,8 @@ var HSQuickLook = HSQuickLook || {};
             if (gd.layout.autoMove === true) {
               gd.layout.autoMove =false;
             }
-            else if (gd.layout.autoMove === true) {
-              gd.layout.autoMove = false;
+            else if (gd.layout.autoMove === false) {
+              gd.layout.autoMove = true;
             }
             Plotly.update(gd, gd.data, gd.layout, gd.config);
           },
