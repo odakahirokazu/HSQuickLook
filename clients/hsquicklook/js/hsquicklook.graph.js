@@ -173,7 +173,7 @@ var HSQuickLook = HSQuickLook || {};
   /***************************************************************************
    * Object prototype MultiTrendCurves
    */
-  HSQuickLook.graph.MultiTrendCurves = function () {
+  HSQuickLook.graph.MultiTrendCurves = function() {
     var data = [],
       counter = 0;
     
@@ -217,7 +217,7 @@ var HSQuickLook = HSQuickLook || {};
       modeBarButtonsToAdd:[ {
         name: "Toggle linear/log in x-axis",
         icon: Plotly.Icons.pencil,
-        click: function (gd) {
+        click: function(gd) {
           if (gd.layout.xaxis.type === "linear") {
             gd.layout.xaxis.type = "log";
             gd.layout.xaxis.range[0] = Math.log10(gd.layout.xaxis.range[0]);
@@ -234,7 +234,7 @@ var HSQuickLook = HSQuickLook || {};
       {
         name: "Toggle linear/log in y-axis",
         icon: Plotly.Icons.drawline,
-        click: function (gd) {
+        click: function(gd) {
           if (gd.layout.yaxis.type === "linear") {
             gd.layout.yaxis.type = "log";
             var ret = CheckLogCondition(gd.layout.yaxis.range);
@@ -258,7 +258,7 @@ var HSQuickLook = HSQuickLook || {};
       {
         name: "Toggle legend ON/OFF",
         icon: Plotly.Icons.eraseshape,
-        click: function (gd) {
+        click: function(gd) {
           if (gd.layout.showlegend === true) {
             gd.layout.showlegend = false;
           }
@@ -271,7 +271,7 @@ var HSQuickLook = HSQuickLook || {};
         {
           name: "Automove of x-axis",
           icon: Plotly.Icons.tooltip_basic,
-          click: function (gd) {
+          click: function(gd) {
             if (gd.layout.autoMove === true) {
               gd.layout.autoMove =false;
             }
@@ -284,7 +284,7 @@ var HSQuickLook = HSQuickLook || {};
         {
           name: "Autoscale of y-axis",
           icon: Plotly.Icons.drawrect,
-          click: function (gd) {
+          click: function(gd) {
             gd.layout.yaxis.range = [gd.layout.yMin, gd.layout.yMax];
             Plotly.update(gd, gd.data, gd.layout, gd.config);
           }
@@ -294,12 +294,12 @@ var HSQuickLook = HSQuickLook || {};
       displaylogo: false,
     };
 
-    this.addTrendCurve = function (sourceID, curve) {
+    this.addTrendCurve = function(sourceID, curve) {
       this.trendCurves[sourceID] = curve;
       data.push(curve.data);
     };
 
-    this.getTrendCurve = function (sourceID) {
+    this.getTrendCurve = function(sourceID) {
       return this.trendCurves[sourceID];
     };
 
