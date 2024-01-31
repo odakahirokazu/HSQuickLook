@@ -639,8 +639,7 @@ var HSQuickLook = HSQuickLook || {};
         graph.refreshCycle = refreshCycle;
       }
       if ('yRange' in info.options) {
-        graph.options.yaxis.min = info.options.yRange[0];
-        graph.options.yaxis.max = info.options.yRange[1];
+        graph.layout.yaxis.range = info.options.yRange;
       }
       if ('frame' in info.options) {
         frameOption = info.options.frame;
@@ -671,8 +670,8 @@ var HSQuickLook = HSQuickLook || {};
     graph.setCapacity(capacity);
     graph.setRangeX([0.0, 30.0]);
     graph.setRangeY([-0.5, 10.0]);
-    graph.options.xaxis.axisLabel = "Time (s)";
-    graph.options.yaxis.axisLabel = "Value";
+    graph.layout.xaxis.title = "Time (s)";
+    graph.layout.yaxis.title = "Value";
     
     if (plotInfo.mode == "diff") {
       graph.differentialMode = true;
@@ -687,14 +686,14 @@ var HSQuickLook = HSQuickLook || {};
     if ('options' in plotInfo) {
       options = plotInfo.options;
       if (options.legend !== void 0) {
-        graph.data.label = options.legend;
+        graph.data.name = options.legend;
       }
       if (options.color !== void 0) {
-        graph.data.color = options.color;
-        graph.data.points.fillColor = options.color;
+        graph.data.line.color = options.color;
+        graph.data.marker.color = options.color;
       }
       if (options.pointSize !== void 0) {
-        graph.data.points.radius = options.pointSize;
+        graph.data.marker.size = options.pointSize;
       }
     }
 
@@ -754,7 +753,9 @@ var HSQuickLook = HSQuickLook || {};
         sourceID = tableID + "-" + source;
         curve = graph.getTrendCurve(sourceID);
         curve.pushData([xValue, yValue]);
-        graph.adjustRangeY(curve.getLastYValue());
+        if (graph.drawn === false){
+          graph.adjustRangeY(yValue);
+        }
       }
     }
     

@@ -11,10 +11,11 @@
     <script type="application/javascript" src="js/jquery/jquery-ui.min.js"></script>
     <script type="application/javascript" src="js/jquery/jquery.flot.min.js"></script>
     <script type="application/javascript" src="js/jquery/sprintf-0.6.js"></script>
+    <script type="application/javascript" src="js/plotly/plotly-2.27.0.min.js"></script>
     <script type="application/javascript" src="js/hsquicklook.graph.js"></script>
     <script type="application/javascript" src="js/hsquicklook.main.js"></script>
     <link rel="stylesheet" href="css/hsquicklook_view.css" type="text/css" />
-    <link rel="stylesheet" href="css/jquery-ui.min.css" type="text/css" />  
+    <link rel="stylesheet" href="css/jquery-ui.min.css" type="text/css" />
     <link rel="stylesheet" href="user_data/user_view.css" type="text/css" />
     <meta http-equiv="PRAGMA" content="NO-CACHE" />
     <meta http-equiv="CACHE-CONTROL" content="NO-CACHE" />
@@ -33,7 +34,7 @@
         <span id="status-connection" class="status-button">close</span>
       </div>
     </div>
-    
+
     <h1 class="title">Quick Look</h1>
 
     <div id="control-panel-frame">
@@ -44,13 +45,13 @@
           <input id="ws-host" type="text" value="localhost:8080" />
           <input id="button-connect" type="button" value="Open" />
         </form>
-        
+
         <form id="contents-form">
           <span>Contents: </span>
           <select id="selected-group"></select>
           <select id="selected-data-sheet"></select>
         </form>
-        
+
         <form id="mode-form">
           <span>Mode: </span>
           <label><input id="mode-ql" name="mode" type="radio" value="mode-ql" checked="checked" />Real time</label>
@@ -83,6 +84,6 @@
         <p id="time" />
         <div id="main-tables" />
       </div>
-     </div>
+    </div>
   </body>
 </html>
