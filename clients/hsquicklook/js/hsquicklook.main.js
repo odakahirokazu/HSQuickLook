@@ -8,6 +8,7 @@
  * Date: 2019-10-25 (v0.7) | change keywords
  * Date: 2022-10-19 (v1.0) | rename block to section, and tweaks
  * Date: 2023-12-09 (v1.5) | check a number type at table/graph updating
+ * Date: 2025-05-28 (v1.7) | replay
  * 
  ******************************************************************************/
 
@@ -34,6 +35,7 @@ var HSQuickLook = HSQuickLook || {};
       controlDisplay = true,
       titleDisplay = true,
       timeScaling = 1.0/64,
+      time1 = new Date();
       /* Variables about the trend graphs */
       graphs = new Object();
 
@@ -78,6 +80,9 @@ var HSQuickLook = HSQuickLook || {};
     $("input#time5").keypress(enterDLModeByEvent);
     $("input#request-data").click(enterDLMode);
     $("input#reset-time").click(setCurrentTime);
+
+    // replay-form
+    $("input#replay-data").click(enterReplayMode);
 
     // title and control panels
     $("#display-button").click(toggleControlDisplay);
@@ -276,6 +281,7 @@ var HSQuickLook = HSQuickLook || {};
    */
   function enterQLMode() {
     paused = false;
+    $("input[name='mode']").val([ "mode-ql" ]);
     $("input#mode-paused").attr("disabled", false);
     sendTimeNow();
   }
@@ -284,16 +290,47 @@ var HSQuickLook = HSQuickLook || {};
     paused = false;
     $("input[name='mode']").val([ "mode-dl" ]);
     $("input#mode-paused").attr("disabled", true);
+    getTime();
     sendTime();
   }
 
-  function sendTime() {
-    var year = $('input#time0').val(),
-        month = $('input#time1').val(),
-        day = $('input#time2').val(),
-        hour = $('input#time3').val(),
+  async function enterReplayMode() {
+    paused = false;
+    $("input[name='mode']").val([ "mode-dl" ]);
+    $("input#mode-paused").attr("disabled", true);
+    getTime();
+    sendTime();
+    while (time1 < new Date()) {
+      await new Promise(resolve => setTimeout(resolve, 1000));
+      const period = $('input#replay-period').val();
+      time1.setTime(time1.getTime() + period*1000);
+      sendTime();
+    }
+    enterQLMode();
+  }
+
+  function getTime() {
+    var year   = $('input#time0').val(),
+        month  = $('input#time1').val(),
+        day    = $('input#time2').val(),
+        hour   = $('input#time3').val(),
         minute = $('input#time4').val(),
-        second = $('input#time5').val(),
+        second = $('input#time5').val();
+    time1.setUTCFullYear(year);
+    time1.setUTCMonth(month-1);
+    time1.setUTCDate(day);
+    time1.setUTCHours(hour);
+    time1.setUTCMinutes(minute);
+    time1.setUTCSeconds(second);
+  }
+  
+  function sendTime() {
+    var year   = time1.getUTCFullYear(),
+        month  = time1.getUTCMonth()+1,
+        day    = time1.getUTCDate(),
+        hour   = time1.getUTCHours(),
+        minute = time1.getUTCMinutes(),
+        second = time1.getUTCSeconds(),
         message = '{"time": "DL ' + year + ':' + month + ':' + day + ':'
         + hour + ':' + minute + ':' + second + '"}';
     ws.send(message);
