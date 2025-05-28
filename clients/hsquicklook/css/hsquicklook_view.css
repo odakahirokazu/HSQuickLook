@@ -1,6 +1,12 @@
+:root {
+    --main-color: #FFF;
+    --main-background-color: #000;
+    --main-border-color: #AAA;
+}
+
 body {
-    background-color: #000;
-    color: #FFF;
+    background-color: var(--main-background-color);
+    color: var(--main-color);
     padding: 0.25em;
     font-family: monospace;
     font-size: 11pt;
@@ -17,6 +23,11 @@ h1 {
 h2 {
     padding-left: 1em;
     font-size: 11pt;
+}
+
+table {
+    color: var(--main-color);
+    border-color: var(--main-border-color);
 }
 
 .panel-heading {
