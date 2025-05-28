@@ -57,19 +57,18 @@ class QLDocument
       :__directory__ => @directory.to_s,
       :__document__ => @document.to_s
     }
+
     if time
       query[:__unixtime__] = {"$lte" => time}
     end
+
     option = {"$natural" => -1 }
 
-    documents = db[@collection.to_s].find(query).sort(option).limit(1)
-    documents.each do |document|
-      if document.class != BSON::Document
-        document = {}
-      end
-      return document
+    document = db[@collection.to_s].find(query).sort(option).limit(1).first
+    if document.class != BSON::Document
+      document = {}
     end
-    return nil
+    return document
   end
 
   def active_phase?(time_index)
@@ -142,6 +141,7 @@ class ClientManager
 
   def register_clients()
     @clients.merge!(@clients_to_register)
+    @clients_to_register.clear
   end
 
   def delete_clients()
