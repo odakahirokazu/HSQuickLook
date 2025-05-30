@@ -8,7 +8,7 @@
  * Date: 2019-10-25 (v0.7) | change keywords
  * Date: 2022-10-19 (v1.0) | rename block to section, and tweaks
  * Date: 2023-12-09 (v1.5) | check a number type at table/graph updating
- * Date: 2025-05-28 (v1.7) | replay
+ * Date: 2025-05-28 (v1.7) | replay; UTC/local time zones; cleanup
  * 
  ******************************************************************************/
 
@@ -35,7 +35,7 @@ var HSQuickLook = HSQuickLook || {};
       controlDisplay = true,
       titleDisplay = true,
       timeScaling = 1.0/64,
-      time1 = new Date();
+      time1 = new Date(),
       /* Variables about the trend graphs */
       graphs = new Object();
 
@@ -92,12 +92,10 @@ var HSQuickLook = HSQuickLook || {};
   }
 
   function initialize(userConfig) {
-    var title = userConfig["title"],
+    let title = userConfig["title"],
         host = userConfig["ws_host"],
         port = userConfig["ws_port"],
-        tiScaling = userConfig["ti_scaling"],
-        group,
-        groupHTML;
+        tiScaling = userConfig["ti_scaling"];
 
     if (title === void 0) {
       title = "HS Quick Look";
@@ -122,8 +120,8 @@ var HSQuickLook = HSQuickLook || {};
     }
 
     schemaList = userConfig["schema_list"];
-    for (group in schemaList) {
-      groupHTML = $("<option />").html(group).attr("value", group);
+    for (let group in schemaList) {
+      const groupHTML = $("<option />").html(group).attr("value", group);
       $("#selected-group").append(groupHTML);
     }
 
@@ -148,31 +146,40 @@ var HSQuickLook = HSQuickLook || {};
   }
 
   function setCurrentTime() {
-    var t = new Date();
-    $('input#time0').val(t.getUTCFullYear());
-    $('input#time1').val(t.getUTCMonth() + 1);
-    $('input#time2').val(t.getUTCDate());
-    $('input#time3').val(t.getUTCHours());
-    $('input#time4').val(t.getUTCMinutes());
-    $('input#time5').val(t.getUTCSeconds());
+    const t = new Date();
+    const utcFlag = $("input#utc-flag").prop("checked");
+
+    if (utcFlag) {
+      $('input#time0').val(t.getUTCFullYear());
+      $('input#time1').val(t.getUTCMonth() + 1);
+      $('input#time2').val(t.getUTCDate());
+      $('input#time3').val(t.getUTCHours());
+      $('input#time4').val(t.getUTCMinutes());
+      $('input#time5').val(t.getUTCSeconds());
+    } else {
+      $('input#time0').val(t.getFullYear());
+      $('input#time1').val(t.getMonth() + 1);
+      $('input#time2').val(t.getDate());
+      $('input#time3').val(t.getHours());
+      $('input#time4').val(t.getMinutes());
+      $('input#time5').val(t.getSeconds());
+    }
   }
 
   function loadDataSheetList() {
-    var group = $("#selected-group").val(),
-        schema = schemaList[group],
-        target = $("#selected-data-sheet").html(""),
-        title = $("<option />").html("").attr("value", "").attr("label", "Select data sheet"),
-        dataSheet,
-        dataSheetHTML;
+    const group = $("#selected-group").val(),
+          schema = schemaList[group],
+          title = $("<option />").html("").attr("value", "").attr("label", "Select data sheet");
+    let target = $("#selected-data-sheet").html("");
     target.append(title);
-    for (dataSheet in schema) {
-      dataSheetHTML = $("<option />").html(dataSheet).attr("value", dataSheet);
+    for (let dataSheet in schema) {
+      const dataSheetHTML = $("<option />").html(dataSheet).attr("value", dataSheet);
       target.append(dataSheetHTML);
     }
   }
 
   function preventDefaultEnterKey(e) {
-    var KC_ENTER = 13;
+    const KC_ENTER = 13;
     if (e.keyCode == KC_ENTER) {
       e.preventDefault();
     }
@@ -182,7 +189,7 @@ var HSQuickLook = HSQuickLook || {};
    * Log
    */
   function log(message) {
-    var messageElement = $("<div />").html(message);
+    const messageElement = $("<div />").html(message);
     $('div#log').prepend(messageElement);
   }
 
@@ -235,14 +242,15 @@ var HSQuickLook = HSQuickLook || {};
    * WebSocket connection
    */
   function openConnection() {
-    var host;
     closeConnection();
-    host = "ws://" + $("#ws-host").val();
+    let host = "ws://" + $("#ws-host").val();
     ws = new WebSocket(host);
 
     ws.onopen = function() {
-      var t = new Date();
-      log("WebSocket opened at "+t.toTimeString());
+      const t = new Date(),
+            utcFlag = $("input#utc-flag").prop("checked"),
+            timeString = utcFlag ? t.toUTCString() : t.toString();
+      log("WebSocket opened at "+timeString);
       sendTimeNow();
       $("#button-connect").val("Close");
       $("#button-connect").unbind("click", openConnection);
@@ -252,8 +260,10 @@ var HSQuickLook = HSQuickLook || {};
     };
 
     ws.onclose = function() {
-      var t = new Date();
-      log("WebSocket closed at "+t.toTimeString());
+      const t = new Date(),
+            utcFlag = $("input#utc-flag").prop("checked"),
+            timeString = utcFlag ? t.toUTCString() : t.toString();
+      log("WebSocket closed at "+t.timeString);
       $("#button-connect").val("Open");
       $("#button-connect").unbind("click");
       $("#button-connect").click(openConnection);
@@ -310,34 +320,45 @@ var HSQuickLook = HSQuickLook || {};
   }
 
   function getTime() {
-    var year   = $('input#time0').val(),
-        month  = $('input#time1').val(),
-        day    = $('input#time2').val(),
-        hour   = $('input#time3').val(),
-        minute = $('input#time4').val(),
-        second = $('input#time5').val();
-    time1.setUTCFullYear(year);
-    time1.setUTCMonth(month-1);
-    time1.setUTCDate(day);
-    time1.setUTCHours(hour);
-    time1.setUTCMinutes(minute);
-    time1.setUTCSeconds(second);
+    const year   = $('input#time0').val(),
+          month  = $('input#time1').val(),
+          day    = $('input#time2').val(),
+          hour   = $('input#time3').val(),
+          minute = $('input#time4').val(),
+          second = $('input#time5').val();
+    const utcFlag = $("input#utc-flag").prop("checked");
+    if (utcFlag) {
+      time1.setUTCFullYear(year);
+      time1.setUTCMonth(month-1);
+      time1.setUTCDate(day);
+      time1.setUTCHours(hour);
+      time1.setUTCMinutes(minute);
+      time1.setUTCSeconds(second);
+    }
+    else {
+      time1.setFullYear(year);
+      time1.setMonth(month-1);
+      time1.setDate(day);
+      time1.setHours(hour);
+      time1.setMinutes(minute);
+      time1.setSeconds(second);
+    }
   }
   
   function sendTime() {
-    var year   = time1.getUTCFullYear(),
-        month  = time1.getUTCMonth()+1,
-        day    = time1.getUTCDate(),
-        hour   = time1.getUTCHours(),
-        minute = time1.getUTCMinutes(),
-        second = time1.getUTCSeconds(),
-        message = '{"time": "DL ' + year + ':' + month + ':' + day + ':'
-        + hour + ':' + minute + ':' + second + '"}';
+    const year   = time1.getUTCFullYear(),
+          month  = time1.getUTCMonth()+1,
+          day    = time1.getUTCDate(),
+          hour   = time1.getUTCHours(),
+          minute = time1.getUTCMinutes(),
+          second = time1.getUTCSeconds();
+    const message = '{"time": "DL ' + year + ':' + month + ':' + day + ':'
+          + hour + ':' + minute + ':' + second + '"}';
     ws.send(message);
   }
 
   function sendTimeNow() {
-    var message = '{"time": "QL" }';
+    const message = '{"time": "QL" }';
     ws.send(message);
   }
 
@@ -346,7 +367,7 @@ var HSQuickLook = HSQuickLook || {};
   }
 
   function enterDLModeByEvent(e) {
-    var KC_ENTER = 13;
+    const KC_ENTER = 13;
     if (e.keyCode == KC_ENTER) {
       e.preventDefault();
       enterDLMode();
@@ -357,16 +378,13 @@ var HSQuickLook = HSQuickLook || {};
    * Data sheet
    */
   function loadDataSheet() {
-    var groupName,
-        dataSheetName = $("#selected-data-sheet").val(),
-        fileName;
-
+    const dataSheetName = $("#selected-data-sheet").val();
     if (dataSheetName == "") {
       return;
     }
 
-    groupName = $("#selected-group").val();
-    fileName = schemaList[groupName][dataSheetName];
+    const groupName = $("#selected-group").val();
+    const fileName = schemaList[groupName][dataSheetName];
 
     if (!ws) {
       alert("WebSocket is not connected. Please connect to WS server.");
@@ -390,22 +408,19 @@ var HSQuickLook = HSQuickLook || {};
   }
 
   function buildDataSheet() {
-    var ti = "-1",
-        time = "2112-09-03 00:00:00 UTC", /* dummy time */
-        target = $('div#main-tables').html(""),
-        schema = HSQuickLook.main.schema,
-        i = 0,
-        tableInfo,
-        tableHTML;
-
+    const ti = "-1",
+          time = "2112-09-03 00:00:00 UTC", /* dummy time */
+          schema = HSQuickLook.main.schema;
+    let target = $('div#main-tables').html("");
+ 
     // display the dummy time
     $('p#time').html(time + " | TI: " + ti);
 
     // main tables
-    for (i=0; i<schema.length; i++) {
-      tableInfo = schema[i];
+    for (let i=0; i<schema.length; i++) {
+      const tableInfo = schema[i];
       if (tableInfo.collection !== void 0) {
-        tableHTML = createTableHTML(tableInfo);
+        const tableHTML = createTableHTML(tableInfo);
         target.append(tableHTML);
         initializeTable(tableInfo);
         ws.send(getRequestMessage(tableInfo));
@@ -425,8 +440,8 @@ var HSQuickLook = HSQuickLook || {};
     if (graphRangeResetEnable) {
       $(".graph-placeholder").dblclick(
         function() {
-          var elemID = this.id.replace("-placeholder", ""),
-              graph = graphs[elemID];
+          const elemID = this.id.replace("-placeholder", "");
+          let graph = graphs[elemID];
           graph.resetRangeY();
         }
       );
@@ -434,31 +449,26 @@ var HSQuickLook = HSQuickLook || {};
   }
 
   function updateDataSheet(dataJSON) {
-    var data = JSON.parse(dataJSON),
-        schema,
-        timeUpdated = false,
-        i = 0,
-        tableInfo,
-        documentLabel,
-        documentData,
-        ti = 0,
-        unixtime = 0,
-        time = 0;
-    
+    const data = JSON.parse(dataJSON);
     if (data == []) { return; }
 
-    schema = HSQuickLook.main.schema;
-    for (i=0; i<schema.length; i++) {
-      tableInfo = schema[i];
-      documentLabel = getDocumentLabel(tableInfo);
-      documentData = data[documentLabel];
+    const schema = HSQuickLook.main.schema;
+    const utcFlag = $("input#utc-flag").prop("checked");
+    let timeUpdated = false,
+        ti = -1;
+
+    for (let i=0; i<schema.length; i++) {
+      const tableInfo = schema[i],
+            documentLabel = getDocumentLabel(tableInfo),
+            documentData = data[documentLabel];
       if (documentData !== void 0) {
         if (!timeUpdated) {
           // display time
           ti = documentData["__ti__"];
-          unixtime = documentData["__unixtime__"];
-          time = new Date(unixtime*1000);
-          $('p#time').html(time.toUTCString()
+          const unixtime = documentData["__unixtime__"],
+                time = new Date(unixtime*1000),
+                timeString = utcFlag ? time.toUTCString() : time.toString();
+          $('p#time').html(timeString
                            + " | TI: " + ti
                            + " | Time: " + ti*timeScaling
                           );
@@ -477,7 +487,7 @@ var HSQuickLook = HSQuickLook || {};
   }
 
   function getTableName(tableInfo) {
-    var tableName = tableInfo.tableName;
+    const tableName = tableInfo.tableName;
     if (tableName === void 0) {
       return getSectionName(tableInfo);
     }
@@ -485,7 +495,7 @@ var HSQuickLook = HSQuickLook || {};
   }
 
   function getTableTitle(tableInfo) {
-    var tableTitle = tableInfo.tableTitle;
+    const tableTitle = tableInfo.tableTitle;
     if (tableTitle === void 0) {
       return getTableName(tableInfo);
     }
@@ -493,54 +503,53 @@ var HSQuickLook = HSQuickLook || {};
   }
 
   function getTableID(tableInfo) {
-    var collection = tableInfo.collection,
-        directory = tableInfo.directory,
-        directory1 = directory.split('/').join('_').split('.').join('_'),
-        document = tableInfo.document,
-        document1 = document.split('.').join('_'),
-        table = getTableName(tableInfo);
+    const collection = tableInfo.collection,
+          directory = tableInfo.directory,
+          directory1 = directory.split('/').join('_').split('.').join('_'),
+          document = tableInfo.document,
+          document1 = document.split('.').join('_'),
+          table = getTableName(tableInfo);
     return (collection + '-' + directory1 + '-' + document1 + '-' + table);
   }
 
   function getRequestMessage(tableInfo) {
-    var collection = tableInfo.collection,
-        directory = tableInfo.directory,
-        document = tableInfo.document,
-        period = tableInfo.period,
-        message = '{"collection": "' + collection + '", '
-        + '"directory": "' + directory + '", '
-        + '"document": "' + document + '", ' + '"period": "'
-        + period + '"}';
+    const collection = tableInfo.collection,
+          directory = tableInfo.directory,
+          document = tableInfo.document,
+          period = tableInfo.period,
+          message = '{"collection": "' + collection + '", '
+          + '"directory": "' + directory + '", '
+          + '"document": "' + document + '", ' + '"period": "'
+          + period + '"}';
     return message;
   }
 
   function getDocumentLabel(tableInfo) {
-    var collection = tableInfo.collection,
-        directory = tableInfo.directory,
-        document = tableInfo.document,
-        documentLabel = collection + '/' + directory + '/' + document;
+    const collection = tableInfo.collection,
+          directory = tableInfo.directory,
+          document = tableInfo.document,
+          documentLabel = collection + '/' + directory + '/' + document;
     return documentLabel;
   }
 
   function createTableHTML(tableInfo) {
-    var tableID = getTableID(tableInfo),
-        table, thead, theadRow, theadTitle, tbody;
+    const tableID = getTableID(tableInfo);
 
-    table = $("<table />").html("");
+    let table = $("<table />").html("");
     table.attr("frame", "border");
     table.attr("rules", "all");
     table.attr("id", "table-" + tableID);
     table.addClass("data-table");
 
-    thead = $("<thead />").html("");
-    theadRow = $("<tr />").html("");
-    theadTitle = $("<th />").html(getTableTitle(tableInfo));
+    let thead = $("<thead />").html("");
+    let theadRow = $("<tr />").html("");
+    let theadTitle = $("<th />").html(getTableTitle(tableInfo));
     theadTitle.attr("colspan", "2");
     theadTitle.attr("id", "table-" + tableID + "-title");
     theadRow.append(theadTitle);
     thead.append(theadRow);
 
-    tbody = $("<tbody/>").html("");
+    let tbody = $("<tbody/>").html("");
     tbody.attr("id", "table-" + tableID + "-body");
 
     table.append(thead);
@@ -550,18 +559,14 @@ var HSQuickLook = HSQuickLook || {};
   }
 
   function initializeTable(tableInfo) {
-    var tableID = getTableID(tableInfo),
-        contents = tableInfo.contents,
-        tbody = $('tbody#table-' + tableID + '-body').html(""),
-        key,
-        info,
-        value = 0,
-        type;
+    const tableID = getTableID(tableInfo),
+        contents = tableInfo.contents;
+    let tbody = $('tbody#table-' + tableID + '-body').html("");
 
-    for (key in contents) {
-      info = contents[key];
-      value = 0;
-      type = info.type;
+    for (let key in contents) {
+      const info = contents[key],
+            type = info.type;
+      let value = 0;
       if (type == "image") {
         value = "<img class=\"image-new\" /><img class=\"image-old\" />";
       }
@@ -570,14 +575,10 @@ var HSQuickLook = HSQuickLook || {};
   }
 
   function updateTable(tableInfo, data, ti) {
-    var sections = data["__sections__"],
-        sectionData = void 0,
-        ib = 0,
-        values, tableID, contents,
-        key, info, elemID, time,
-        source, value;
+    const sections = data["__sections__"];
+    let sectionData = void 0;
 
-    for (ib=0; ib<sections.length; ib++) {
+    for (let ib=0; ib<sections.length; ib++) {
       if (sections[ib]["__section__"] == tableInfo.section) {
         sectionData = sections[ib];
         break;
@@ -587,18 +588,19 @@ var HSQuickLook = HSQuickLook || {};
       return false;
     }
 
-    values = sectionData["__contents__"];
-    tableID = getTableID(tableInfo);
-    contents = tableInfo.contents;
+    const values = sectionData["__contents__"],
+          tableID = getTableID(tableInfo),
+          contents = tableInfo.contents;
 
-    for (key in contents) {
-      info = contents[key];
+    for (let key in contents) {
+      const info = contents[key];
       if (info.type == "trend-graph") {
-        elemID = tableID + "-" + key;
-        time = ti*timeScaling;
+        const elemID = tableID + "-" + key;
+        const time = ti*timeScaling;
         updateGraph(elemID, info, time, values, tableID);
       }
       else{
+        let source, value;
         if ('source' in info) {
           source = info.source;
         } else {
@@ -626,53 +628,47 @@ var HSQuickLook = HSQuickLook || {};
    * Data element
    */
   function makePair(key, rawValue, info, tableID) {
-    var type = info.type,
-        elemID = tableID + "-" + key,
-        pair, elemKeyHTML, elemValueHTML,
-        value, status, valueFormated;
-    
-    elemKeyHTML = $("<td />").attr("id", elemID+"-key").html(key);
+    const type = info.type,
+          elemID = tableID + "-" + key;
+    const elemKeyHTML = $("<td />").attr("id", elemID+"-key").html(key);
+    let elemValueHTML;
     
     if (type == "trend-graph") {
       elemValueHTML = $("<td />").attr("id", elemID).html("");
       appendTrendCurve(elemValueHTML, elemID, info, tableID);
     }
     else {
-      value = convertValue(info, rawValue);
-      status = valueStatus(info, value);
-      valueFormated = formatValue(info, value);
+      const value = convertValue(info, rawValue),
+            status = valueStatus(info, value),
+            valueFormated = formatValue(info, value);
       elemValueHTML = $("<td />").attr("id", elemID).html(valueFormated);
       addValueClass(elemValueHTML, status, type);
     }
     
-    pair = $("<tr />").append(elemKeyHTML).append(elemValueHTML);
+    const pair = $("<tr />").append(elemKeyHTML).append(elemValueHTML);
     return pair;
   }
 
   function appendTrendCurve(elemValueHTML, elemID, info, tableID) {
-    var graph,
-        xWidth, refreshCycle = 4,
-        i = 0, plotInfo, sourceID, curve, capacity = 600,
-        container, frameOption,
-        timeOriginHTML;
-
     if (graphs[elemID] !== void 0) {
       alert("appendTrendCurve(): " + elemID + " already exists.");
       return;
     }
 
-    graph = new HSQuickLook.graph.MultiTrendCurves();
+    let graph = new HSQuickLook.graph.MultiTrendCurves();
     graphs[elemID] = graph;
     graph.placeholder = "#"+elemID+"-placeholder";
 
+    let capacity = 600,
+        frameOption;
     if ('options' in info) {
       if ('xWidth' in info.options) {
-        xWidth = info.options.xWidth;
-        capacity = xWidth;
+        const xWidth = info.options.xWidth,
+              capacity = xWidth;
         graph.xWidth = capacity;
       }
       if ('refreshCycle' in info.options) {
-        refreshCycle = info.options.refreshCycle;
+        const refreshCycle = info.options.refreshCycle;
         graph.refreshCycle = refreshCycle;
       }
       if ('yRange' in info.options) {
@@ -683,27 +679,25 @@ var HSQuickLook = HSQuickLook || {};
       }
     }
 
-    for (i=0; i<info.group.length; i++) {
-      plotInfo = info.group[i];
-      sourceID = tableID + "-" + plotInfo.source;
-      curve = createTrendCurve(capacity, plotInfo);
+    for (let i=0; i<info.group.length; i++) {
+      const plotInfo = info.group[i],
+            sourceID = tableID + "-" + plotInfo.source,
+            curve = createTrendCurve(capacity, plotInfo);
       graph.addTrendCurve(sourceID, curve);
     }
 
-    container = createGraphContainer(elemID, frameOption);
+    const container = createGraphContainer(elemID, frameOption);
     elemValueHTML.attr("id", elemID);
     elemValueHTML.append(container);
     
-    timeOriginHTML = $("<div />").attr("id", elemID+"-timeorigin").html("Origin of time: ");
+    let timeOriginHTML = $("<div />").attr("id", elemID+"-timeorigin").html("Origin of time: ");
     timeOriginHTML.addClass("graph-timeorigin");
     timeOriginHTML.append($("<span />").attr("id", elemID+"-timeorigin-value"));
     elemValueHTML.append(timeOriginHTML);
   }
 
   function createTrendCurve(capacity, plotInfo) {
-    var graph, options;
-
-    graph = new HSQuickLook.graph.TrendCurve(),
+    let graph = new HSQuickLook.graph.TrendCurve();
     graph.setCapacity(capacity);
     graph.setRangeX([0.0, 30.0]);
     graph.setRangeY([-0.5, 10.0]);
@@ -721,7 +715,7 @@ var HSQuickLook = HSQuickLook || {};
     }
 
     if ('options' in plotInfo) {
-      options = plotInfo.options;
+      let options = plotInfo.options;
       if (options.legend !== void 0) {
         graph.data.name = options.legend;
       }
@@ -738,7 +732,7 @@ var HSQuickLook = HSQuickLook || {};
   }
 
   function addValueClass(target, status, type) {
-    var statusClass;
+    let statusClass;
     if (status != "") {
       statusClass = "value-status-" + status;
       target.addClass(statusClass);
@@ -747,22 +741,18 @@ var HSQuickLook = HSQuickLook || {};
   }
 
   function updateValue(key, rawValue, info, tableID) {
-    var elemID = tableID + "-" + key,
-        target,
-        value,
-        status,
-        type = info.type,
-        valueFormated;
+    const elemID = tableID + "-" + key,
+          type = info.type;
     
     if (type == "image") {
       updateImage(key, rawValue, info, tableID);
     } else if (type == "trend-graph") {
       // do nothing
     } else {
-      target = $("#" + elemID);
-      value = convertValue(info, rawValue);
-      status = valueStatus(info, value);
-      valueFormated = formatValue(info, value);
+      let target = $("#" + elemID);
+      const value = convertValue(info, rawValue),
+            status = valueStatus(info, value),
+            valueFormated = formatValue(info, value);
       target.html(valueFormated);
       target.removeClass();
       addValueClass(target, status, type);
@@ -770,25 +760,23 @@ var HSQuickLook = HSQuickLook || {};
   }
 
   function updateGraph(elemID, info, time, values, tableID) {
-    var graph, xValue,
-        i = 0, plotInfo, source, yValueRaw, yValue, sourceID, curve;
-
-    graph = graphs[elemID];
+    let graph = graphs[elemID];
     if (graph.timeOrigin === void 0) {
       graph.timeOrigin = time;
       $("#" + elemID + "-timeorigin-value").html(time);
     }
-    xValue = time - graph.timeOrigin;
 
-    for (i=0; i<info.group.length; i++) {
-      plotInfo = info.group[i];
-      source = plotInfo.source;
-      yValueRaw = values[source];
-      yValue = Number(convertValue(plotInfo, yValueRaw));
+    const xValue = time - graph.timeOrigin;
+
+    for (let i=0; i<info.group.length; i++) {
+      const plotInfo = info.group[i],
+            source = plotInfo.source,
+            yValueRaw = values[source],
+            yValue = Number(convertValue(plotInfo, yValueRaw));
 
       if (yValue != Number.NaN) {
-        sourceID = tableID + "-" + source;
-        curve = graph.getTrendCurve(sourceID);
+        const sourceID = tableID + "-" + source;
+        let curve = graph.getTrendCurve(sourceID);
         curve.pushData([xValue, yValue]);
         if (graph.drawn === false) {
           graph.adjustRangeY(yValue);
@@ -801,28 +789,25 @@ var HSQuickLook = HSQuickLook || {};
   }
 
   function updateImage(key, rawValue, info, tableID) {
-    var elemID = tableID + "-" + key,
-        target,
-        value = convertValue(info, rawValue),
-        image1, image2, data, data64, binaryData, mimeType,
-        height, width,
-        oldBlobURL, currentBlobURL, newBlobURL,
-        URL;
+    const elemID = tableID + "-" + key,
+          value = convertValue(info, rawValue);
 
-    target = $("#" + elemID);
+    let target = $("#" + elemID);
     target.removeClass("display-phase1").addClass("display-phase0");
-    image1 = target.children("img.image-new");
-    image2 = target.children("img.image-old");
-    data = JSON.parse(value);
-    data64 = data.data.replace(/\s/g, '');
-    binaryData = atob(data64);
-    mimeType = data.type;
-    height = data.height;
-    width = data.width;
+    let image1 = target.children("img.image-new"),
+        image2 = target.children("img.image-old");
+
+    const data = JSON.parse(value),
+          data64 = data.data.replace(/\s/g, ''),
+          binaryData = atob(data64),
+          mimeType = data.type,
+          height = data.height,
+          width = data.width;
     
-    oldBlobURL = image2.attr("src");
-    currentBlobURL = image1.attr("src");
-    newBlobURL = createImageURL(binaryData, mimeType);
+    const oldBlobURL = image2.attr("src"),
+          currentBlobURL = image1.attr("src"),
+          newBlobURL = createImageURL(binaryData, mimeType);
+
     image2.attr({
       "src" : newBlobURL,
       "height" : height,
@@ -837,30 +822,28 @@ var HSQuickLook = HSQuickLook || {};
       }, 250);
     
     if (oldBlobURL) {
-      URL = window.URL || window.webkitURL;
+      let URL = window.URL || window.webkitURL;
       URL.revokeObjectURL(oldBlobURL);
     }
   }
 
   function createImageURL(binaryData, mimeType) {
-    var buf = new ArrayBuffer(binaryData.length),
-        view = new Uint8Array(buf),
-        i = 0,
-        blob, URL, blobURL;
+    const buf = new ArrayBuffer(binaryData.length),
+          view = new Uint8Array(buf);
     
-    for (i=0; i<view.length; i++) {
+    for (let i=0; i<view.length; i++) {
       view[i] = binaryData.charCodeAt(i);
     }
-    blob = new Blob([view], {
+    const blob = new Blob([view], {
       "type" : mimeType
     });
-    URL = window.URL || window.webkitURL;
-    blobURL = URL.createObjectURL(blob);
+    const URL = window.URL || window.webkitURL;
+    const blobURL = URL.createObjectURL(blob);
     return blobURL;
   }
 
   function valueStatus(info, value) {
-    var status;
+    let status;
     if ('status' in info) {
       status = info.status;
       if (typeof status == "function") {
@@ -873,11 +856,9 @@ var HSQuickLook = HSQuickLook || {};
   }
 
   function convertValue(info, rawValue) {
-    var value = rawValue,
-        conversion;
-
+    let value = rawValue;
     if ('conversion' in info) {
-      conversion = info.conversion;
+      const conversion = info.conversion;
       if (typeof conversion == "function") {
         value = conversion(value);
       }
@@ -890,8 +871,8 @@ var HSQuickLook = HSQuickLook || {};
   }
 
   function formatValue(info, value) {
-    var type = info.type,
-        format = info.format;
+    const type = info.type,
+          format = info.format;
     if (format === void 0) {
       return value;
     }
@@ -916,14 +897,13 @@ var HSQuickLook = HSQuickLook || {};
    * Trend curve plots
    */
   function createGraphContainer(elemID, frameOption) {
-    var container, placeholder;
-    container = $("<div />").attr("id", elemID+"-graph").addClass("graph-container");
+    let container = $("<div />").attr("id", elemID+"-graph").addClass("graph-container");
     if (frameOption !== void 0) {
       container.css("width", frameOption.width);
       container.css("height", frameOption.height);
     }
     
-    placeholder = $("<div />").attr("id", elemID+"-placeholder").addClass("graph-placeholder");
+    let placeholder = $("<div />").attr("id", elemID+"-placeholder").addClass("graph-placeholder");
     container.append(placeholder);
     return container;
   }
