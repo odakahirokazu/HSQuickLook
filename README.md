@@ -3,7 +3,7 @@ HSQuickLook
 
 Multi-purpose web-based data monitoring system.
 
-- Version: 1.5
+- Version: 1.7
 - Authors: Hirokazu Odaka and Soki Sakurai
 
 
@@ -75,10 +75,10 @@ Run WS server.
 
 Open a client with Safari (or any other web browser you like).
 
-    open clients/hsquicklook/index.html
+    cd clients/hsquicklook
+    python3 -m http.server
 
-This is local file access for test, so you may need to disable local file restriction (find it in Develop manu).
-This client runs on an HTTP server for remote access.
+Access to http://localhost:8000
 
 Run an analyzer
 
