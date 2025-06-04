@@ -56,7 +56,7 @@ This requires several packages
     gem install mongo
     gem install eventmachine
     gem install em-websocket
-    gen install bson_ext
+    gem install bson_ext
     gem install mime-types
 
 For Ruby 3.0 or higher you need sorted_set.
