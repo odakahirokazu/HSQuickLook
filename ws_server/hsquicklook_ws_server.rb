@@ -13,10 +13,13 @@
 #   2019-10-25 | change keywords
 #   2022-10-19 | use pure ruby mode of EventMachine
 #   2022-10-19 | 1.4 | rename block to section
+#   2025-05-29 | 1.7 | modify query
+#   2025-07-11 | 1.8 | argument options
 ######################################################################
 
 EventMachinePureRubyMode = false
 
+require 'optparse'
 require 'sorted_set'
 require 'mongo'
 require 'em/pure_ruby' if EventMachinePureRubyMode
@@ -28,9 +31,10 @@ require 'mime/types'
 ######################################################################
 ### QL definition
 ######################################################################
-DBName = ( ARGV[0] or "quicklook" )
-Host = ( ARGV[1] or "localhost" )
-Port = ( ARGV[2] ? ARGV[2].to_i : 27017 )
+DefaultWSPort = 8080
+DefaultDBName = "quicklook"
+DefaultDBHost = "localhost"
+DefaultDBPort = 27017
 ######################################################################
 
 
@@ -239,8 +243,10 @@ end
 
 class HSQuickLookServer
   def initialize()
+    @ws_port = 8080
     @client_manager = ClientManager.new
   end
+  attr_accessor :ws_port
 
   def mongodb(host, port, db_name)
     connection = "#{host}:#{port}"
@@ -276,7 +282,7 @@ class HSQuickLookServer
       @channel = EM::Channel.new
       @current_client_id = 0
 
-      EventMachine::WebSocket.start(:host => "0.0.0.0", :port => 8080) do |ws|
+      EventMachine::WebSocket.start(:host => "0.0.0.0", :port => @ws_port) do |ws|
         ws.onopen do
           @current_client_id = @current_client_id + 1
           cid = @current_client_id
@@ -337,25 +343,40 @@ end
 ################################ Main ################################
 ######################################################################
 
-puts '************************************************************'
-puts '*                                                          *'
-puts '*             HSQuickLook WebSocket Server                 *'
-puts '*                                                          *'
-puts '*               Version 1.4 (2022-10-20)                   *'
-puts '*                   Since 2013-01-10                       *'
-puts '*            Hirokazu Odaka and Soki Sakurai               *'
-puts '*                                                          *'
-puts '************************************************************'
-puts ''
-puts 'MongoDB connection to '+Host+':'+Port.to_s
-puts 'Database: '+DBName
-puts ''
+ws_port = DefaultWSPort
+db_host = DefaultDBHost
+db_port = DefaultDBPort
+
+opt = OptionParser.new
+opt.banner = "Usage: ruby hsquicklook_ws_server.rb DBName [options]"
+opt.on("--wsport=VAL", "WebSocket port") {|v| ws_port = v.to_i }
+opt.on("--dbhost=VAL", "MongoDB host") {|v| db_host = v }
+opt.on("--dbport=VAL", "MongoDB port") {|v| db_port = v.to_i }
+opt.parse!(ARGV)
+
+db_name = ARGV[0] || DefaultDBName
+
+puts "************************************************************"
+puts "*                                                          *"
+puts "*             HSQuickLook WebSocket Server                 *"
+puts "*                                                          *"
+puts "*               Version 1.8 (2025-07-11)                   *"
+puts "*                   Since 2013-01-10                       *"
+puts "*            Hirokazu Odaka and Soki Sakurai               *"
+puts "*                                                          *"
+puts "************************************************************"
+puts ""
+puts "WebSocket Port: #{ws_port}"
+puts "MongoDB connection to #{db_host}:#{db_port}"
+puts "Database: #{db_name}"
+puts ""
 STDOUT.flush
 
 Mongo::Logger.logger.level = Logger::INFO
 
 server = HSQuickLookServer.new
-server.mongodb(Host, Port, DBName)
+server.ws_port = ws_port
+server.mongodb(db_host, db_port, db_name)
 server.run
 
 ######################################################################
