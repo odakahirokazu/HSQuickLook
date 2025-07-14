@@ -87,6 +87,17 @@ div#status-panel {
     color: #EEFFFF;
 }
 
+.status-button-view-realtime {
+    color: #FF3333;
+    animation: blink-realtime-view 1.5s infinite;
+}
+
+@keyframes blink-realtime-view {
+    0%   { background-color: #336633; }
+    50%  { background-color: #66FF66; }
+    100% { background-color: #336633; }
+}
+
 #control-panel-frame {
     float: left;
     margin: 0px;

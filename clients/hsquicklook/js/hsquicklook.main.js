@@ -1,6 +1,6 @@
 /*******************************************************************************
  * HS Quick Look
- * 
+ *
  * Authors: Hirokazu Odaka, Soki Sakurai
  * Date: 2012-10-14 (alpha)
  * Date: 2014-04-07 (v0.5.1)
@@ -9,14 +9,14 @@
  * Date: 2022-10-19 (v1.0) | rename block to section, and tweaks
  * Date: 2023-12-09 (v1.5) | check a number type at table/graph updating
  * Date: 2025-05-28 (v1.7) | replay; UTC/local time zones; cleanup
- * 
+ *
  ******************************************************************************/
 
 /* Global variable */
 var HSQuickLook = HSQuickLook || {};
 
 /* The anonymous function of this script */
-(function() {
+(function () {
   /***************************************************************************
    * Exported variables
    */
@@ -27,33 +27,33 @@ var HSQuickLook = HSQuickLook || {};
    * Parameters
    */
   var tableDraggable = false,
-      graphRangeResetEnable = true,
-      /* Basic variables */
-      ws = null,
-      schemaList,
-      paused = false,
-      controlDisplay = true,
-      titleDisplay = true,
-      timeScaling = 1.0/64,
-      time1 = new Date(),
-      /* Variables about the trend graphs */
-      graphs = new Object();
+    graphRangeResetEnable = true,
+    /* Basic variables */
+    ws = null,
+    schemaList,
+    connected = false,
+    paused = false,
+    controlDisplay = true,
+    titleDisplay = true,
+    timeScaling = 1.0 / 64,
+    time1 = new Date(),
+    /* Variables about the trend graphs */
+    graphs = new Object();
 
   /***************************************************************************
    * Main
    */
-  $(document).ready(
-    function() {
-      $.ajaxSetup({
-        cache: false
-      });
-      bindEventForms();
-      $.getJSON("user_data/user_configuration.json")
-          .done(initialize)
-          .fail(function() {
-            alert("User configuraion file is not found.");
-          });
+  $(document).ready(function () {
+    $.ajaxSetup({
+      cache: false,
     });
+    bindEventForms();
+    $.getJSON("user_data/user_configuration.json")
+      .done(initialize)
+      .fail(function () {
+        alert("User configuraion file is not found.");
+      });
+  });
 
   /***************************************************************************
    * Initialization
@@ -93,15 +93,15 @@ var HSQuickLook = HSQuickLook || {};
 
   function initialize(userConfig) {
     let title = userConfig["title"],
-        host = userConfig["ws_host"],
-        port = userConfig["ws_port"],
-        tiScaling = userConfig["ti_scaling"];
+      host = userConfig["ws_host"],
+      port = userConfig["ws_port"],
+      tiScaling = userConfig["ti_scaling"];
 
     if (title === void 0) {
       title = "HS Quick Look";
     }
-    $('h1.title').html(title);
-    $('title').html(title);
+    $("h1.title").html(title);
+    $("title").html(title);
 
     if (host === void 0 || host == "") {
       host = location.hostname;
@@ -112,10 +112,10 @@ var HSQuickLook = HSQuickLook || {};
     $("#ws-host").val(host + ":" + port);
 
     if (tiScaling !== void 0) {
-      if (tiScaling==0) {
-        alert("Invalid user configuration: TI scaling is set to 0."); 
+      if (tiScaling == 0) {
+        alert("Invalid user configuration: TI scaling is set to 0.");
       } else {
-        timeScaling = 1.0/tiScaling;
+        timeScaling = 1.0 / tiScaling;
       }
     }
 
@@ -150,30 +150,35 @@ var HSQuickLook = HSQuickLook || {};
     const utcFlag = $("input#utc-flag").prop("checked");
 
     if (utcFlag) {
-      $('input#time0').val(t.getUTCFullYear());
-      $('input#time1').val(t.getUTCMonth() + 1);
-      $('input#time2').val(t.getUTCDate());
-      $('input#time3').val(t.getUTCHours());
-      $('input#time4').val(t.getUTCMinutes());
-      $('input#time5').val(t.getUTCSeconds());
+      $("input#time0").val(t.getUTCFullYear());
+      $("input#time1").val(t.getUTCMonth() + 1);
+      $("input#time2").val(t.getUTCDate());
+      $("input#time3").val(t.getUTCHours());
+      $("input#time4").val(t.getUTCMinutes());
+      $("input#time5").val(t.getUTCSeconds());
     } else {
-      $('input#time0').val(t.getFullYear());
-      $('input#time1').val(t.getMonth() + 1);
-      $('input#time2').val(t.getDate());
-      $('input#time3').val(t.getHours());
-      $('input#time4').val(t.getMinutes());
-      $('input#time5').val(t.getSeconds());
+      $("input#time0").val(t.getFullYear());
+      $("input#time1").val(t.getMonth() + 1);
+      $("input#time2").val(t.getDate());
+      $("input#time3").val(t.getHours());
+      $("input#time4").val(t.getMinutes());
+      $("input#time5").val(t.getSeconds());
     }
   }
 
   function loadDataSheetList() {
     const group = $("#selected-group").val(),
-          schema = schemaList[group],
-          title = $("<option />").html("").attr("value", "").attr("label", "Select data sheet");
+      schema = schemaList[group],
+      title = $("<option />")
+        .html("")
+        .attr("value", "")
+        .attr("label", "Select data sheet");
     let target = $("#selected-data-sheet").html("");
     target.append(title);
     for (let dataSheet in schema) {
-      const dataSheetHTML = $("<option />").html(dataSheet).attr("value", dataSheet);
+      const dataSheetHTML = $("<option />")
+        .html(dataSheet)
+        .attr("value", dataSheet);
       target.append(dataSheetHTML);
     }
   }
@@ -190,11 +195,11 @@ var HSQuickLook = HSQuickLook || {};
    */
   function log(message) {
     const messageElement = $("<div />").html(message);
-    $('div#log').prepend(messageElement);
+    $("div#log").prepend(messageElement);
   }
 
   function clearLog() {
-    $('div#log').html('');
+    $("div#log").html("");
   }
 
   /***************************************************************************
@@ -246,39 +251,45 @@ var HSQuickLook = HSQuickLook || {};
     let host = "ws://" + $("#ws-host").val();
     ws = new WebSocket(host);
 
-    ws.onopen = function() {
+    ws.onopen = function () {
       const t = new Date(),
-            utcFlag = $("input#utc-flag").prop("checked"),
-            timeString = utcFlag ? t.toUTCString() : t.toString();
-      log("WebSocket opened at "+timeString);
+        utcFlag = $("input#utc-flag").prop("checked"),
+        timeString = utcFlag ? t.toUTCString() : t.toString();
+      log("WebSocket opened at " + timeString);
       sendTimeNow();
       $("#button-connect").val("Close");
       $("#button-connect").unbind("click", openConnection);
       $("#button-connect").click(closeConnection);
       $("#status-connection").html("Open");
       $("#status-connection").addClass("status-button-on");
+      $("#status-view").html("Realtime");
+      $("#status-view").addClass("status-button-view-realtime");
+      connected = true;
     };
 
-    ws.onclose = function() {
+    ws.onclose = function () {
       const t = new Date(),
-            utcFlag = $("input#utc-flag").prop("checked"),
-            timeString = utcFlag ? t.toUTCString() : t.toString();
-      log("WebSocket closed at "+t.timeString);
+        utcFlag = $("input#utc-flag").prop("checked"),
+        timeString = utcFlag ? t.toUTCString() : t.toString();
+      log("WebSocket closed at " + timeString);
       $("#button-connect").val("Open");
       $("#button-connect").unbind("click");
       $("#button-connect").click(openConnection);
       $("#status-connection").html("Close");
       $("#status-connection").removeClass("status-button-on");
+      $("#status-view").html("mode");
+      $("#status-view").removeClass("status-button-view-realtime");
+      connected = false;
     };
 
-    ws.onmessage = function(e) {
+    ws.onmessage = function (e) {
       // log("WebSocket message: "+e.data);
       if (!paused) {
         updateDataSheet(e.data);
       }
     };
   }
-  
+
   function closeConnection() {
     if (ws) {
       ws.close();
@@ -290,70 +301,99 @@ var HSQuickLook = HSQuickLook || {};
    * Time control
    */
   function enterQLMode() {
-    paused = false;
-    $("input[name='mode']").val([ "mode-ql" ]);
-    $("input#mode-paused").attr("disabled", false);
-    sendTimeNow();
+    if (connected) {
+      paused = false;
+      $("input[name='mode']").val(["mode-ql"]);
+      $("input#mode-paused").attr("disabled", false);
+      $("#status-view").html("Realtime");
+      $("#status-view").addClass("status-button-view-realtime");
+      sendTimeNow();
+    } else {
+      log("Error: WebSocket is closed.");
+    }
   }
 
   function enterDLMode() {
-    paused = false;
-    $("input[name='mode']").val([ "mode-dl" ]);
-    $("input#mode-paused").attr("disabled", true);
-    getTime();
-    sendTime();
+    if (connected) {
+      paused = false;
+      $("input[name='mode']").val(["mode-dl"]);
+      $("input#mode-paused").attr("disabled", true);
+      $("#status-view").html("Historical");
+      $("#status-view").removeClass("status-button-view-realtime");
+      getTime();
+      sendTime();
+    } else {
+      log("Error: WebSocket is closed.");
+    }
   }
 
   async function enterReplayMode() {
-    paused = false;
-    $("input[name='mode']").val([ "mode-dl" ]);
-    $("input#mode-paused").attr("disabled", true);
-    getTime();
-    sendTime();
-    while (time1 < new Date()) {
-      await new Promise(resolve => setTimeout(resolve, 1000));
-      const period = $('input#replay-period').val();
-      time1.setTime(time1.getTime() + period*1000);
+    if (connected) {
+      paused = false;
+      $("input[name='mode']").val(["mode-dl"]);
+      $("input#mode-paused").attr("disabled", true);
+      $("#status-view").html("Replay");
+      $("#status-view").removeClass("status-button-view-realtime");
+      getTime();
       sendTime();
+      while (time1 < new Date()) {
+        await new Promise((resolve) => setTimeout(resolve, 1000));
+        const period = $("input#replay-period").val();
+        time1.setTime(time1.getTime() + period * 1000);
+        sendTime();
+      }
+      enterQLMode();
+    } else {
+      log("Error: WebSocket is closed.");
     }
-    enterQLMode();
   }
 
   function getTime() {
-    const year   = $('input#time0').val(),
-          month  = $('input#time1').val(),
-          day    = $('input#time2').val(),
-          hour   = $('input#time3').val(),
-          minute = $('input#time4').val(),
-          second = $('input#time5').val();
+    const year = $("input#time0").val(),
+      month = $("input#time1").val(),
+      day = $("input#time2").val(),
+      hour = $("input#time3").val(),
+      minute = $("input#time4").val(),
+      second = $("input#time5").val();
     const utcFlag = $("input#utc-flag").prop("checked");
     if (utcFlag) {
       time1.setUTCFullYear(year);
-      time1.setUTCMonth(month-1);
+      time1.setUTCMonth(month - 1);
       time1.setUTCDate(day);
       time1.setUTCHours(hour);
       time1.setUTCMinutes(minute);
       time1.setUTCSeconds(second);
-    }
-    else {
+    } else {
       time1.setFullYear(year);
-      time1.setMonth(month-1);
+      time1.setMonth(month - 1);
       time1.setDate(day);
       time1.setHours(hour);
       time1.setMinutes(minute);
       time1.setSeconds(second);
     }
   }
-  
+
   function sendTime() {
-    const year   = time1.getUTCFullYear(),
-          month  = time1.getUTCMonth()+1,
-          day    = time1.getUTCDate(),
-          hour   = time1.getUTCHours(),
-          minute = time1.getUTCMinutes(),
-          second = time1.getUTCSeconds();
-    const message = '{"time": "DL ' + year + ':' + month + ':' + day + ':'
-          + hour + ':' + minute + ':' + second + '"}';
+    const year = time1.getUTCFullYear(),
+      month = time1.getUTCMonth() + 1,
+      day = time1.getUTCDate(),
+      hour = time1.getUTCHours(),
+      minute = time1.getUTCMinutes(),
+      second = time1.getUTCSeconds();
+    const message =
+      '{"time": "DL ' +
+      year +
+      ":" +
+      month +
+      ":" +
+      day +
+      ":" +
+      hour +
+      ":" +
+      minute +
+      ":" +
+      second +
+      '"}';
     ws.send(message);
   }
 
@@ -363,7 +403,13 @@ var HSQuickLook = HSQuickLook || {};
   }
 
   function pause() {
-    paused = true;
+    if (connected) {
+      $("#status-view").html("Pause");
+      $("#status-view").removeClass("status-button-view-realtime");
+      paused = true;
+    } else {
+      log("Error: WebSocket is closed.");
+    }
   }
 
   function enterDLModeByEvent(e) {
@@ -393,31 +439,31 @@ var HSQuickLook = HSQuickLook || {};
 
     $("title").html(dataSheetName);
     $("h1.title").html(dataSheetName);
-    
+
     resetGraphVariables();
 
     $.ajax({
-      url : fileName,
+      url: fileName,
       // dataType : 'json',
-      dataType : 'script',
-      success : buildDataSheet,
-      error : function() {
+      dataType: "script",
+      success: buildDataSheet,
+      error: function () {
         alert("Failed to read " + fileName + ".");
-      }
+      },
     });
   }
 
   function buildDataSheet() {
     const ti = "-1",
-          time = "2112-09-03 00:00:00 UTC", /* dummy time */
-          schema = HSQuickLook.main.schema;
-    let target = $('div#main-tables').html("");
- 
+      time = "2112-09-03 00:00:00 UTC" /* dummy time */,
+      schema = HSQuickLook.main.schema;
+    let target = $("div#main-tables").html("");
+
     // display the dummy time
-    $('p#time').html(time + " | TI: " + ti);
+    $("p#time").html(time + " | TI: " + ti);
 
     // main tables
-    for (let i=0; i<schema.length; i++) {
+    for (let i = 0; i < schema.length; i++) {
       const tableInfo = schema[i];
       if (tableInfo.collection !== void 0) {
         const tableHTML = createTableHTML(tableInfo);
@@ -438,40 +484,39 @@ var HSQuickLook = HSQuickLook || {};
 
     // range-reset
     if (graphRangeResetEnable) {
-      $(".graph-placeholder").dblclick(
-        function() {
-          const elemID = this.id.replace("-placeholder", "");
-          let graph = graphs[elemID];
-          graph.resetRangeY();
-        }
-      );
+      $(".graph-placeholder").dblclick(function () {
+        const elemID = this.id.replace("-placeholder", "");
+        let graph = graphs[elemID];
+        graph.resetRangeY();
+      });
     }
   }
 
   function updateDataSheet(dataJSON) {
     const data = JSON.parse(dataJSON);
-    if (data == []) { return; }
+    if (data == []) {
+      return;
+    }
 
     const schema = HSQuickLook.main.schema;
     const utcFlag = $("input#utc-flag").prop("checked");
     let timeUpdated = false,
-        ti = -1;
+      ti = -1;
 
-    for (let i=0; i<schema.length; i++) {
+    for (let i = 0; i < schema.length; i++) {
       const tableInfo = schema[i],
-            documentLabel = getDocumentLabel(tableInfo),
-            documentData = data[documentLabel];
+        documentLabel = getDocumentLabel(tableInfo),
+        documentData = data[documentLabel];
       if (documentData !== void 0) {
         if (!timeUpdated) {
           // display time
           ti = documentData["__ti__"];
           const unixtime = documentData["__unixtime__"],
-                time = new Date(unixtime*1000),
-                timeString = utcFlag ? time.toUTCString() : time.toString();
-          $('p#time').html(timeString
-                           + " | TI: " + ti
-                           + " | Time: " + ti*timeScaling
-                          );
+            time = new Date(unixtime * 1000),
+            timeString = utcFlag ? time.toUTCString() : time.toString();
+          $("p#time").html(
+            timeString + " | TI: " + ti + " | Time: " + ti * timeScaling,
+          );
           timeUpdated = true;
         }
         updateTable(tableInfo, documentData, ti);
@@ -504,31 +549,40 @@ var HSQuickLook = HSQuickLook || {};
 
   function getTableID(tableInfo) {
     const collection = tableInfo.collection,
-          directory = tableInfo.directory,
-          directory1 = directory.split('/').join('_').split('.').join('_'),
-          document = tableInfo.document,
-          document1 = document.split('.').join('_'),
-          table = getTableName(tableInfo);
-    return (collection + '-' + directory1 + '-' + document1 + '-' + table);
+      directory = tableInfo.directory,
+      directory1 = directory.split("/").join("_").split(".").join("_"),
+      document = tableInfo.document,
+      document1 = document.split(".").join("_"),
+      table = getTableName(tableInfo);
+    return collection + "-" + directory1 + "-" + document1 + "-" + table;
   }
 
   function getRequestMessage(tableInfo) {
     const collection = tableInfo.collection,
-          directory = tableInfo.directory,
-          document = tableInfo.document,
-          period = tableInfo.period,
-          message = '{"collection": "' + collection + '", '
-          + '"directory": "' + directory + '", '
-          + '"document": "' + document + '", ' + '"period": "'
-          + period + '"}';
+      directory = tableInfo.directory,
+      document = tableInfo.document,
+      period = tableInfo.period,
+      message =
+        '{"collection": "' +
+        collection +
+        '", ' +
+        '"directory": "' +
+        directory +
+        '", ' +
+        '"document": "' +
+        document +
+        '", ' +
+        '"period": "' +
+        period +
+        '"}';
     return message;
   }
 
   function getDocumentLabel(tableInfo) {
     const collection = tableInfo.collection,
-          directory = tableInfo.directory,
-          document = tableInfo.document,
-          documentLabel = collection + '/' + directory + '/' + document;
+      directory = tableInfo.directory,
+      document = tableInfo.document,
+      documentLabel = collection + "/" + directory + "/" + document;
     return documentLabel;
   }
 
@@ -560,15 +614,15 @@ var HSQuickLook = HSQuickLook || {};
 
   function initializeTable(tableInfo) {
     const tableID = getTableID(tableInfo),
-        contents = tableInfo.contents;
-    let tbody = $('tbody#table-' + tableID + '-body').html("");
+      contents = tableInfo.contents;
+    let tbody = $("tbody#table-" + tableID + "-body").html("");
 
     for (let key in contents) {
       const info = contents[key],
-            type = info.type;
+        type = info.type;
       let value = 0;
       if (type == "image") {
-        value = "<img class=\"image-new\" /><img class=\"image-old\" />";
+        value = '<img class="image-new" /><img class="image-old" />';
       }
       tbody.append(makePair(key, value, info, tableID));
     }
@@ -578,7 +632,7 @@ var HSQuickLook = HSQuickLook || {};
     const sections = data["__sections__"];
     let sectionData = void 0;
 
-    for (let ib=0; ib<sections.length; ib++) {
+    for (let ib = 0; ib < sections.length; ib++) {
       if (sections[ib]["__section__"] == tableInfo.section) {
         sectionData = sections[ib];
         break;
@@ -589,19 +643,18 @@ var HSQuickLook = HSQuickLook || {};
     }
 
     const values = sectionData["__contents__"],
-          tableID = getTableID(tableInfo),
-          contents = tableInfo.contents;
+      tableID = getTableID(tableInfo),
+      contents = tableInfo.contents;
 
     for (let key in contents) {
       const info = contents[key];
       if (info.type == "trend-graph") {
         const elemID = tableID + "-" + key;
-        const time = ti*timeScaling;
+        const time = ti * timeScaling;
         updateGraph(elemID, info, time, values, tableID);
-      }
-      else{
+      } else {
         let source, value;
-        if ('source' in info) {
+        if ("source" in info) {
           source = info.source;
         } else {
           source = key;
@@ -609,14 +662,14 @@ var HSQuickLook = HSQuickLook || {};
         if (typeof source == "string") {
           value = values[source];
         } else {
-          value = source.map(function(s) {
+          value = source.map(function (s) {
             return values[s];
           });
         }
-        
+
         if (value === void 0) {
           continue;
-        }    
+        }
         updateValue(key, value, info, tableID);
       }
     }
@@ -629,22 +682,23 @@ var HSQuickLook = HSQuickLook || {};
    */
   function makePair(key, rawValue, info, tableID) {
     const type = info.type,
-          elemID = tableID + "-" + key;
-    const elemKeyHTML = $("<td />").attr("id", elemID+"-key").html(key);
+      elemID = tableID + "-" + key;
+    const elemKeyHTML = $("<td />")
+      .attr("id", elemID + "-key")
+      .html(key);
     let elemValueHTML;
-    
+
     if (type == "trend-graph") {
       elemValueHTML = $("<td />").attr("id", elemID).html("");
       appendTrendCurve(elemValueHTML, elemID, info, tableID);
-    }
-    else {
+    } else {
       const value = convertValue(info, rawValue),
-            status = valueStatus(info, value),
-            valueFormated = formatValue(info, value);
+        status = valueStatus(info, value),
+        valueFormated = formatValue(info, value);
       elemValueHTML = $("<td />").attr("id", elemID).html(valueFormated);
       addValueClass(elemValueHTML, status, type);
     }
-    
+
     const pair = $("<tr />").append(elemKeyHTML).append(elemValueHTML);
     return pair;
   }
@@ -657,42 +711,46 @@ var HSQuickLook = HSQuickLook || {};
 
     let graph = new HSQuickLook.graph.MultiTrendCurves();
     graphs[elemID] = graph;
-    graph.placeholder = "#"+elemID+"-placeholder";
+    graph.placeholder = "#" + elemID + "-placeholder";
 
     let capacity = 600,
-        frameOption;
-    if ('options' in info) {
-      if ('xWidth' in info.options) {
+      frameOption;
+    if ("options" in info) {
+      if ("xWidth" in info.options) {
         const xWidth = info.options.xWidth,
-              capacity = xWidth;
+          capacity = xWidth;
         graph.xWidth = capacity;
       }
-      if ('refreshCycle' in info.options) {
+      if ("refreshCycle" in info.options) {
         const refreshCycle = info.options.refreshCycle;
         graph.refreshCycle = refreshCycle;
       }
-      if ('yRange' in info.options) {
+      if ("yRange" in info.options) {
         graph.layout.yaxis.range = info.options.yRange;
       }
-      if ('frame' in info.options) {
+      if ("frame" in info.options) {
         frameOption = info.options.frame;
       }
     }
 
-    for (let i=0; i<info.group.length; i++) {
+    for (let i = 0; i < info.group.length; i++) {
       const plotInfo = info.group[i],
-            sourceID = tableID + "-" + plotInfo.source,
-            curve = createTrendCurve(capacity, plotInfo);
+        sourceID = tableID + "-" + plotInfo.source,
+        curve = createTrendCurve(capacity, plotInfo);
       graph.addTrendCurve(sourceID, curve);
     }
 
     const container = createGraphContainer(elemID, frameOption);
     elemValueHTML.attr("id", elemID);
     elemValueHTML.append(container);
-    
-    let timeOriginHTML = $("<div />").attr("id", elemID+"-timeorigin").html("Origin of time: ");
+
+    let timeOriginHTML = $("<div />")
+      .attr("id", elemID + "-timeorigin")
+      .html("Origin of time: ");
     timeOriginHTML.addClass("graph-timeorigin");
-    timeOriginHTML.append($("<span />").attr("id", elemID+"-timeorigin-value"));
+    timeOriginHTML.append(
+      $("<span />").attr("id", elemID + "-timeorigin-value"),
+    );
     elemValueHTML.append(timeOriginHTML);
   }
 
@@ -703,18 +761,18 @@ var HSQuickLook = HSQuickLook || {};
     graph.setRangeY([-0.5, 10.0]);
     graph.layout.xaxis.title = "Time (s)";
     graph.layout.yaxis.title = "Value";
-    
+
     if (plotInfo.mode == "diff") {
       graph.differentialMode = true;
     } else {
       graph.differentialMode = false;
     }
 
-    if('upperBound' in plotInfo) {
+    if ("upperBound" in plotInfo) {
       graph.upperBound = plotInfo.upperBound;
     }
 
-    if ('options' in plotInfo) {
+    if ("options" in plotInfo) {
       let options = plotInfo.options;
       if (options.legend !== void 0) {
         graph.data.name = options.legend;
@@ -742,8 +800,8 @@ var HSQuickLook = HSQuickLook || {};
 
   function updateValue(key, rawValue, info, tableID) {
     const elemID = tableID + "-" + key,
-          type = info.type;
-    
+      type = info.type;
+
     if (type == "image") {
       updateImage(key, rawValue, info, tableID);
     } else if (type == "trend-graph") {
@@ -751,8 +809,8 @@ var HSQuickLook = HSQuickLook || {};
     } else {
       let target = $("#" + elemID);
       const value = convertValue(info, rawValue),
-            status = valueStatus(info, value),
-            valueFormated = formatValue(info, value);
+        status = valueStatus(info, value),
+        valueFormated = formatValue(info, value);
       target.html(valueFormated);
       target.removeClass();
       addValueClass(target, status, type);
@@ -768,11 +826,11 @@ var HSQuickLook = HSQuickLook || {};
 
     const xValue = time - graph.timeOrigin;
 
-    for (let i=0; i<info.group.length; i++) {
+    for (let i = 0; i < info.group.length; i++) {
       const plotInfo = info.group[i],
-            source = plotInfo.source,
-            yValueRaw = values[source],
-            yValue = Number(convertValue(plotInfo, yValueRaw));
+        source = plotInfo.source,
+        yValueRaw = values[source],
+        yValue = Number(convertValue(plotInfo, yValueRaw));
 
       if (yValue != Number.NaN) {
         const sourceID = tableID + "-" + source;
@@ -783,44 +841,43 @@ var HSQuickLook = HSQuickLook || {};
         }
       }
     }
-    
+
     graph.adjustRangeX(xValue);
     graph.plot();
   }
 
   function updateImage(key, rawValue, info, tableID) {
     const elemID = tableID + "-" + key,
-          value = convertValue(info, rawValue);
+      value = convertValue(info, rawValue);
 
     let target = $("#" + elemID);
     target.removeClass("display-phase1").addClass("display-phase0");
     let image1 = target.children("img.image-new"),
-        image2 = target.children("img.image-old");
+      image2 = target.children("img.image-old");
 
     const data = JSON.parse(value),
-          data64 = data.data.replace(/\s/g, ''),
-          binaryData = atob(data64),
-          mimeType = data.type,
-          height = data.height,
-          width = data.width;
-    
+      data64 = data.data.replace(/\s/g, ""),
+      binaryData = atob(data64),
+      mimeType = data.type,
+      height = data.height,
+      width = data.width;
+
     const oldBlobURL = image2.attr("src"),
-          currentBlobURL = image1.attr("src"),
-          newBlobURL = createImageURL(binaryData, mimeType);
+      currentBlobURL = image1.attr("src"),
+      newBlobURL = createImageURL(binaryData, mimeType);
 
     image2.attr({
-      "src" : newBlobURL,
-      "height" : height,
-      "width" : width
+      src: newBlobURL,
+      height: height,
+      width: width,
     });
     image1.removeClass("image-new").addClass("image-old");
     image2.removeClass("image-old").addClass("image-new");
-    
-    setTimeout(
-      function() {
-        target.removeClass("display-phase0").addClass("display-phase1");
-      }, 250);
-    
+
+    setTimeout(function () {
+      target.removeClass("display-phase0").addClass("display-phase1");
+    }, 250);
+
     if (oldBlobURL) {
       let URL = window.URL || window.webkitURL;
       URL.revokeObjectURL(oldBlobURL);
@@ -829,13 +886,13 @@ var HSQuickLook = HSQuickLook || {};
 
   function createImageURL(binaryData, mimeType) {
     const buf = new ArrayBuffer(binaryData.length),
-          view = new Uint8Array(buf);
-    
-    for (let i=0; i<view.length; i++) {
+      view = new Uint8Array(buf);
+
+    for (let i = 0; i < view.length; i++) {
       view[i] = binaryData.charCodeAt(i);
     }
     const blob = new Blob([view], {
-      "type" : mimeType
+      type: mimeType,
     });
     const URL = window.URL || window.webkitURL;
     const blobURL = URL.createObjectURL(blob);
@@ -844,7 +901,7 @@ var HSQuickLook = HSQuickLook || {};
 
   function valueStatus(info, value) {
     let status;
-    if ('status' in info) {
+    if ("status" in info) {
       status = info.status;
       if (typeof status == "function") {
         status = status(value);
@@ -857,7 +914,7 @@ var HSQuickLook = HSQuickLook || {};
 
   function convertValue(info, rawValue) {
     let value = rawValue;
-    if ('conversion' in info) {
+    if ("conversion" in info) {
       const conversion = info.conversion;
       if (typeof conversion == "function") {
         value = conversion(value);
@@ -872,7 +929,7 @@ var HSQuickLook = HSQuickLook || {};
 
   function formatValue(info, value) {
     const type = info.type,
-          format = info.format;
+      format = info.format;
     if (format === void 0) {
       return value;
     }
@@ -885,7 +942,12 @@ var HSQuickLook = HSQuickLook || {};
   }
 
   function checkNumberType(value, type) {
-    if (type=="number" || type=="int" || type=="uint" || type=="float") {
+    if (
+      type == "number" ||
+      type == "int" ||
+      type == "uint" ||
+      type == "float"
+    ) {
       if (typeof value != "number") {
         return false;
       }
@@ -897,20 +959,23 @@ var HSQuickLook = HSQuickLook || {};
    * Trend curve plots
    */
   function createGraphContainer(elemID, frameOption) {
-    let container = $("<div />").attr("id", elemID+"-graph").addClass("graph-container");
+    let container = $("<div />")
+      .attr("id", elemID + "-graph")
+      .addClass("graph-container");
     if (frameOption !== void 0) {
       container.css("width", frameOption.width);
       container.css("height", frameOption.height);
     }
-    
-    let placeholder = $("<div />").attr("id", elemID+"-placeholder").addClass("graph-placeholder");
+
+    let placeholder = $("<div />")
+      .attr("id", elemID + "-placeholder")
+      .addClass("graph-placeholder");
     container.append(placeholder);
     return container;
   }
-  
+
   function resetGraphVariables() {
     delete graphs;
     graphs = new Object();
   }
-
 })(); /* end of the anonymous function */
