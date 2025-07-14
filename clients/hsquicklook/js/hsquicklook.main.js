@@ -31,7 +31,6 @@ var HSQuickLook = HSQuickLook || {};
     /* Basic variables */
     ws = null,
     schemaList,
-    connected = false,
     paused = false,
     controlDisplay = true,
     titleDisplay = true,
@@ -264,7 +263,7 @@ var HSQuickLook = HSQuickLook || {};
       $("#status-connection").addClass("status-button-on");
       $("#status-view").html("Realtime");
       $("#status-view").addClass("status-button-view-realtime");
-      connected = true;
+      loadDataSheet();
     };
 
     ws.onclose = function () {
@@ -279,7 +278,6 @@ var HSQuickLook = HSQuickLook || {};
       $("#status-connection").removeClass("status-button-on");
       $("#status-view").html("mode");
       $("#status-view").removeClass("status-button-view-realtime");
-      connected = false;
     };
 
     ws.onmessage = function (e) {
@@ -301,51 +299,56 @@ var HSQuickLook = HSQuickLook || {};
    * Time control
    */
   function enterQLMode() {
-    if (connected) {
-      paused = false;
-      $("input[name='mode']").val(["mode-ql"]);
-      $("input#mode-paused").attr("disabled", false);
-      $("#status-view").html("Realtime");
-      $("#status-view").addClass("status-button-view-realtime");
-      sendTimeNow();
-    } else {
-      log("Error: WebSocket is closed.");
+    if (!ws) {
+      alert("WebSocket is not connected. Please connect to WS server.");
+      return;
     }
+
+    $("input[name='mode']").val(["mode-ql"]);
+    $("input#mode-paused").attr("disabled", false);
+    $("#status-view").html("Realtime");
+    $("#status-view").addClass("status-button-view-realtime");
+    sendTimeNow();
+    paused = false;
   }
 
   function enterDLMode() {
-    if (connected) {
-      paused = false;
-      $("input[name='mode']").val(["mode-dl"]);
-      $("input#mode-paused").attr("disabled", true);
-      $("#status-view").html("Historical");
-      $("#status-view").removeClass("status-button-view-realtime");
-      getTime();
-      sendTime();
-    } else {
-      log("Error: WebSocket is closed.");
+    if (!ws) {
+      alert("WebSocket is not connected. Please connect to WS server.");
+      return;
     }
+
+    $("input[name='mode']").val(["mode-dl"]);
+    $("input#mode-paused").attr("disabled", true);
+    $("#status-view").html("Historical");
+    $("#status-view").removeClass("status-button-view-realtime");
+    clearGraphData();
+    getTime();
+    sendTime();
+    paused = false;
   }
 
   async function enterReplayMode() {
-    if (connected) {
-      paused = false;
-      $("input[name='mode']").val(["mode-dl"]);
-      $("input#mode-paused").attr("disabled", true);
-      $("#status-view").html("Replay");
-      $("#status-view").removeClass("status-button-view-realtime");
-      getTime();
-      sendTime();
-      while (time1 < new Date()) {
-        await new Promise((resolve) => setTimeout(resolve, 1000));
-        const period = $("input#replay-period").val();
-        time1.setTime(time1.getTime() + period * 1000);
-        sendTime();
-      }
-      enterQLMode();
-    } else {
-      log("Error: WebSocket is closed.");
+    if (!ws) {
+      alert("WebSocket is not connected. Please connect to WS server.");
+      return;
     }
+
+    $("input[name='mode']").val(["mode-dl"]);
+    $("input#mode-paused").attr("disabled", true);
+    $("#status-view").html("Replay");
+    $("#status-view").removeClass("status-button-view-realtime");
+    clearGraphData();
+    getTime();
+    sendTime();
+    paused = false;
+    while (time1 < new Date()) {
+      await new Promise((resolve) => setTimeout(resolve, 1000));
+      const period = $("input#replay-period").val();
+      time1.setTime(time1.getTime() + period * 1000);
+      sendTime();
+    }
+    enterQLMode();
   }
 
   function getTime() {
@@ -403,13 +406,14 @@ var HSQuickLook = HSQuickLook || {};
   }
 
   function pause() {
-    if (connected) {
-      $("#status-view").html("Pause");
-      $("#status-view").removeClass("status-button-view-realtime");
-      paused = true;
-    } else {
-      log("Error: WebSocket is closed.");
+    if (!ws) {
+      alert("WebSocket is not connected. Please connect to WS server.");
+      return;
     }
+
+    $("#status-view").html("Pause");
+    $("#status-view").removeClass("status-button-view-realtime");
+    paused = true;
   }
 
   function enterDLModeByEvent(e) {
@@ -977,5 +981,11 @@ var HSQuickLook = HSQuickLook || {};
   function resetGraphVariables() {
     delete graphs;
     graphs = new Object();
+  }
+
+  function clearGraphData() {
+    for (let graph of Object.values(graphs)) {
+      graph.clearData();
+    }
   }
 })(); /* end of the anonymous function */
