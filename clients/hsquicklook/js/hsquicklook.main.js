@@ -166,14 +166,9 @@ var HSQuickLook = HSQuickLook || {};
   }
 
   function loadDataSheetList() {
-    const group = $("#selected-group").val(),
-      schema = schemaList[group],
-      title = $("<option />")
-        .html("")
-        .attr("value", "")
-        .attr("label", "Select data sheet");
+    const group = $("#selected-group").val();
+    const schema = schemaList[group];
     let target = $("#selected-data-sheet").html("");
-    target.append(title);
     for (let dataSheet in schema) {
       const dataSheetHTML = $("<option />")
         .html(dataSheet)
