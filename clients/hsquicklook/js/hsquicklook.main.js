@@ -294,7 +294,7 @@ var HSQuickLook = HSQuickLook || {};
    * Time control
    */
   function enterQLMode() {
-    if (!ws) {
+    if (ws.readyState !== WebSocket.OPEN) {
       alert("WebSocket is not connected. Please connect to WS server.");
       return;
     }
@@ -308,7 +308,7 @@ var HSQuickLook = HSQuickLook || {};
   }
 
   function enterDLMode() {
-    if (!ws) {
+    if (ws.readyState !== WebSocket.OPEN) {
       alert("WebSocket is not connected. Please connect to WS server.");
       return;
     }
@@ -324,7 +324,7 @@ var HSQuickLook = HSQuickLook || {};
   }
 
   async function enterReplayMode() {
-    if (!ws) {
+    if (ws.readyState !== WebSocket.OPEN) {
       alert("WebSocket is not connected. Please connect to WS server.");
       return;
     }
@@ -401,7 +401,7 @@ var HSQuickLook = HSQuickLook || {};
   }
 
   function pause() {
-    if (!ws) {
+    if (ws.readyState !== WebSocket.OPEN) {
       alert("WebSocket is not connected. Please connect to WS server.");
       return;
     }
@@ -431,7 +431,7 @@ var HSQuickLook = HSQuickLook || {};
     const groupName = $("#selected-group").val();
     const fileName = schemaList[groupName][dataSheetName];
 
-    if (!ws) {
+    if (ws.readyState !== WebSocket.OPEN) {
       alert("WebSocket is not connected. Please connect to WS server.");
       return;
     }
