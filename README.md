@@ -3,7 +3,7 @@ HSQuickLook
 
 Multi-purpose web-based data monitoring system.
 
-- Version: 1.9
+- Version: 1.10
 - Authors: Hirokazu Odaka and Soki Sakurai
 
 

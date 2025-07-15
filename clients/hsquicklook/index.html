@@ -44,7 +44,7 @@
         <form id="ws-form">
           <span>Connection to ws://</span>
           <input id="ws-host" type="text" value="localhost:8080" />
-          <input id="button-connect" type="button" value="Open" />
+          <input id="button-connect" type="button" value="open" />
         </form>
 
         <form id="contents-form">
@@ -54,10 +54,8 @@
         </form>
 
         <form id="mode-form">
-          <span>Mode: </span>
-          <label><input id="mode-ql" name="mode" type="radio" value="mode-ql" checked="checked" />realtime</label>
-          <label><input id="mode-paused" name="mode" type="radio" value="mode-paused" />pause</label>
-          <label><input id="mode-dl" name="mode" type="radio" value="mode-dl" disabled="disabled" />specified</label>
+          <span>Realtime: </span>
+          <input id="mode-realtime" type="checkbox" name="realtime" checked /><span>on</span>
         </form>
 
         <form id="time-form">
@@ -69,15 +67,15 @@
           <input id="time4" type="number" value="0" min="0" max="59" />
           <input id="time5" type="number" value="0" min="0" max="59" />
           <input id="utc-flag" type="checkbox" name="utc" /><span>UTC</span>
-          <input id="request-data" type="button" value="Request data" />
-          <input id="set-time-origin" type="button" value="Set origin" />
-          <input id="reset-time" type="button" value="Reset time" />
+          <input id="request-data" type="button" value="request data" />
+          <input id="set-time-origin" type="button" value="set origin" />
+          <input id="reset-time" type="button" value="reset time" />
         </form>
 
         <form id="replay-form">
           <span>Replay: </span>
           <input id="replay-period" type="number" value="10" min="1" max="9999" />
-          <input id="replay-data" type="button" value="Start" />
+          <input id="replay-data" type="button" value="start" />
         </form>
       </div>
 

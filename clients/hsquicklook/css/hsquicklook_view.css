@@ -146,6 +146,15 @@ input#time5 { width: 2.8em; }
     display: none;
 }
 
+p#time {
+    font-weight: bold;
+    color: #CCC;
+}
+
+p#time-origin {
+    color: #999;
+}
+
 img {
     padding: 0.0em;
     font-family: monospace;

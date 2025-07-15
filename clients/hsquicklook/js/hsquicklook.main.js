@@ -68,8 +68,7 @@ var HSQuickLook = HSQuickLook || {};
     $("select#selected-data-sheet").change(loadDataSheet);
 
     // mode-form
-    $("input#mode-ql").click(enterRealtimeMode);
-    $("input#mode-paused").click(pause);
+    $("input#mode-realtime").change(selectRealtimeMode);
 
     // time-form
     $("input#time0").keypress(enterHistoricalModeByEvent);
@@ -280,10 +279,10 @@ var HSQuickLook = HSQuickLook || {};
         timeString = utcFlag ? t.toUTCString() : t.toString();
       log("WebSocket opened at " + timeString);
       sendTimeNow();
-      $("#button-connect").val("Close");
+      $("#button-connect").val("close");
       $("#button-connect").unbind("click", openConnection);
       $("#button-connect").click(closeConnection);
-      $("#status-connection").html("Open");
+      $("#status-connection").html("open");
       $("#status-connection").addClass("status-button-on");
       $("#status-mode").html("realtime");
       $("#status-mode").addClass("status-button-mode-realtime");
@@ -295,10 +294,10 @@ var HSQuickLook = HSQuickLook || {};
         utcFlag = $("input#utc-flag").prop("checked"),
         timeString = utcFlag ? t.toUTCString() : t.toString();
       log("WebSocket closed at " + timeString);
-      $("#button-connect").val("Open");
+      $("#button-connect").val("open");
       $("#button-connect").unbind("click");
       $("#button-connect").click(openConnection);
-      $("#status-connection").html("Close");
+      $("#status-connection").html("close");
       $("#status-connection").removeClass("status-button-on");
       $("#status-mode").html("mode");
       $("#status-mode").removeClass("status-button-mode-realtime");
@@ -322,14 +321,28 @@ var HSQuickLook = HSQuickLook || {};
   /***************************************************************************
    * Time control
    */
+
+  function selectRealtimeMode() {
+    if (ws.readyState !== WebSocket.OPEN) {
+      alert("WebSocket is not connected. Please connect to WS server.");
+      return;
+    }
+
+    const realtime = $("input#mode-realtime").prop("checked");
+    if (realtime) {
+      enterRealtimeMode();
+    } else {
+      pause();
+    }
+  }
+
   function enterRealtimeMode() {
     if (ws.readyState !== WebSocket.OPEN) {
       alert("WebSocket is not connected. Please connect to WS server.");
       return;
     }
 
-    $("input[name='mode']").val(["mode-ql"]);
-    $("input#mode-paused").attr("disabled", false);
+    $("input#mode-realtime").prop("checked", true);
     $("#status-mode").html("realtime");
     $("#status-mode").addClass("status-button-mode-realtime");
     sendTimeNow();
@@ -342,8 +355,7 @@ var HSQuickLook = HSQuickLook || {};
       return;
     }
 
-    $("input[name='mode']").val(["mode-dl"]);
-    $("input#mode-paused").attr("disabled", true);
+    $("input#mode-realtime").prop("checked", false);
     $("#status-mode").html("historical");
     $("#status-mode").removeClass("status-button-mode-realtime");
     clearGraphData();
@@ -358,8 +370,7 @@ var HSQuickLook = HSQuickLook || {};
       return;
     }
 
-    $("input[name='mode']").val(["mode-dl"]);
-    $("input#mode-paused").attr("disabled", true);
+    $("input#mode-realtime").prop("checked", false);
     $("#status-mode").html("replay");
     $("#status-mode").removeClass("status-button-mode-realtime");
     clearGraphData();
@@ -435,6 +446,7 @@ var HSQuickLook = HSQuickLook || {};
       return;
     }
 
+    $("input#mode-realtime").prop("checked", false);
     $("#status-mode").html("pause");
     $("#status-mode").removeClass("status-button-mode-realtime");
     paused = true;
