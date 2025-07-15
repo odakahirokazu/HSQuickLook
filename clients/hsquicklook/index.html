@@ -31,7 +31,7 @@
         <span id="clear-log-button" class="menu-button">clear log</span>
       </div>
       <div id="status-panel">
-        <span id="status-view" class="status-button">view</span>
+        <span id="status-mode" class="status-button">mode</span>
         <span id="status-connection" class="status-button">close</span>
       </div>
     </div>
@@ -55,9 +55,9 @@
 
         <form id="mode-form">
           <span>Mode: </span>
-          <label><input id="mode-ql" name="mode" type="radio" value="mode-ql" checked="checked" />Real time</label>
-          <label><input id="mode-paused" name="mode" type="radio" value="mode-paused" />Pause</label>
-          <label><input id="mode-dl" name="mode" type="radio" value="mode-dl" disabled="disabled" />Time specified</label>
+          <label><input id="mode-ql" name="mode" type="radio" value="mode-ql" checked="checked" />realtime</label>
+          <label><input id="mode-paused" name="mode" type="radio" value="mode-paused" />pause</label>
+          <label><input id="mode-dl" name="mode" type="radio" value="mode-dl" disabled="disabled" />specified</label>
         </form>
 
         <form id="time-form">
@@ -70,6 +70,7 @@
           <input id="time5" type="number" value="0" min="0" max="59" />
           <input id="utc-flag" type="checkbox" name="utc" /><span>UTC</span>
           <input id="request-data" type="button" value="Request data" />
+          <input id="set-time-origin" type="button" value="Set origin" />
           <input id="reset-time" type="button" value="Reset time" />
         </form>
 
@@ -90,6 +91,7 @@
       <div id="data-panel">
         <h2 class="panel-heading">Data</h2>
         <p id="time" />
+        <p id="time-origin" />
         <div id="main-tables" />
       </div>
     </div>

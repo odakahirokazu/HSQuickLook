@@ -34,8 +34,9 @@ var HSQuickLook = HSQuickLook || {};
     paused = false,
     controlDisplay = true,
     titleDisplay = true,
-    timeScaling = 1.0 / 64,
-    time1 = new Date(),
+    unitTI = 1.0 / 64,
+    timeAssigned = new Date(),
+    timeOrigin = new Date(),
     /* Variables about the trend graphs */
     graphs = new Object();
 
@@ -78,7 +79,8 @@ var HSQuickLook = HSQuickLook || {};
     $("input#time4").keypress(enterDLModeByEvent);
     $("input#time5").keypress(enterDLModeByEvent);
     $("input#request-data").click(enterDLMode);
-    $("input#reset-time").click(setCurrentTime);
+    $("input#set-time-origin").click(setTimeOrigin);
+    $("input#reset-time").click(resetCurrentTime);
 
     // replay-form
     $("input#replay-data").click(enterReplayMode);
@@ -114,7 +116,7 @@ var HSQuickLook = HSQuickLook || {};
       if (tiScaling == 0) {
         alert("Invalid user configuration: TI scaling is set to 0.");
       } else {
-        timeScaling = 1.0 / tiScaling;
+        unitTI = 1.0 / tiScaling;
       }
     }
 
@@ -125,7 +127,7 @@ var HSQuickLook = HSQuickLook || {};
     }
 
     initializeManuBar();
-    setCurrentTime();
+    resetCurrentTime();
     loadDataSheetList();
     openConnection();
   }
@@ -144,7 +146,7 @@ var HSQuickLook = HSQuickLook || {};
     }
   }
 
-  function setCurrentTime() {
+  function resetCurrentTime() {
     const t = new Date();
     const utcFlag = $("input#utc-flag").prop("checked");
 
@@ -163,6 +165,33 @@ var HSQuickLook = HSQuickLook || {};
       $("input#time4").val(t.getMinutes());
       $("input#time5").val(t.getSeconds());
     }
+  }
+
+  function setTimeOrigin() {
+    const year = $("input#time0").val(),
+      month = $("input#time1").val(),
+      day = $("input#time2").val(),
+      hour = $("input#time3").val(),
+      minute = $("input#time4").val(),
+      second = $("input#time5").val();
+    const utcFlag = $("input#utc-flag").prop("checked");
+    if (utcFlag) {
+      timeOrigin.setUTCFullYear(year);
+      timeOrigin.setUTCMonth(month - 1);
+      timeOrigin.setUTCDate(day);
+      timeOrigin.setUTCHours(hour);
+      timeOrigin.setUTCMinutes(minute);
+      timeOrigin.setUTCSeconds(second);
+    } else {
+      timeOrigin.setFullYear(year);
+      timeOrigin.setMonth(month - 1);
+      timeOrigin.setDate(day);
+      timeOrigin.setHours(hour);
+      timeOrigin.setMinutes(minute);
+      timeOrigin.setSeconds(second);
+    }
+
+    setGraphTimeOrigin(timeOrigin);
   }
 
   function loadDataSheetList() {
@@ -256,8 +285,8 @@ var HSQuickLook = HSQuickLook || {};
       $("#button-connect").click(closeConnection);
       $("#status-connection").html("Open");
       $("#status-connection").addClass("status-button-on");
-      $("#status-view").html("Realtime");
-      $("#status-view").addClass("status-button-view-realtime");
+      $("#status-mode").html("realtime");
+      $("#status-mode").addClass("status-button-mode-realtime");
       loadDataSheet();
     };
 
@@ -271,8 +300,8 @@ var HSQuickLook = HSQuickLook || {};
       $("#button-connect").click(openConnection);
       $("#status-connection").html("Close");
       $("#status-connection").removeClass("status-button-on");
-      $("#status-view").html("mode");
-      $("#status-view").removeClass("status-button-view-realtime");
+      $("#status-mode").html("mode");
+      $("#status-mode").removeClass("status-button-mode-realtime");
     };
 
     ws.onmessage = function (e) {
@@ -301,8 +330,8 @@ var HSQuickLook = HSQuickLook || {};
 
     $("input[name='mode']").val(["mode-ql"]);
     $("input#mode-paused").attr("disabled", false);
-    $("#status-view").html("Realtime");
-    $("#status-view").addClass("status-button-view-realtime");
+    $("#status-mode").html("realtime");
+    $("#status-mode").addClass("status-button-mode-realtime");
     sendTimeNow();
     paused = false;
   }
@@ -315,8 +344,8 @@ var HSQuickLook = HSQuickLook || {};
 
     $("input[name='mode']").val(["mode-dl"]);
     $("input#mode-paused").attr("disabled", true);
-    $("#status-view").html("Historical");
-    $("#status-view").removeClass("status-button-view-realtime");
+    $("#status-mode").html("historical");
+    $("#status-mode").removeClass("status-button-mode-realtime");
     clearGraphData();
     getTime();
     sendTime();
@@ -331,16 +360,16 @@ var HSQuickLook = HSQuickLook || {};
 
     $("input[name='mode']").val(["mode-dl"]);
     $("input#mode-paused").attr("disabled", true);
-    $("#status-view").html("Replay");
-    $("#status-view").removeClass("status-button-view-realtime");
+    $("#status-mode").html("replay");
+    $("#status-mode").removeClass("status-button-mode-realtime");
     clearGraphData();
     getTime();
     sendTime();
     paused = false;
-    while (time1 < new Date()) {
+    while (timeAssigned < new Date()) {
       await new Promise((resolve) => setTimeout(resolve, 1000));
       const period = $("input#replay-period").val();
-      time1.setTime(time1.getTime() + period * 1000);
+      timeAssigned.setTime(timeAssigned.getTime() + period * 1000);
       sendTime();
     }
     enterQLMode();
@@ -355,29 +384,29 @@ var HSQuickLook = HSQuickLook || {};
       second = $("input#time5").val();
     const utcFlag = $("input#utc-flag").prop("checked");
     if (utcFlag) {
-      time1.setUTCFullYear(year);
-      time1.setUTCMonth(month - 1);
-      time1.setUTCDate(day);
-      time1.setUTCHours(hour);
-      time1.setUTCMinutes(minute);
-      time1.setUTCSeconds(second);
+      timeAssigned.setUTCFullYear(year);
+      timeAssigned.setUTCMonth(month - 1);
+      timeAssigned.setUTCDate(day);
+      timeAssigned.setUTCHours(hour);
+      timeAssigned.setUTCMinutes(minute);
+      timeAssigned.setUTCSeconds(second);
     } else {
-      time1.setFullYear(year);
-      time1.setMonth(month - 1);
-      time1.setDate(day);
-      time1.setHours(hour);
-      time1.setMinutes(minute);
-      time1.setSeconds(second);
+      timeAssigned.setFullYear(year);
+      timeAssigned.setMonth(month - 1);
+      timeAssigned.setDate(day);
+      timeAssigned.setHours(hour);
+      timeAssigned.setMinutes(minute);
+      timeAssigned.setSeconds(second);
     }
   }
 
   function sendTime() {
-    const year = time1.getUTCFullYear(),
-      month = time1.getUTCMonth() + 1,
-      day = time1.getUTCDate(),
-      hour = time1.getUTCHours(),
-      minute = time1.getUTCMinutes(),
-      second = time1.getUTCSeconds();
+    const year = timeAssigned.getUTCFullYear(),
+      month = timeAssigned.getUTCMonth() + 1,
+      day = timeAssigned.getUTCDate(),
+      hour = timeAssigned.getUTCHours(),
+      minute = timeAssigned.getUTCMinutes(),
+      second = timeAssigned.getUTCSeconds();
     const message =
       '{"time": "DL ' +
       year +
@@ -406,8 +435,8 @@ var HSQuickLook = HSQuickLook || {};
       return;
     }
 
-    $("#status-view").html("Pause");
-    $("#status-view").removeClass("status-button-view-realtime");
+    $("#status-mode").html("pause");
+    $("#status-mode").removeClass("status-button-mode-realtime");
     paused = true;
   }
 
@@ -460,6 +489,7 @@ var HSQuickLook = HSQuickLook || {};
 
     // display the dummy time
     $("p#time").html(time + " | TI: " + ti);
+    $("p#time-origin").html("Origin of time: ");
 
     // main tables
     for (let i = 0; i < schema.length; i++) {
@@ -499,26 +529,43 @@ var HSQuickLook = HSQuickLook || {};
 
     const schema = HSQuickLook.main.schema;
     const utcFlag = $("input#utc-flag").prop("checked");
-    let timeUpdated = false,
-      ti = -1;
-
+    let timeUpdated = false;
+    let unixtime = undefined;
     for (let i = 0; i < schema.length; i++) {
-      const tableInfo = schema[i],
-        documentLabel = getDocumentLabel(tableInfo),
-        documentData = data[documentLabel];
+      const tableInfo = schema[i];
+      const documentLabel = getDocumentLabel(tableInfo);
+      const documentData = data[documentLabel];
       if (documentData !== void 0) {
         if (!timeUpdated) {
           // display time
-          ti = documentData["__ti__"];
-          const unixtime = documentData["__unixtime__"],
-            time = new Date(unixtime * 1000),
-            timeString = utcFlag ? time.toUTCString() : time.toString();
-          $("p#time").html(
-            timeString + " | TI: " + ti + " | Time: " + ti * timeScaling,
-          );
+          unixtime = documentData["__unixtime__"];
+          const ti = documentData["__ti__"];
+          const time = new Date(unixtime * 1000);
+          const timeString = utcFlag ? time.toUTCString() : time.toString();
+          const timeDisplay =
+            timeString +
+            " | unixtime: " +
+            unixtime +
+            " | TI: " +
+            ti +
+            " (" +
+            ti * unitTI +
+            " s)";
+          $("p#time").html(timeDisplay);
+
+          const timeOriginString = utcFlag
+            ? timeOrigin.toUTCString()
+            : timeOrigin.toString();
+          const timeOriginDisplay =
+            "Origin of time: " +
+            timeOriginString +
+            " | unixtime: " +
+            timeOrigin.getTime() / 1000.0;
+          $("p#time-origin").html(timeOriginDisplay);
+
           timeUpdated = true;
         }
-        updateTable(tableInfo, documentData, ti);
+        updateTable(tableInfo, documentData, unixtime);
       }
     }
   }
@@ -627,7 +674,7 @@ var HSQuickLook = HSQuickLook || {};
     }
   }
 
-  function updateTable(tableInfo, data, ti) {
+  function updateTable(tableInfo, data, unixtime) {
     const sections = data["__sections__"];
     let sectionData = void 0;
 
@@ -649,8 +696,7 @@ var HSQuickLook = HSQuickLook || {};
       const info = contents[key];
       if (info.type == "trend-graph") {
         const elemID = tableID + "-" + key;
-        const time = ti * timeScaling;
-        updateGraph(elemID, info, time, values, tableID);
+        updateGraph(elemID, info, unixtime, values, tableID);
       } else {
         let source, value;
         if ("source" in info) {
@@ -711,6 +757,7 @@ var HSQuickLook = HSQuickLook || {};
     let graph = new HSQuickLook.graph.MultiTrendCurves();
     graphs[elemID] = graph;
     graph.placeholder = "#" + elemID + "-placeholder";
+    graph.timeOrigin = timeOrigin.getTime() / 1000.0;
 
     let capacity = 600,
       frameOption;
@@ -742,15 +789,6 @@ var HSQuickLook = HSQuickLook || {};
     const container = createGraphContainer(elemID, frameOption);
     elemValueHTML.attr("id", elemID);
     elemValueHTML.append(container);
-
-    let timeOriginHTML = $("<div />")
-      .attr("id", elemID + "-timeorigin")
-      .html("Origin of time: ");
-    timeOriginHTML.addClass("graph-timeorigin");
-    timeOriginHTML.append(
-      $("<span />").attr("id", elemID + "-timeorigin-value"),
-    );
-    elemValueHTML.append(timeOriginHTML);
   }
 
   function createTrendCurve(capacity, plotInfo) {
@@ -816,14 +854,9 @@ var HSQuickLook = HSQuickLook || {};
     }
   }
 
-  function updateGraph(elemID, info, time, values, tableID) {
+  function updateGraph(elemID, info, unixtime, values, tableID) {
     let graph = graphs[elemID];
-    if (graph.timeOrigin === void 0) {
-      graph.timeOrigin = time;
-      $("#" + elemID + "-timeorigin-value").html(time);
-    }
-
-    const xValue = time - graph.timeOrigin;
+    const xValue = unixtime - graph.timeOrigin;
 
     for (let i = 0; i < info.group.length; i++) {
       const plotInfo = info.group[i],
@@ -981,6 +1014,12 @@ var HSQuickLook = HSQuickLook || {};
   function clearGraphData() {
     for (let graph of Object.values(graphs)) {
       graph.clearData();
+    }
+  }
+
+  function setGraphTimeOrigin(t) {
+    for (let graph of Object.values(graphs)) {
+      graph.timeOrigin = t.getTime() / 1000.0;
     }
   }
 })(); /* end of the anonymous function */
