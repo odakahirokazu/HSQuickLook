@@ -68,17 +68,17 @@ var HSQuickLook = HSQuickLook || {};
     $("select#selected-data-sheet").change(loadDataSheet);
 
     // mode-form
-    $("input#mode-ql").click(enterQLMode);
+    $("input#mode-ql").click(enterRealtimeMode);
     $("input#mode-paused").click(pause);
 
     // time-form
-    $("input#time0").keypress(enterDLModeByEvent);
-    $("input#time1").keypress(enterDLModeByEvent);
-    $("input#time2").keypress(enterDLModeByEvent);
-    $("input#time3").keypress(enterDLModeByEvent);
-    $("input#time4").keypress(enterDLModeByEvent);
-    $("input#time5").keypress(enterDLModeByEvent);
-    $("input#request-data").click(enterDLMode);
+    $("input#time0").keypress(enterHistoricalModeByEvent);
+    $("input#time1").keypress(enterHistoricalModeByEvent);
+    $("input#time2").keypress(enterHistoricalModeByEvent);
+    $("input#time3").keypress(enterHistoricalModeByEvent);
+    $("input#time4").keypress(enterHistoricalModeByEvent);
+    $("input#time5").keypress(enterHistoricalModeByEvent);
+    $("input#request-data").click(enterHistoricalMode);
     $("input#set-time-origin").click(setTimeOrigin);
     $("input#reset-time").click(resetCurrentTime);
 
@@ -322,7 +322,7 @@ var HSQuickLook = HSQuickLook || {};
   /***************************************************************************
    * Time control
    */
-  function enterQLMode() {
+  function enterRealtimeMode() {
     if (ws.readyState !== WebSocket.OPEN) {
       alert("WebSocket is not connected. Please connect to WS server.");
       return;
@@ -336,7 +336,7 @@ var HSQuickLook = HSQuickLook || {};
     paused = false;
   }
 
-  function enterDLMode() {
+  function enterHistoricalMode() {
     if (ws.readyState !== WebSocket.OPEN) {
       alert("WebSocket is not connected. Please connect to WS server.");
       return;
@@ -372,7 +372,7 @@ var HSQuickLook = HSQuickLook || {};
       timeAssigned.setTime(timeAssigned.getTime() + period * 1000);
       sendTime();
     }
-    enterQLMode();
+    enterRealtimeMode();
   }
 
   function getTime() {
@@ -440,11 +440,11 @@ var HSQuickLook = HSQuickLook || {};
     paused = true;
   }
 
-  function enterDLModeByEvent(e) {
+  function enterHistoricalModeByEvent(e) {
     const KC_ENTER = 13;
     if (e.keyCode == KC_ENTER) {
       e.preventDefault();
-      enterDLMode();
+      enterHistoricalMode();
     }
   }
 
