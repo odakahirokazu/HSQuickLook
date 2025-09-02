@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.8)
+cmake_minimum_required(VERSION 3.25)
 
 ### Initial definition of cmake variables
 set(CMAKE_INSTALL_PREFIX $ENV{HOME} CACHE PATH "install prefix")
@@ -22,7 +22,7 @@ set(HSQUICKLOOK_INSTALL_HEADERS TRUE)
 
 ### External libraries
 ### BOOST ###
-find_package(Boost 1.60.0 REQUIRED COMPONENTS system filesystem)
+find_package(Boost 1.80.0 CONFIG COMPONENTS system filesystem)
 message("-- Boost_INCLUDE_DIRS: ${Boost_INCLUDE_DIRS}")
 message("-- Boost_LIBRARIES: ${Boost_LIBRARIES}")
 
