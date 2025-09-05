@@ -22,7 +22,7 @@ set(HSQUICKLOOK_INSTALL_HEADERS TRUE)
 
 ### External libraries
 ### BOOST ###
-find_package(Boost 1.80.0 CONFIG COMPONENTS system filesystem)
+find_package(Boost 1.80.0 CONFIG COMPONENTS filesystem)
 message("-- Boost_INCLUDE_DIRS: ${Boost_INCLUDE_DIRS}")
 message("-- Boost_LIBRARIES: ${Boost_LIBRARIES}")
 
