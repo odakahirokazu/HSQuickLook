@@ -23,7 +23,7 @@ ANLStatus AnalyzerModuleExample1::mod_define()
 
 ANLStatus AnalyzerModuleExample1::mod_initialize()
 {
-  get_module_NC("MongoDBClient", &mongodb_client_);
+  get_module_non_const("MongoDBClient", &mongodb_client_);
   mongodb_client_->createCappedCollection("main", 1*1024*1024);
 
   std::random_device seed_gen;

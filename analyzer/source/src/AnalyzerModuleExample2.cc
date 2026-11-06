@@ -28,14 +28,13 @@ ANLStatus AnalyzerModuleExample2::mod_define()
 
 ANLStatus AnalyzerModuleExample2::mod_initialize()
 {
-  get_module_NC("MongoDBClient", &mongodb_client_);
+  get_module_non_const("MongoDBClient", &mongodb_client_);
   mongodb_client_->createCappedCollection("image", 100*1024*1024);
   return AS_OK;
 }
 
 ANLStatus AnalyzerModuleExample2::mod_analyze()
 {
-  static int ii(0);
   const time_t t = std::time(nullptr);
   const int64_t ti = static_cast<int64_t>(t)*64;
 
@@ -65,8 +64,6 @@ ANLStatus AnalyzerModuleExample2::mod_analyze()
 
   auto doc = builder.generate();
   mongodb_client_->push("image", doc);
-
-  ++ii;
 
   return AS_OK;
 }
